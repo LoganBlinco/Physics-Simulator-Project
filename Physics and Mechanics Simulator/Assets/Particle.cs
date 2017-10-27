@@ -47,21 +47,22 @@ public class Particle : MonoBehaviour {
     {
         NumberOfInputs[index] = value;
     }
-
+    private float _mass;
     public float Mass
     {
-        set { Mass = MyMaths.Magnitude(value); }
-        get { return Mass; }
+        set { _mass = MyMaths.Magnitude(value); }
+        get { return _mass; }
     }
-
+    private float _restitution;
     public float Restitution
     {
-        set { Restitution = MyMaths.Clamp(value, 0, 1); }
-        get { return Restitution; }
+        set { _restitution = MyMaths.Clamp(value, 0, 1); }
+        get { return _restitution; }
     }
+    private float _radius;
     public float Radius
     {
-        set { Radius = MyMaths.Magnitude(value); }
-        get { return Radius; }
+        set { _radius = MyMaths.Magnitude(value); }
+        get { return _radius; }
     }
 }

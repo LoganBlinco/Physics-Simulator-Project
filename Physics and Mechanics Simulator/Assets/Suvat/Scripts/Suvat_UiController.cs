@@ -23,6 +23,8 @@ public class Suvat_UiController : MonoBehaviour {
     public Slider Slider_SimulationSpeed;
     public Text Label_Speed;
 
+    public Toggle Gravity;
+
 
     public void Start()
     {
@@ -34,6 +36,15 @@ public class Suvat_UiController : MonoBehaviour {
         SetDimention_Y(true);
         SetDimention_Z(true);
     }
+    public void OnCalculateClicked()
+    {
+        Suvat.OnCalculateClicked();
+    }
+    public void OnResetClicked()
+    {
+        ResetUI();
+    }
+
     public void OnParticleInfomationButtonClicked()
     {
         ParticleInfomationCanvas.SetActive(true);
@@ -115,6 +126,61 @@ public class Suvat_UiController : MonoBehaviour {
         //Rounding to 2 Decimal places
         string value2DP = Slider_SimulationSpeed.value.ToString("n2");
         Label_Speed.text = "Speed = " + value2DP + "x";
+    }
+
+    public void UpdateUI(Particle values)
+    {
+        S_x.text = values.Displacement[0].ToString();
+        S_y.text = values.Displacement[1].ToString();
+        S_z.text = values.Displacement[2].ToString();
+
+        U_x.text = values.InitialVelocity[0].ToString();
+        U_y.text = values.InitialVelocity[1].ToString();
+        U_z.text = values.InitialVelocity[2].ToString();
+
+        V_x.text = values.FinalVelocity[0].ToString();
+        V_y.text = values.FinalVelocity[1].ToString();
+        V_z.text = values.FinalVelocity[2].ToString();
+
+        A_x.text = values.Acceleration[0].ToString();
+        A_y.text = values.Acceleration[1].ToString();
+        A_z.text = values.Acceleration[2].ToString();
+
+        Time.text = values.Time.ToString();
+
+        R_x.text = values.InitialPosition[0].ToString();
+        R_y.text = values.InitialPosition[1].ToString();
+        R_z.text = values.InitialPosition[2].ToString();
+
+        Radius.text = values.Radius.ToString();
+    }
+
+    public void ResetUI()
+    {
+        S_x.text = "";
+        S_y.text = "";
+        S_z.text = "";
+
+        U_x.text = "";
+        U_y.text = "";
+        U_z.text = "";
+
+        V_x.text = "";
+        V_y.text = "";
+        V_z.text = "";
+
+        A_x.text = "";
+        A_y.text = "";
+        A_z.text = "";
+
+        Time.text = "";
+
+        R_x.text = "";
+        R_y.text = "";
+        R_z.text = "";
+
+        Radius.text = "";
+        Gravity.isOn = false;
     }
 
 
