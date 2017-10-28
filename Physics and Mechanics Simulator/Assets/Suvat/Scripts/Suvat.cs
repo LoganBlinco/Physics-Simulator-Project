@@ -11,15 +11,16 @@ public class Suvat : MonoBehaviour {
     {
         Particle values = new Particle();
         int dimentions = Suvat_UiController.instance.DropBox_Dimentions.value + 1;
+        int particle = Suvat_UiController.instance.DropBox_Particle.value;
         getMisc(ref values);
         getSuvat(ref values, dimentions);
         ValidateCheck(ref values);
         Suvat_UiController.instance.UpdateUI(values);
         try
         {
-            Particle.Instances[dimentions] = values;
+            Particle.Instances[particle] = values;
         }
-        catch(ArgumentOutOfRangeException e)
+        catch
         {
             Particle.Instances.Add(values);
         }
@@ -41,21 +42,8 @@ public class Suvat : MonoBehaviour {
         }
     }
 
-    private static void getMisc(ref Particle values)
-    {
-        Suvat_UiController controller = Suvat_UiController.instance;
-        if (controller.Radius.text != "")
-        {
-            values.Radius = float.Parse(controller.Radius.text);
-        }else
-        {
-            values.Radius = 1;
-        }
-        if (controller.Gravity.isOn == true)
-        {
-            values.Acceleration -= new Vector3(0, Gravity, 0);
-        }
-    }
+
+    #region Getting inputs
 
     private static void getSuvat(ref Particle values, int dimentions)
     {
@@ -180,6 +168,24 @@ public class Suvat : MonoBehaviour {
         }
     }
 
+    private static void getMisc(ref Particle values)
+    {
+        Suvat_UiController controller = Suvat_UiController.instance;
+        if (controller.Radius.text != "")
+        {
+            values.Radius = float.Parse(controller.Radius.text);
+        }
+        else
+        {
+            values.Radius = 1;
+        }
+        if (controller.Gravity.isOn == true)
+        {
+            values.Acceleration -= new Vector3(0, Gravity, 0);
+        }
+    }
+
+    #endregion
 
     public static string ReplaceAtIndex(int index, char value, string word)
     {

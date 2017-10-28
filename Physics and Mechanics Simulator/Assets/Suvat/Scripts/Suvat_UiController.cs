@@ -19,6 +19,7 @@ public class Suvat_UiController : MonoBehaviour {
     public InputField Radius;
 
     public Dropdown DropBox_Dimentions;
+    public Dropdown DropBox_Particle;
 
     public Slider Slider_SimulationSpeed;
     public Text Label_Speed;
@@ -36,6 +37,33 @@ public class Suvat_UiController : MonoBehaviour {
         SetDimention_Y(true);
         SetDimention_Z(true);
     }
+
+    #region Simulation buttons
+
+    public void OnPauseClicked()
+    {
+        SimulateController.isSimulating = false;
+    }
+    public void OnPlayClicked()
+    {
+        if (SimulateController.simulationTime == SimulateController.maxTime)
+        {
+            //increasse time thing
+        }
+        else
+        {
+            SimulateController.isSimulating = true;
+        }
+    }
+
+    public void OnSlider_SimulationSpeedChanged()
+    {
+        //Rounding to 2 Decimal places
+        string value2DP = Slider_SimulationSpeed.value.ToString("n2");
+        Label_Speed.text = "Speed = " + value2DP + "x";
+    }
+    #endregion
+
     public void OnCalculateClicked()
     {
         Suvat.OnCalculateClicked();
@@ -43,6 +71,12 @@ public class Suvat_UiController : MonoBehaviour {
     public void OnResetClicked()
     {
         ResetUI();
+    }
+    public void OnSimulateClicked()
+    {
+        Suvat.OnCalculateClicked();
+        SimulateController.speedInput = Slider_SimulationSpeed;
+        SimulateController.OnSimulateClicked();
     }
 
     public void OnParticleInfomationButtonClicked()
@@ -121,12 +155,7 @@ public class Suvat_UiController : MonoBehaviour {
     }
     #endregion
 
-    public void OnSlider_SimulationSpeedChanged()
-    {
-        //Rounding to 2 Decimal places
-        string value2DP = Slider_SimulationSpeed.value.ToString("n2");
-        Label_Speed.text = "Speed = " + value2DP + "x";
-    }
+
 
     public void UpdateUI(Particle values)
     {

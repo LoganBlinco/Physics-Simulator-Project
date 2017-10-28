@@ -13,8 +13,6 @@ public class MyMaths : MonoBehaviour
         }
         return newVector;
     }
-
-
     public static float Magnitude(float value)
     {
         if (value < 0)
@@ -61,7 +59,6 @@ public class MyMaths : MonoBehaviour
         return value;
     }
 
-
     //Vector_magnitude requires an overload for List<float> n dimentional vetors and Vector3's
     public static float Vector_Magnitude(List<float> a)
     {
@@ -81,8 +78,6 @@ public class MyMaths : MonoBehaviour
         }
         return SquareRoot(SquaredMagnitude);
     }
-
-
 
 
     public static float DotProduct_Value(List<float> a, List<float> b)
