@@ -19,6 +19,8 @@ public class Suvat_UiController : MonoBehaviour {
     public InputField R_x, R_y, R_z;
     public InputField Radius;
 
+    public Text Label_Time;
+
     public Dropdown DropBox_Dimentions;
     public Dropdown DropBox_Particle;
     public Dropdown DropBox_CameraTarget;
@@ -34,6 +36,7 @@ public class Suvat_UiController : MonoBehaviour {
         //Creates reference for all methods to access.
         instance = this;
         CameraController.DropBoxTarget = DropBox_CameraTarget;
+        SimulateController.LabelTime = Label_Time;
 
         OnParticleInfomationButtonClicked();
         SetDimention_X(true);

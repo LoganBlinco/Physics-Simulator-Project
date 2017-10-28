@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GenerateBackground : MonoBehaviour {
 
-    private static int offset = 4;
+    private static int offset = 3;
     private static int sizeOfSprite = 4;
 
     public static GameObject[] prefabs;
@@ -25,9 +25,10 @@ public class GenerateBackground : MonoBehaviour {
 
         for (int dimentions = 0;dimentions<3;dimentions++)
         {
-            GetMin(dimentions);
-            GetMax(dimentions);
+            GetVetex(dimentions);
         }
+        min = min - Vector3.one * offset * sizeOfSprite;
+        max = max + Vector3.one * offset * sizeOfSprite;
         CalculateNumberOfInstances();
         InstatiatePrefabs();
     }
@@ -41,10 +42,14 @@ public class GenerateBackground : MonoBehaviour {
             {
                 int value = Convert.ToInt32(0.5f * (1 + Mathf.Pow(-1, j - 1 + n)));
                 Vector3 Position = new Vector3(
-                    min.x - offset + sizeOfSprite * i,
-                    min.y - offset + sizeOfSprite * j,
+                    min.x  + sizeOfSprite * i,
+                    min.y  + sizeOfSprite * j,
                     0);
-                Instantiate(prefabs[value], Position, Quaternion.identity);
+                GameObject temp = Instantiate(prefabs[value], Position, Quaternion.identity);
+                temp.transform.localScale = new Vector3(
+                    sizeOfSprite,
+                    sizeOfSprite,
+                    0);
             }
             n++;
         }
@@ -52,7 +57,7 @@ public class GenerateBackground : MonoBehaviour {
 
     private static void CalculateNumberOfInstances()
     {
-        Vector3 temp = (max - min) / sizeOfSprite + Vector3.one * offset;
+        Vector3 temp = (max - min) / sizeOfSprite;
         temp = MyMaths.Vector_Ceil(temp);
         for (int i =0;i<3;i++)
         {
@@ -60,24 +65,79 @@ public class GenerateBackground : MonoBehaviour {
         }
     }
 
-    public static void GetMin(int dimention)
+    public static void GetVetex(int dimention)
     {
         float initialPos;
         float finalPos;
         for (int i =0;i<Particle.Instances.Count;i++)
         {
+            float newMin =0;
+            float newMax =0;
+
             initialPos = Particle.Instances[i].InitialPosition[dimention];
             finalPos = initialPos + Particle.Instances[i].Displacement[dimention];
-            if (initialPos < min[dimention])
+            float a = Particle.Instances[i].Acceleration[dimention];
+            float u = Particle.Instances[i].InitialVelocity[dimention];
+            float t = SimulateController.maxTime;
+
+            if (u >= 0 && a < 0)
             {
-                min[dimention] = initialPos;
+                newMax = Case_One_Max(u, 0, a) + initialPos;
+                newMin = Case_One_Min(u, a, t) + initialPos;
             }
-            if (finalPos < min[dimention])
+            else if (u <= 0 && a > 0)
             {
-                min[dimention] = finalPos;
-            } 
+                newMin = Case_One_Max(u, 0, a) + initialPos;
+                newMax = Case_One_Min(u, a, t) + initialPos;
+            }
+            else if (a == 0 && u >= 0)
+            {
+                newMin = initialPos;
+                newMax = u * t + initialPos;
+            }
+            else if (a== 0 && u < 0)
+            {
+                newMin = u * t + initialPos;
+                newMax = initialPos;
+            }
+            else
+            {
+                //im not sure what other combo's exists
+                Debug.Log("Additional combo");
+                Debug.Log("u :" + u);
+                Debug.Log("a :" + a);
+                Debug.Log("t : "+t);
+            }
+            if (newMin < min[dimention])
+            {
+                min[dimention] = newMax;
+            }
+            if (newMax > max[dimention])
+            {
+                max[dimention] = newMax;
+            }
         }
     }
+
+    private static float Case_One_Min(float u, float a, float t)
+    {
+        //when t = 0,displacement = 0
+        float maxTime = u * t + 0.5f * a * Mathf.Pow(t, 2);
+        if (maxTime < 0)
+        {
+            return maxTime;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    private static float Case_One_Max(float u, int v, float a)
+    {
+        return (v + u) * (v - u) / (2 * a);
+    }
+
     public static void GetMax(int dimention)
     {
         float initialPos;

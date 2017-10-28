@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +18,10 @@ public class CameraController : MonoBehaviour {
 
     public static float freeSpeed = 1.0f;
     public static bool isFreeRoam = true;
-    public static float zoomMod;
+    public static float currentZoom =8;
+    public static float maxZoom = 40;
+    public static float minZoom = 0.1f;
+    public static float zoomMod = 1;
 
     public static bool CameraExists;
 
@@ -32,6 +36,7 @@ public class CameraController : MonoBehaviour {
         {
             Destroy(gameObject);
         }
+        Camera.main.orthographicSize = currentZoom;
     }
     private void Update()
     {
@@ -44,7 +49,22 @@ public class CameraController : MonoBehaviour {
             GetFollowTarget();
             ControlLockOn();
         }
+        ControlZoom();
     }
+
+    private void ControlZoom()
+    {
+        float input = Input.GetAxis("Mouse ScrollWheel");
+        if (input != 0)
+        {
+            float sign = -Mathf.Sign(input); //minus so backwards is zoom out while inwards is zoom in
+            currentZoom += sign * zoomMod;
+            currentZoom = MyMaths.Clamp(currentZoom, minZoom, maxZoom);
+            Debug.Log("Next zoom " + currentZoom);
+            Camera.main.orthographicSize = currentZoom;
+        }
+    }
+
     private void GetFollowTarget()
     {
         targetIndex = DropBoxTarget.value-1;

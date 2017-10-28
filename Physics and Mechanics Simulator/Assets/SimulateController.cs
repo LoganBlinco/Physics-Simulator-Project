@@ -9,6 +9,7 @@ public class SimulateController : MonoBehaviour {
     public static List<GameObject> ParticleInstances;
 
     public static Slider speedInput;
+    public static Text LabelTime;
     static float deltaT;
     public static bool isSimulating;
     public static float simulationTime;
@@ -23,18 +24,20 @@ public class SimulateController : MonoBehaviour {
     public static void OnSimulateClicked()
     {
         Clear();
-        GenerateBackground.CreateBackground();
-        ParticleInstances = new List<GameObject>();
-
-        DestroyObjects();
-        simulationSpeed = speedInput.value;
-        for (int i = 0;i<Particle.Instances.Count;i++)
+        for (int i = 0; i < Particle.Instances.Count; i++)
         {
-            InstantiateParticle(i);
             if (Particle.Instances[i].Time > maxTime)
             {
                 maxTime = Particle.Instances[i].Time;
             }
+        }
+        GenerateBackground.CreateBackground();
+        ParticleInstances = new List<GameObject>();
+        DestroyObjects();
+        simulationSpeed = speedInput.value;
+        for (int i = 0; i < Particle.Instances.Count; i++)
+        {
+            InstantiateParticle(i);
         }
         isSimulating = true;
         simulationTime = 0;
@@ -76,10 +79,18 @@ public class SimulateController : MonoBehaviour {
             //UpdateGravity();
             //UpdateCollisions();
         }
+        UpdateTimeLabel();
         CheckTime();
         simulationTime += deltaT;
         simulationTime = MyMaths.Clamp(simulationTime, 0, maxTime);
+
     }
+    private void UpdateTimeLabel()
+    {
+        string value2DP = simulationTime.ToString("n2");
+        LabelTime.text = "Time :" + value2DP + "s";
+    }
+
 
     private void CheckTime()
     {
