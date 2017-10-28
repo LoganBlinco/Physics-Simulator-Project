@@ -22,11 +22,6 @@ public class SimulateController : MonoBehaviour {
     }
     public static void OnSimulateClicked()
     {
-        for (int i =0;i<Particle.Instances.Count;i++)
-        {
-            Particle.Instances[i].beforeSimulation = 
-        }
-
         Clear();
         GenerateBackground.CreateBackground();
         ParticleInstances = new List<GameObject>();

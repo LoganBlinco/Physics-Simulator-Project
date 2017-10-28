@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GenerateBackground : MonoBehaviour {
 
-    private static int offset = 2;
+    private static int offset = 4;
     private static int sizeOfSprite = 4;
 
     public static GameObject[] prefabs;
@@ -41,8 +41,8 @@ public class GenerateBackground : MonoBehaviour {
             {
                 int value = Convert.ToInt32(0.5f * (1 + Mathf.Pow(-1, j - 1 + n)));
                 Vector3 Position = new Vector3(
-                    min.x - sizeOfSprite + sizeOfSprite * i,
-                    min.y - sizeOfSprite + sizeOfSprite * j,
+                    min.x - offset + sizeOfSprite * i,
+                    min.y - offset + sizeOfSprite * j,
                     0);
                 Instantiate(prefabs[value], Position, Quaternion.identity);
             }

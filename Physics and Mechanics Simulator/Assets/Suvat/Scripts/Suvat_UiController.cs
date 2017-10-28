@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using System;
 
 public class Suvat_UiController : MonoBehaviour {
 
@@ -20,6 +21,7 @@ public class Suvat_UiController : MonoBehaviour {
 
     public Dropdown DropBox_Dimentions;
     public Dropdown DropBox_Particle;
+    public Dropdown DropBox_CameraTarget;
 
     public Slider Slider_SimulationSpeed;
     public Text Label_Speed;
@@ -31,6 +33,7 @@ public class Suvat_UiController : MonoBehaviour {
     {
         //Creates reference for all methods to access.
         instance = this;
+        CameraController.DropBoxTarget = DropBox_CameraTarget;
 
         OnParticleInfomationButtonClicked();
         SetDimention_X(true);
@@ -156,6 +159,71 @@ public class Suvat_UiController : MonoBehaviour {
     #endregion
 
 
+    public void OnDropBox_ParticleChanged()
+    {
+        int maximum = DropBox_Particle.options.Count;
+        int value = DropBox_Particle.value;
+        if (value == maximum - 1 && SimulateController.isSimulating == false)
+        {
+            AddOptionToDropBox(maximum);
+        }
+
+        //Updates values depending on the particle selected.
+        UpdateValues();
+    }
+
+    private void AddOptionToDropBox(int size)
+    {
+        Dropdown.OptionData[] oldOptions = new Dropdown.OptionData[size + 1];
+        for (int i = 0; i < size; i++)
+        {
+            oldOptions[i] = DropBox_Particle.options[i];
+        }
+        DropBox_Particle.options.Clear();
+        DropBox_CameraTarget.options.Clear();
+        string _text = "Free Roam ";
+        DropBox_CameraTarget.options.Add(new Dropdown.OptionData() { text = _text });
+        for (int i = 0; i < size - 1; i++)
+        {
+            DropBox_Particle.options.Add(oldOptions[i]);
+            DropBox_CameraTarget.options.Add(oldOptions[i]);
+        }
+        _text = "Particle " + size.ToString();
+        DropBox_Particle.options.Add(new Dropdown.OptionData() { text = _text });
+        DropBox_CameraTarget.options.Add(new Dropdown.OptionData() { text = _text });
+
+        _text = "Add Particle";
+        DropBox_Particle.options.Add(new Dropdown.OptionData() { text = _text });
+
+        DropBox_Particle.value = size - 2;
+        DropBox_Particle.value = size - 1;
+    }
+
+    private void UpdateValues()
+    {
+        int current = DropBox_Particle.value;
+        try
+        {
+            UpdateUI(Particle.Instances[current]);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            ResetUI();
+        }
+    }
+
+    public void OnDropBox_CameraTargetChanged()
+    {
+        int value = DropBox_CameraTarget.value;
+        if (value == 0)
+        {
+            CameraController.isFreeRoam = true;
+        }
+        else
+        {
+            CameraController.isFreeRoam = false;
+        }
+    }
 
     public void UpdateUI(Particle values)
     {
