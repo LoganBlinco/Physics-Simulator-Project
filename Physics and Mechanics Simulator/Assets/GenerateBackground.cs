@@ -5,10 +5,13 @@ using UnityEngine;
 
 public class GenerateBackground : MonoBehaviour {
 
-    private static int offset = 3;
-    private static int sizeOfSprite = 4;
+    //Reference to the prefabs in resouces folder.
+    public static GameObject[] prefabs = new GameObject[] { (Resources.Load("4x4 White") as GameObject), (Resources.Load("4x4 Black") as GameObject) };
 
-    public static GameObject[] prefabs;
+    //Additional prefabs which will be generated on the left and up of background
+    private static int offset = 3;
+    //Lenght of each size in pixels such as 4x4
+    private static int sizeOfSprite = 4;
 
     private static Vector3 min;
     private static Vector3 max;
@@ -16,15 +19,11 @@ public class GenerateBackground : MonoBehaviour {
 
     public static void CreateBackground()
     {
-        Clear();
-        prefabs[0] = (Resources.Load("4x4 White") as GameObject);
-        prefabs[1] = (Resources.Load("4x4 Black") as GameObject);
-
-        string tag = "Background_prefab";
-        DestroyObejctsWithTag(tag);
-
+        ClearVariables();
+        DestroyObjects();
         for (int dimentions = 0;dimentions<3;dimentions++)
         {
+            //Gets max and min
             GetVetex(dimentions);
         }
         min = min - Vector3.one * offset * sizeOfSprite;
@@ -33,52 +32,37 @@ public class GenerateBackground : MonoBehaviour {
         InstatiatePrefabs();
     }
 
-    private static void InstatiatePrefabs()
+    //Sets variable data to 0
+    private static void ClearVariables()
     {
-        int n = 0;
-        for (int i = 0;i<NumberOfInstances.x;i++)
-        {
-            for (int j =0;j<NumberOfInstances.y;j++)
-            {
-                int value = Convert.ToInt32(0.5f * (1 + Mathf.Pow(-1, j - 1 + n)));
-                Vector3 Position = new Vector3(
-                    min.x  + sizeOfSprite * i,
-                    min.y  + sizeOfSprite * j,
-                    0);
-                GameObject temp = Instantiate(prefabs[value], Position, Quaternion.identity);
-                temp.transform.localScale = new Vector3(
-                    sizeOfSprite,
-                    sizeOfSprite,
-                    0);
-            }
-            n++;
-        }
+        min = Vector3.zero;
+        max = Vector3.zero;
+        NumberOfInstances = Vector3.zero;
     }
-
-    private static void CalculateNumberOfInstances()
+    //Destroygs pre-existing background prefabs
+    private static void DestroyObjects()
     {
-        Vector3 temp = (max - min) / sizeOfSprite;
-        temp = MyMaths.Vector_Ceil(temp);
-        for (int i =0;i<3;i++)
-        {
-            NumberOfInstances[i] = MyMaths.Magnitude(temp[i]);
-        }
+        string tag = "Background_prefab";
+        DestroyObejctsWithTag(tag);
     }
-
-    public static void GetVetex(int dimention)
+    //Gets max and min values of particles for simulation
+    private static void GetVetex(int dimention)
     {
         float initialPos;
-        float finalPos;
-        for (int i =0;i<Particle.Instances.Count;i++)
+        float newMin;
+        float newMax;
+        float a;
+        float u;
+        float t;
+        for (int i = 0; i < Particle.Instances.Count; i++)
         {
-            float newMin =0;
-            float newMax =0;
+            newMin = 0;
+            newMax = 0;
 
             initialPos = Particle.Instances[i].InitialPosition[dimention];
-            finalPos = initialPos + Particle.Instances[i].Displacement[dimention];
-            float a = Particle.Instances[i].Acceleration[dimention];
-            float u = Particle.Instances[i].InitialVelocity[dimention];
-            float t = SimulateController.maxTime;
+            a = Particle.Instances[i].Acceleration[dimention];
+            u = Particle.Instances[i].InitialVelocity[dimention];
+            t = SimulateController.maxTime;
 
             if (u >= 0 && a < 0)
             {
@@ -95,18 +79,18 @@ public class GenerateBackground : MonoBehaviour {
                 newMin = initialPos;
                 newMax = u * t + initialPos;
             }
-            else if (a== 0 && u < 0)
+            else if (a == 0 && u < 0)
             {
                 newMin = u * t + initialPos;
                 newMax = initialPos;
             }
             else
             {
-                //im not sure what other combo's exists
+                //im not sure what other combo's exists so this covers any for the future
                 Debug.Log("Additional combo");
                 Debug.Log("u :" + u);
                 Debug.Log("a :" + a);
-                Debug.Log("t : "+t);
+                Debug.Log("t : " + t);
             }
             if (newMin < min[dimention])
             {
@@ -118,7 +102,42 @@ public class GenerateBackground : MonoBehaviour {
             }
         }
     }
+    //Calculates the numer of prefabs which must be used in each dimention
+    private static void CalculateNumberOfInstances()
+    {
+        Vector3 temp = (max - min) / sizeOfSprite;
+        temp = MyMaths.Vector_Ceil(temp);
+        for (int i = 0; i < 3; i++)
+        {
+            NumberOfInstances[i] = MyMaths.Magnitude(temp[i]);
+        }
+    }
 
+    //Creates the prefabs
+    private static void InstatiatePrefabs()
+    {
+        int n = 0;
+        for (int i = 0;i<NumberOfInstances.x;i++)
+        {
+            for (int j =0;j<NumberOfInstances.y;j++)
+            {
+                //equation used to alternate between white and black
+                int value = Convert.ToInt32(0.5f * (1 + Mathf.Pow(-1, j - 1 + n)));
+                Vector3 Position = new Vector3(
+                    min.x  + sizeOfSprite * i,
+                    min.y  + sizeOfSprite * j,
+                    0);
+                GameObject temp = Instantiate(prefabs[value], Position, Quaternion.identity);
+                temp.transform.localScale = new Vector3(
+                    sizeOfSprite,
+                    sizeOfSprite,
+                    0);
+            }
+            n++;
+        }
+    }
+
+    //Method used when calculating vertex
     private static float Case_One_Min(float u, float a, float t)
     {
         //when t = 0,displacement = 0
@@ -133,41 +152,13 @@ public class GenerateBackground : MonoBehaviour {
         }
     }
 
+    //Method used when calculating vertex
     private static float Case_One_Max(float u, int v, float a)
     {
         return (v + u) * (v - u) / (2 * a);
     }
 
-    public static void GetMax(int dimention)
-    {
-        float initialPos;
-        float finalPos;
-        for (int i = 0; i < Particle.Instances.Count; i++)
-        {
-            initialPos = Particle.Instances[i].InitialPosition[dimention];
-            finalPos = initialPos + Particle.Instances[i].Displacement[dimention];
-            if (initialPos > max[dimention])
-            {
-                max[dimention] = initialPos;
-            }
-            if (finalPos > max[dimention])
-            {
-                max[dimention] = finalPos;
-            }
-        }
-    }
-
-
-    public static void Clear()
-    {
-        prefabs = new GameObject[2];
-        //first = new GameObject();
-        //second = new GameObject();
-        min = Vector3.zero;
-        max = Vector3.zero;
-        NumberOfInstances = Vector3.zero;
-    }
-
+    //Destroys anyobject with the input tag parameter in the scene
     public static void DestroyObejctsWithTag(string tag)
     {
         GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(tag);

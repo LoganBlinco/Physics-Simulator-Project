@@ -21,16 +21,11 @@ public class SimulateController : MonoBehaviour {
         get { return _simulationSpeed; }
         set { _simulationSpeed = MyMaths.Magnitude(value); }
     }
+
     public static void OnSimulateClicked()
     {
         Clear();
-        for (int i = 0; i < Particle.Instances.Count; i++)
-        {
-            if (Particle.Instances[i].Time > maxTime)
-            {
-                maxTime = Particle.Instances[i].Time;
-            }
-        }
+        GetMaxTime();
         GenerateBackground.CreateBackground();
         ParticleInstances = new List<GameObject>();
         DestroyObjects();
@@ -42,30 +37,40 @@ public class SimulateController : MonoBehaviour {
         isSimulating = true;
         simulationTime = 0;
     }
-    private static void DestroyObjects()
-    {
-        string tag = "Player";
-        GenerateBackground.DestroyObejctsWithTag(tag);
-    }
-
-
-    private static void InstantiateParticle(int index)
-    {
-        Vector3 Position = Particle.Instances[index].InitialPosition;
-        Vector3 Velocity = Particle.Instances[index].InitialVelocity;
-        //Creating a unity object 
-        ParticleInstances.Add(Instantiate(Resources.Load("Sphere"), Position, Quaternion.identity) as GameObject);
-        float Radius = Particle.Instances[index].Radius;
-        ParticleInstances[index].transform.localScale = Vector3.one * Radius;
-    }
-
-    public static void Clear()
+    //Resets variables
+    private static void Clear()
     {
         ParticleInstances = new List<GameObject>();
         isSimulating = false;
         simulationTime = 0;
         maxTime = 0;
         simulationSpeed = 0;
+    }
+    //Gets the maximum time which any of the simulations have
+    private static void GetMaxTime()
+    {
+        for (int i = 0; i < Particle.Instances.Count; i++)
+        {
+            if (Particle.Instances[i].Time > maxTime)
+            {
+                maxTime = Particle.Instances[i].Time;
+            }
+        }
+    }
+    //Destroys objects with the Player Tag.Objects with the player tag are prefabs created for simulation previously.
+    private static void DestroyObjects()
+    {
+        string tag = "Player";
+        GenerateBackground.DestroyObejctsWithTag(tag);
+    }
+    //Instantiates the prefab at the position required.
+    private static void InstantiateParticle(int index)
+    {
+        Vector3 Position = Particle.Instances[index].InitialPosition;
+        //Creating a unity object 
+        ParticleInstances.Add(Instantiate(Resources.Load("Sphere"), Position, Quaternion.identity) as GameObject);
+        float Radius = Particle.Instances[index].Radius;
+        ParticleInstances[index].transform.localScale = Vector3.one * Radius;
     }
 
     public void Update()
@@ -83,15 +88,14 @@ public class SimulateController : MonoBehaviour {
         CheckTime();
         simulationTime += deltaT;
         simulationTime = MyMaths.Clamp(simulationTime, 0, maxTime);
-
     }
+    //Sets the time label to the currenty simulation time
     private void UpdateTimeLabel()
     {
         string value2DP = simulationTime.ToString("n2");
         LabelTime.text = "Time :" + value2DP + "s";
     }
-
-
+    //Checks if simulation time is greater than maxTime to end simulation
     private void CheckTime()
     {
         if (simulationTime >= maxTime)
@@ -100,6 +104,7 @@ public class SimulateController : MonoBehaviour {
         }
     }
 
+    //Moves every particle with an instance.
     private void MoveParticles()
     {
         for (int i =0;i<Particle.Instances.Count;i++)
@@ -107,6 +112,22 @@ public class SimulateController : MonoBehaviour {
             MoveParticles_Controller(i);
         }
     }
+    //Perfomrs the movement calculations using the change in time.
+    private void MoveParticles_Controller(int index)
+    {
+        //Allows for Suvat equation to be used to determine displacement.
+        Particle.Instances[index].Key[0] = "01111";
+        Particle.Instances[index].Key[1] = "01111";
+        Particle.Instances[index].Key[2] = "01111";
+        //Changing time according to simulation
+        Particle.Instances[index].Time = simulationTime;
+        //Getting correct equation
+        Particle.Instances[index] = SuvatSolvers.FindEquation(Particle.Instances[index]);
+        Vector3 position = Particle.Instances[index].Displacement + Particle.Instances[index].InitialPosition;
+        ParticleInstances[index].transform.position = position;
+    }
+
+    //Updates velocity of each particle by the time.deltatime
     private void UpdateVelocity()
     {
         for (int i = 0; i < Particle.Instances.Count; i++)
@@ -117,23 +138,11 @@ public class SimulateController : MonoBehaviour {
 
     private void UpdateVelocity_Controller(int index)
     {
-        Particle.Instances[index].Key[0] = "01011";
-        Particle.Instances[index].Key[1] = "01011";
-        Particle.Instances[index].Key[2] = "01011";
+        //Blanked out displacement so I can use v = u + at meaning the si
+        Particle.Instances[index].Key[0] = "11011";
+        Particle.Instances[index].Key[1] = "11011";
+        Particle.Instances[index].Key[2] = "11011";
         Particle.Instances[index].Time = simulationTime;
         Particle.Instances[index] = SuvatSolvers.FindEquation(Particle.Instances[index]);
-    }
-
-    private void MoveParticles_Controller(int index)
-    {
-        //Done to find the new diosplacement
-        Particle.Instances[index].Key[0] = "01111";
-        Particle.Instances[index].Key[1] = "01111";
-        Particle.Instances[index].Key[2] = "01111";
-        Particle.Instances[index].Time = simulationTime;
-
-        Particle.Instances[index] = SuvatSolvers.FindEquation(Particle.Instances[index]);
-        Vector3 position = Particle.Instances[index].Displacement + Particle.Instances[index].InitialPosition;
-        ParticleInstances[index].transform.position = position;
     }
 }

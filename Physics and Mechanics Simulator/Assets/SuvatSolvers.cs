@@ -8,6 +8,7 @@ public class SuvatSolvers : MonoBehaviour
 
     public static Particle FindEquation(Particle values)
     {
+        //i is the dimention to calculate
         int i = 0;
         var Equations = new Dictionary<string, Action>
             {
@@ -49,7 +50,6 @@ public class SuvatSolvers : MonoBehaviour
                 i = 2;
                 Equations[values.Key[i]]();
             }
-
             j++;
         }
         return values;
@@ -79,8 +79,6 @@ public class SuvatSolvers : MonoBehaviour
     {
         values.inValidInput[i] = true;
     }
-
-
     // s = ut + 1/2 * a * t^2
     public static void RanOn_01011(Particle values, int i)
     {
@@ -93,7 +91,6 @@ public class SuvatSolvers : MonoBehaviour
         values.Displacement[i] = 0.5f * (values.InitialVelocity[i] + values.FinalVelocity[i]) * values.Time;
         values.Key[i] = ReplaceAtIndex(0, '1', values.Key[i]);
     }
-
     //Uses 01101
     public static void RanOn_01111(Particle values, int i)
     {
