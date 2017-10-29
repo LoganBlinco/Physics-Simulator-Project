@@ -103,8 +103,6 @@ public class GenerateBackground : MonoBehaviour {
                 Debug.Log("a :" + a);
                 Debug.Log("t : " + t);
             }
-            Debug.Log(newMin);
-            Debug.Log(newMax);
             if (newMin < min[dimention])
             {
                 min[dimention] = newMin;
@@ -114,8 +112,6 @@ public class GenerateBackground : MonoBehaviour {
                 max[dimention] = newMax;
             }
         }
-        Debug.Log(min);
-        Debug.Log(max);
     }
     //Calculates the numer of prefabs which must be used in each dimention
     private static void CalculateNumberOfInstances()

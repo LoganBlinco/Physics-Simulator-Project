@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Particle : MonoBehaviour {
+public class Particle {
 
     public static List<Particle> Instances = new List<Particle>();
     public Particle beforeSimulation;
