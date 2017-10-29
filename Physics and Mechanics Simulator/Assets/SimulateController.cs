@@ -10,6 +10,7 @@ public class SimulateController : MonoBehaviour {
 
     public static Slider speedInput;
     public static Text LabelTime;
+
     static float deltaT;
     public static bool isSimulating;
     public static float simulationTime;
@@ -81,10 +82,9 @@ public class SimulateController : MonoBehaviour {
             deltaT = Time.fixedDeltaTime * simulationSpeed;
             MoveParticles();
             UpdateVelocity();
+            UpdateTimeLabel();
             //UpdateGravity();
-            //UpdateCollisions();
         }
-        UpdateTimeLabel();
         CheckTime();
         simulationTime += deltaT;
         simulationTime = MyMaths.Clamp(simulationTime, 0, maxTime);
@@ -138,7 +138,6 @@ public class SimulateController : MonoBehaviour {
 
     private void UpdateVelocity_Controller(int index)
     {
-        //Blanked out displacement so I can use v = u + at meaning the si
         Particle.Instances[index].Key[0] = "11011";
         Particle.Instances[index].Key[1] = "11011";
         Particle.Instances[index].Key[2] = "11011";

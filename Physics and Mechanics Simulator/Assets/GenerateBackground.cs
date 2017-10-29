@@ -66,7 +66,7 @@ public class GenerateBackground : MonoBehaviour {
 
             if (u >= 0 && a < 0)
             {
-                newMax = Case_One_Max(u, 0, a) + initialPos;
+                newMax = -Mathf.Pow(u, 2) / (2 * a) + initialPos;
                 newMin = Case_One_Min(u, a, t) + initialPos;
             }
             else if (u <= 0 && a > 0)
@@ -127,13 +127,12 @@ public class GenerateBackground : MonoBehaviour {
     //Creates the prefabs
     private static void InstatiatePrefabs()
     {
-        int n = 0;
         for (int i = 0;i<NumberOfInstances.x;i++)
         {
             for (int j =0;j<NumberOfInstances.y;j++)
             {
                 //equation used to alternate between white and black
-                int value = Convert.ToInt32(0.5f * (1 + Mathf.Pow(-1, j - 1 + n)));
+                int value = Convert.ToInt32(0.5f * (1 + Mathf.Pow(-1, j - 1 + i)));
                 Vector3 Position = new Vector3(
                     min.x  + sizeOfSprite * i,
                     min.y  + sizeOfSprite * j,
@@ -144,7 +143,6 @@ public class GenerateBackground : MonoBehaviour {
                     sizeOfSprite,
                     0);
             }
-            n++;
         }
     }
 
@@ -161,12 +159,6 @@ public class GenerateBackground : MonoBehaviour {
         {
             return 0;
         }
-    }
-
-    //Method used when calculating vertex
-    private static float Case_One_Max(float u, int v, float a)
-    {
-        return (v + u) * (v - u) / (2 * a);
     }
 
     //Destroys anyobject with the input tag parameter in the scene
