@@ -71,8 +71,9 @@ public class GenerateBackground : MonoBehaviour {
             }
             else if (u <= 0 && a > 0)
             {
-                newMin = Case_One_Max(u, 0, a) + initialPos;
-                newMax = Case_One_Min(u, a, t) + initialPos;
+                //S = -u^2 / 2a (v^2 = 0)
+                newMin = -Mathf.Pow(u,2)/(2 * a) + initialPos;
+                newMax = u * t + 0.5f * a * Mathf.Pow(t, 2) + initialPos;
             }
             else if (a == 0 && u >= 0)
             {
@@ -84,6 +85,16 @@ public class GenerateBackground : MonoBehaviour {
                 newMin = u * t + initialPos;
                 newMax = initialPos;
             }
+            else if (u > 0 && a > 0)
+            {
+                newMin = initialPos;
+                newMax = u * t + 0.5f * a * Mathf.Pow(t,2) +initialPos;
+            }
+            else if (u < 0 && a < 0)
+            {
+                newMax = initialPos;
+                newMin = u * t + 0.5f * a * Mathf.Pow(t, 2) + initialPos;
+            }
             else
             {
                 //im not sure what other combo's exists so this covers any for the future
@@ -92,15 +103,19 @@ public class GenerateBackground : MonoBehaviour {
                 Debug.Log("a :" + a);
                 Debug.Log("t : " + t);
             }
+            Debug.Log(newMin);
+            Debug.Log(newMax);
             if (newMin < min[dimention])
             {
-                min[dimention] = newMax;
+                min[dimention] = newMin;
             }
             if (newMax > max[dimention])
             {
                 max[dimention] = newMax;
             }
         }
+        Debug.Log(min);
+        Debug.Log(max);
     }
     //Calculates the numer of prefabs which must be used in each dimention
     private static void CalculateNumberOfInstances()

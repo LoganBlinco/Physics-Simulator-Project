@@ -99,7 +99,6 @@ public class CameraController : MonoBehaviour {
             float sign = -Mathf.Sign(input); //minus so backwards is zoom out while inwards is zoom in
             currentZoom += sign * zoomMod;
             currentZoom = MyMaths.Clamp(currentZoom, minZoom, maxZoom);
-            Debug.Log("Next zoom " + currentZoom);
             Camera.main.orthographicSize = currentZoom;
         }
     }
