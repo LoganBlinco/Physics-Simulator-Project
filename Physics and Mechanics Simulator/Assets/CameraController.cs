@@ -6,8 +6,11 @@ using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour {
 
+    //Contains reference to the object the camera must follow
     public static GameObject followTarget;
+    //Position which camera is moving towards
     public Vector3 TargetPosition;
+    //Index value of target to follow
     public static int targetIndex;
 
 
@@ -30,11 +33,13 @@ public class CameraController : MonoBehaviour {
     //Amount changed per scroll on wheel
     public static float zoomMod = 1;
 
+    //Does the camera exist in the scene.
     public static bool CameraExists;
 
     //Ran when object attached to script is initialized.
     public void Start()
     {
+        //if a camera does not exist then one must be instatiated.
         if (CameraExists == false)
         {
             CameraExists = true;
@@ -43,6 +48,7 @@ public class CameraController : MonoBehaviour {
         }
         else
         {
+            //Destroys the game object because a camera already exists
             Destroy(gameObject);
         }
         //Sets start zoom
@@ -64,14 +70,17 @@ public class CameraController : MonoBehaviour {
         }
         ControlZoom();
     }
-
+    //Gets the target which the user has selected for the camera to follow
     private void GetFollowTarget()
     {
+        //Dropbox is from UI
         targetIndex = DropBoxTarget.value-1;
         followTarget = SimulateController.ParticleInstances[targetIndex];
     }
+    //Controls movemenet when in freeRoam mode
     private void ControlFreeRoam()
     {
+        //GetAxisRaw returns 1,0,-1 depending on the d
         float input_x = Input.GetAxisRaw("Horizontal");
         float input_y = Input.GetAxisRaw("Vertical");
         gameObject.transform.position += new Vector3(
