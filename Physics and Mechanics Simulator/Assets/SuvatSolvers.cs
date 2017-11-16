@@ -10,6 +10,7 @@ public class SuvatSolvers : MonoBehaviour
     {
         //i is the dimention to calculate
         int i = 0;
+        //Dictionary reference between key and function to be ran
         var Equations = new Dictionary<string, Action>
             {
                 { "00111", () => RanOn_00111(values, i) },
@@ -31,6 +32,7 @@ public class SuvatSolvers : MonoBehaviour
             };
 
         //The emergency escape incase something goes wrong
+        //Prevents an infinite loop
         int j = 0;
         int maxj = 10;
         while (((values.GetNumberOfInputs()[0] != 5 && values.GetNumberOfInputs()[1] != 5 && values.GetNumberOfInputs()[2] != 5) || (values.inValidInput[0] == false || values.inValidInput[1] == false || values.inValidInput[2] == false)) && (j < maxj))
@@ -53,13 +55,13 @@ public class SuvatSolvers : MonoBehaviour
             j++;
         }
         return values;
-
     }
-
+    //S = (v^2-u^2) / 2a
     private static void RanOn_01110(Particle values, int i)
     {
         if (values.Acceleration[i] != 0)
         {
+            //S = (v^2-u^2) / 2a
             values.Displacement[0] = (Mathf.Pow(values.FinalVelocity[i], 2) - Mathf.Pow(values.InitialVelocity[i], 2)) / (2 * values.Acceleration[i]);
             values.Key[i] = ReplaceAtIndex(0, '1', values.Key[i]);
         }
@@ -69,12 +71,14 @@ public class SuvatSolvers : MonoBehaviour
         }
     }
 
+    //S = vt - 1/2 a t^2
     private static void RanOn_00111(Particle values, int i)
     {
         values.Displacement[i] = values.FinalVelocity[i] * values.Time - 0.5f * (values.Acceleration[i] * Mathf.Pow(values.Time, 2));
         values.Key[i] = ReplaceAtIndex(0, '1', values.Key[i]);
     }
 
+    //sets inValidInput = true (all inputs calculated)
     private static void RanOn_11111(Particle values, int i)
     {
         values.inValidInput[i] = true;
@@ -232,6 +236,8 @@ public class SuvatSolvers : MonoBehaviour
         }
     }
 
+
+    //Replaces a character of a string at the index value.
     public static string ReplaceAtIndex(int index, char value, string word)
     {
         try

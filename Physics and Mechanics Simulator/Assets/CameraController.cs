@@ -88,11 +88,16 @@ public class CameraController : MonoBehaviour {
                     input_y,
                     0f).normalized * freeSpeed;
     }
+    //Controls movement when particle lock on is selected
+    //Camera to move towards target particle with a speed proportional to the particle following.
     private void ControlLockOn()
     {
+        //Velocity is a percentage of the particle its following.Determined by the speed Mod.
         Vector3 Velocity = Particle.Instances[targetIndex].FinalVelocity + Vector3.one;
         moveSpeed = Velocity.magnitude * speedMod;
 
+        //Position to move to + the buffer.
+        //Buffer allows for an offset between camera and particle
         TargetPosition = new Vector3(
             followTarget.transform.position.x + buffer,
             followTarget.transform.position.y + buffer,
@@ -100,15 +105,17 @@ public class CameraController : MonoBehaviour {
         //moves to the target position in a period of time (moveSpeed * deltaT)
         transform.position = Vector3.Lerp(transform.position, TargetPosition, moveSpeed * Time.deltaTime);
     }
+    //Controls the zoom of the camera
     private void ControlZoom()
     {
+        // 1 for positive , 0 for no input , -1 for negative input
         float input = Input.GetAxis("Mouse ScrollWheel");
         if (input != 0)
         {
             float sign = -Mathf.Sign(input); //minus so backwards is zoom out while inwards is zoom in
             currentZoom += sign * zoomMod;
-            currentZoom = MyMaths.Clamp(currentZoom, minZoom, maxZoom);
-            Camera.main.orthographicSize = currentZoom;
+            currentZoom = MyMaths.Clamp(currentZoom, minZoom, maxZoom); //Clamps the currentZoom between minZoom and maxZoom
+            Camera.main.orthographicSize = currentZoom; // Updates zoom
         }
     }
 }

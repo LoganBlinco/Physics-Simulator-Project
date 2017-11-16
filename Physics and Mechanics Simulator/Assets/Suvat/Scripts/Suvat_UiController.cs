@@ -6,11 +6,18 @@ using System;
 
 public class Suvat_UiController : MonoBehaviour {
 
+    //stores reference to the UI controller instance
+    //Allows it to be accessed anywhere in program
     public static Suvat_UiController instance;
 
+    //Stroes reference to the Particle infomation panel
     public GameObject ParticleInfomationCanvas;
+    //Stroes reference to the Particle graphs panel
     public GameObject ParticleGraphCanvas;
 
+    //Suvat input items
+    //First character corresponds to Suvat value
+    //Second character , after underscore , corresponds to dimention
     public InputField S_x, S_y, S_z;
     public InputField U_x, U_y, U_z;
     public InputField V_x, V_y, V_z;
@@ -19,26 +26,42 @@ public class Suvat_UiController : MonoBehaviour {
     public InputField R_x, R_y, R_z;
     public InputField Radius;
 
+    //Time label which contains the current simulation time.
     public Text Label_Time;
-
+    //Reference to the dropbox containing the number of dimentions
     public Dropdown DropBox_Dimentions;
+    //Reference to the dropbox containing the particle currently selected
     public Dropdown DropBox_Particle;
+    //Reference to the dropbox containing the camera target
     public Dropdown DropBox_CameraTarget;
 
+    //Reference to the slider containing the simulation speed
     public Slider Slider_SimulationSpeed;
+    //Reference to the Label containing the simulation speed value on the Slider_SimulationSpeed Slider
     public Text Label_Speed;
 
+    //Reference to Toggle containing whether gravity should be added or not
+    //State is true or false
     public Toggle Gravity;
 
 
+    //unity method ran when the object is first instatiated
+    //This occurs when the scene is first loaded in the case of the UIController
     public void Start()
     {
         //Creates reference for all methods to access.
         instance = this;
+
+        //Gives the Camera and Simulate Controllers a reference to the required Dropboxes and Labels,
         CameraController.DropBoxTarget = DropBox_CameraTarget;
         SimulateController.LabelTime = Label_Time;
 
+
+        //begins program with Particle infomation selected
+        //Enabled Particle infomation panel
+        //Disables Particle graphs panel
         OnParticleInfomationButtonClicked();
+        //Turns all dimention inputs on.
         SetDimention_X(true);
         SetDimention_Y(true);
         SetDimention_Z(true);
@@ -46,10 +69,15 @@ public class Suvat_UiController : MonoBehaviour {
 
     #region Simulation buttons
 
+    //Ran when pause button is clicked
+    //Pauses simulation
     public void OnPauseClicked()
     {
         SimulateController.isSimulating = false;
     }
+
+    //Ran when play button is clicked
+    //Plays simulation
     public void OnPlayClicked()
     {
         if (SimulateController.simulationTime == SimulateController.maxTime)
@@ -62,34 +90,50 @@ public class Suvat_UiController : MonoBehaviour {
         }
     }
 
+    //Ran when the SimulationSpeed slider changes value due to user input
+    //Must update the Label_Speed text to match current slider value
     public void OnSlider_SimulationSpeedChanged()
     {
         //Rounding to 2 Decimal places
         string value2DP = Slider_SimulationSpeed.value.ToString("n2");
+        //Updates the label's text
         Label_Speed.text = "Speed = " + value2DP + "x";
     }
     #endregion
 
+    //Ran when the Calculate button is clicked
+    //Begins the calculation proccess
     public void OnCalculateClicked()
     {
         Suvat.OnCalculateClicked();
     }
+
+    //Ran when the reset button is clicked
     public void OnResetClicked()
     {
         ResetUI();
     }
+
+    //Ran when the Simulation button is clicked
     public void OnSimulateClicked()
     {
+        //Calculates values required for simulation
         Suvat.OnCalculateClicked();
+        //Creates reference in SImulateController to the Speed Slider in UI
         SimulateController.speedInput = Slider_SimulationSpeed;
+        //Begins the simulation process in the SimulateController class
         SimulateController.OnSimulateClicked();
     }
 
+    //Ran when Particle infomation is clicked
+    //Sets the Particle infomation panel active
     public void OnParticleInfomationButtonClicked()
     {
         ParticleInfomationCanvas.SetActive(true);
         ParticleGraphCanvas.SetActive(false);
     }
+    //Ran when Particle graphs is clicked
+    //Sets the Particle grapghs panel active
     public void OnParticleGraphButtonClicked()
     {
         ParticleInfomationCanvas.SetActive(false);
@@ -97,34 +141,45 @@ public class Suvat_UiController : MonoBehaviour {
     }
 
     #region Updating dimentions input fields
+
+    //Ran when Dimentions DropBox value is changed
+    //Must update the dimentional inputs which are active to the user
     public void OnDropBox_DimentionsChanged()
     {
+        //gets current value in Dimentions Dropbox
         int value = DropBox_Dimentions.value;
         switch(value)
         {
+            //1 Dimentions selected
             case 0:
                 SetDimention_X(true);
                 SetDimention_Y(false);
                 SetDimention_Z(false);
+                //Changes the time input box size and positition to fit the others
                 changeFieldSize(0.319f);
                 changeFieldPosition(200);
                 break;
+            //2 Dimentions selected
             case 1:
                 SetDimention_X(true);
                 SetDimention_Y(true);
                 SetDimention_Z(false);
+                //Changes the time input box size and positition to fit the others
                 changeFieldSize(0.66f);
                 changeFieldPosition(261.5f);
                 break;
+            //3 Dimentions selected
             case 2:
                 SetDimention_X(true);
                 SetDimention_Y(true);
                 SetDimention_Z(true);
+                //Changes the time input box size and positition to fit the others
                 changeFieldSize(1);
                 changeFieldPosition(322);
                 break;
         } 
     }
+    //Sets input elements in dimention activity to the bool state
     private void SetDimention_X(bool state)
     {
         S_x.gameObject.SetActive(state);
@@ -133,6 +188,7 @@ public class Suvat_UiController : MonoBehaviour {
         A_x.gameObject.SetActive(state);
         R_x.gameObject.SetActive(state);
     }
+    //Sets input elements in dimention activity to the bool state
     private void SetDimention_Y(bool state)
     {
         S_y.gameObject.SetActive(state);
@@ -141,6 +197,7 @@ public class Suvat_UiController : MonoBehaviour {
         A_y.gameObject.SetActive(state);
         R_y.gameObject.SetActive(state);
     }
+    //Sets input elements in dimention activity to the bool state
     private void SetDimention_Z(bool state)
     {
         S_z.gameObject.SetActive(state);
@@ -149,6 +206,8 @@ public class Suvat_UiController : MonoBehaviour {
         A_z.gameObject.SetActive(state);
         R_z.gameObject.SetActive(state);
     }
+
+
     private void changeFieldSize(float size)
     {
         var temp_Time = Time.gameObject.transform.localScale;
@@ -161,43 +220,57 @@ public class Suvat_UiController : MonoBehaviour {
     }
     #endregion
 
-
+    //Ran when the value of DropBox_Particle is changed
+    //Must check if add particle has been selected and if so add it
     public void OnDropBox_ParticleChanged()
     {
+        //Number of options in dropbox
         int maximum = DropBox_Particle.options.Count;
+        //value dropbo has selected
         int value = DropBox_Particle.value;
+        //"Add Particle" is the last option
+        //therefore maximum -1
+        //cannot add a particle while simulation is occuring
         if (value == maximum - 1 && SimulateController.isSimulating == false)
         {
+            //Adds the additional particle to the dropbox's
             AddOptionToDropBox(maximum);
         }
-
         //Updates values depending on the particle selected.
         UpdateValues();
     }
 
+    //Adds an additional particle to the dropbox
+    //option must be added to camera target and particle selections
     private void AddOptionToDropBox(int size)
     {
+        //Gets the current option in the particle dropbox.
         Dropdown.OptionData[] oldOptions = new Dropdown.OptionData[size + 1];
         for (int i = 0; i < size; i++)
         {
             oldOptions[i] = DropBox_Particle.options[i];
         }
+        //Clears the dropbox's options
         DropBox_Particle.options.Clear();
         DropBox_CameraTarget.options.Clear();
         string _text = "Free Roam ";
+        //Adds the Free roam option to dropbox particles
         DropBox_CameraTarget.options.Add(new Dropdown.OptionData() { text = _text });
+        //Adds previous options to CameraTarget and Particle dropboxes
         for (int i = 0; i < size - 1; i++)
         {
             DropBox_Particle.options.Add(oldOptions[i]);
             DropBox_CameraTarget.options.Add(oldOptions[i]);
         }
+        //Adds additioanl particle to options
         _text = "Particle " + size.ToString();
         DropBox_Particle.options.Add(new Dropdown.OptionData() { text = _text });
         DropBox_CameraTarget.options.Add(new Dropdown.OptionData() { text = _text });
-
+        //Adds the add particle option to the Particle dropbox 
         _text = "Add Particle";
         DropBox_Particle.options.Add(new Dropdown.OptionData() { text = _text });
-
+        //Selects the added particle
+        //A glitch means that the first selection does not occur therefore a dummy selection occurs to fix this 
         DropBox_Particle.value = size - 2;
         DropBox_Particle.value = size - 1;
     }

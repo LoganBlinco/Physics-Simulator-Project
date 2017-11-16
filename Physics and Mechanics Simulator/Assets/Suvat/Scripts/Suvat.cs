@@ -5,12 +5,17 @@ using UnityEngine;
 
 public class Suvat : MonoBehaviour {
 
+    //Value of gravity which is added when gravity is enabled
     static float Gravity = 9.8f;
 
+    //Ran when the calculate button is clicked on the UI.
     public static void OnCalculateClicked()
     {
+        //Creates new particle instance
         Particle values = new Particle();
+        //gets number of dimentions used from UI
         int dimentions = Suvat_UiController.instance.DropBox_Dimentions.value + 1;
+        //gets particle number from UI dropbox
         int particle = Suvat_UiController.instance.DropBox_Particle.value;
         getMisc(ref values);
         getSuvat(ref values, dimentions);
@@ -171,7 +176,7 @@ public class Suvat : MonoBehaviour {
     private static void getMisc(ref Particle values)
     {
         Suvat_UiController controller = Suvat_UiController.instance;
-        if (controller.Radius.text != "")
+        if (controller.Radius.text != "" && controller.Radius.text != "0")
         {
             values.Radius = float.Parse(controller.Radius.text);
         }
