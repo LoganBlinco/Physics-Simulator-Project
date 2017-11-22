@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class MyMaths : MonoBehaviour
 {
-    //Rounds the value of each element up inside of the Vector3
+    //Goes through each element inside of the vector
+    //rounds such element's value to the next integer
     public static Vector3 Vector_Ceil(Vector3 v)
     {
+        //The vector to be returned
         Vector3 newVector = new Vector3();
         for (int i = 0; i < 3; i++)
         {
@@ -19,8 +21,10 @@ public class MyMaths : MonoBehaviour
     //Returns the magnitude (no direction) of the value inputted into parameters
     public static float Magnitude(float value)
     {
+        //Determines if value is negative
         if (value < 0)
         {
+            //negative times a negative is positive
             return -value;
         }
         //if the value is not negative then it does not need additional manipulation
@@ -30,7 +34,7 @@ public class MyMaths : MonoBehaviour
         }
     }
 
-    //Returns the square root of the value
+    //Returns the square root of the value (approximated)
     //Uses the babylonian algorithm.
     //Infomation can be found at : en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method
     public static float SquareRoot(float x)
@@ -45,10 +49,11 @@ public class MyMaths : MonoBehaviour
         float current = 2.0f;
         //The itteration shall be completed when the current = guess.
         //This occurs because of the 32 bit floating point binary value stored.
+        //Could be changed to 3-6 itterations for performance improvements
         while (guess != current)
         {
             guess = current;
-            //Performs algorithm
+            //Performs algorithm of babylonian apporximation
             current = (float)(0.5 * (guess + x / guess));
         }
         return current;
@@ -114,8 +119,10 @@ public class MyMaths : MonoBehaviour
         else
         {
             float counter = 0;
+            //For every element in the vectors
             for (int i = 0; i < a.Count; i++)
             {
+                //Multiply the elements
                 counter += a[i] * b[i];
             }
             //value of scalar product
@@ -137,6 +144,7 @@ public class MyMaths : MonoBehaviour
     //returns the angle between two vectors(lists).
     public static float DotProduct_Angle(List<float> a, List<float> b)
     {
+        //Vectors must have same dimentions
         if (a.Count != b.Count)
         {
             return 0;

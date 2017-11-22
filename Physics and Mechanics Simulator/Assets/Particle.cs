@@ -44,9 +44,10 @@ public class Particle {
             //for every character
             for (character = 0; character < Key[dimention].Length; character++)
             {
-                //if character = '1'
+                //if character = '1' , meaning value has been calculated
                 if (Key[dimention][character] == '1')
                 {
+                    //valid inputs increases by one
                     numInputs += 1;
                 }
             }

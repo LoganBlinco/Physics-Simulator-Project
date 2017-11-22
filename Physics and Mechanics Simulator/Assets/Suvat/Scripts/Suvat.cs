@@ -17,10 +17,17 @@ public class Suvat : MonoBehaviour {
         int dimentions = Suvat_UiController.instance.DropBox_Dimentions.value + 1;
         //gets particle number from UI dropbox
         int particle = Suvat_UiController.instance.DropBox_Particle.value;
+        //Gets the non-suvat values and asseings them to values
         getMisc(ref values);
+        //gets the suvat values in all dimentions given 
         getSuvat(ref values, dimentions);
+        //Checks that 3 or more inputs have been entered.
         ValidateCheck(ref values);
+        //Updates the suvat values displayed to the user
         Suvat_UiController.instance.UpdateUI(values);
+        //Stores the instance into the Instances list in Particle.
+        //Try must be used because the index may not be deffined yet if a particle has not been created with such index yet
+        //if no particle with index has been created then it must be the final particle.
         try
         {
             Particle.Instances[particle] = values;
@@ -50,25 +57,32 @@ public class Suvat : MonoBehaviour {
 
     #region Getting inputs
 
+    //Runs the methods required to get the Suvat inputs in all dimentions required
     private static void getSuvat(ref Particle values, int dimentions)
     {
         if (dimentions >= 1)
         {
+            //Gets inputs in the X dimention
             GetInput_Suvat_x(ref values, dimentions);
             if (dimentions >= 2)
             {
+                //Gets inputs in the Y dimention
                 GetInput_Suvat_y(ref values, dimentions);
                 if (dimentions >= 3)
                 {
+                    //Gets inputs in the Z dimention
                     GetInput_Suvat_z(ref values, dimentions);
                 }
                 else
                 {
+                    //Only two dimentions selected therefore the 2nd element (third dimention) has invalid inputs
+                    //Ie: no inputs
                     values.inValidInput[2] = true;
                 }
             }
             else
             {
+                //Only 1 dimention selcted.Therefore Y and Z are disabled (elements 1 and 2)
                 values.inValidInput[1] = true;
                 values.inValidInput[2] = true;
             }
@@ -76,6 +90,7 @@ public class Suvat : MonoBehaviour {
         }
         else
         {
+            //No dimentions are selected.Therefore all dimentions are disabled
             values.inValidInput[0] = true;
             values.inValidInput[1] = true;
             values.inValidInput[2] = true;
@@ -173,19 +188,28 @@ public class Suvat : MonoBehaviour {
         }
     }
 
+
+    //Gets non suvat based inputs from the UI and sassigns values to the particle instance
     private static void getMisc(ref Particle values)
     {
+        //Reference to the UI instance that being used
         Suvat_UiController controller = Suvat_UiController.instance;
+        //Radius cannot be empty text or 0
         if (controller.Radius.text != "" && controller.Radius.text != "0")
         {
+            //converts text to float from the input field
             values.Radius = float.Parse(controller.Radius.text);
         }
         else
         {
+            //If the radius has not been stated or =0 then a default value of 1 is assigned.
             values.Radius = 1;
         }
+        //If the gravity toggle has been enabled
         if (controller.Gravity.isOn == true)
         {
+            //gravity must be added.Gravity is negative therefore a vector subtraction occurs of the magnitude of gravity.
+            //Y component only
             values.Acceleration -= new Vector3(0, Gravity, 0);
         }
     }

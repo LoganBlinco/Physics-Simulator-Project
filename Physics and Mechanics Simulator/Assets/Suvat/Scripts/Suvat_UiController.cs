@@ -80,14 +80,7 @@ public class Suvat_UiController : MonoBehaviour {
     //Plays simulation
     public void OnPlayClicked()
     {
-        if (SimulateController.simulationTime == SimulateController.maxTime)
-        {
-            //increasse time thing
-        }
-        else
-        {
-            SimulateController.isSimulating = true;
-        }
+        SimulateController.isSimulating = true;
     }
 
     //Ran when the SimulationSpeed slider changes value due to user input
@@ -275,15 +268,20 @@ public class Suvat_UiController : MonoBehaviour {
         DropBox_Particle.value = size - 1;
     }
 
+    //Updates values in the User interface depending on the particle selected by the user
     private void UpdateValues()
     {
+        //Gets the particle index value fromt the dropbox
         int current = DropBox_Particle.value;
+        //particle may not be created yet therefore try ,catch exception prevents error.
         try
         {
+            //Updates UI using a particles values
             UpdateUI(Particle.Instances[current]);
         }
         catch (ArgumentOutOfRangeException e)
         {
+            //If no particle is found the default values should be used
             ResetUI();
         }
     }
@@ -301,6 +299,8 @@ public class Suvat_UiController : MonoBehaviour {
         }
     }
 
+
+    //Updates values of the UI with the values inside of the Particle parameter given in each dimention
     public void UpdateUI(Particle values)
     {
         S_x.text = values.Displacement[0].ToString();
@@ -328,6 +328,7 @@ public class Suvat_UiController : MonoBehaviour {
         Radius.text = values.Radius.ToString();
     }
 
+    //Resets particle input fields contents to empty string or default values
     public void ResetUI()
     {
         S_x.text = "";
@@ -353,6 +354,7 @@ public class Suvat_UiController : MonoBehaviour {
         R_z.text = "";
 
         Radius.text = "";
+        //Unchecks the toggle
         Gravity.isOn = false;
     }
 

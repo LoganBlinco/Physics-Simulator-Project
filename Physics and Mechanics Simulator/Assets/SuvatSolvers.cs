@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class SuvatSolvers : MonoBehaviour
 {
-
+    //Ran when a Suvat calculation is too occur on the passed in instance of Particle.
     public static Particle FindEquation(Particle values)
     {
         //i is the dimention to calculate
         int i = 0;
         //Dictionary reference between key and function to be ran
+        //When the key is indexed the function is ran with parameters values and i
         var Equations = new Dictionary<string, Action>
             {
                 { "00111", () => RanOn_00111(values, i) },
@@ -35,21 +36,29 @@ public class SuvatSolvers : MonoBehaviour
         //Prevents an infinite loop
         int j = 0;
         int maxj = 10;
+        //While their are still values to calculate in any dimentions
+        //and not all dimentions have invalid inputs
         while (((values.GetNumberOfInputs()[0] != 5 && values.GetNumberOfInputs()[1] != 5 && values.GetNumberOfInputs()[2] != 5) || (values.inValidInput[0] == false || values.inValidInput[1] == false || values.inValidInput[2] == false)) && (j < maxj))
         {
+            //Dimention has 3 or more inputs
             if (values.GetNumberOfInputs()[0] >= 3)
             {
                 i = 0;
+                //Calls the corressponding equation
                 Equations[values.Key[i]]();
             }
+            //Dimention has 3 or more inputs
             if (values.GetNumberOfInputs()[1] >= 3)
             {
                 i = 1;
+                //Calls the corressponding equation
                 Equations[values.Key[i]]();
             }
+            //Dimention has 3 or more inputs
             if (values.GetNumberOfInputs()[2] >= 3)
             {
                 i = 2;
+                //Calls the corressponding equation
                 Equations[values.Key[i]]();
             }
             j++;
@@ -59,6 +68,7 @@ public class SuvatSolvers : MonoBehaviour
     //S = (v^2-u^2) / 2a
     private static void RanOn_01110(Particle values, int i)
     {
+        //cannot devide by 0.Therefore would be invalid input
         if (values.Acceleration[i] != 0)
         {
             //S = (v^2-u^2) / 2a
@@ -74,6 +84,7 @@ public class SuvatSolvers : MonoBehaviour
     //S = vt - 1/2 a t^2
     private static void RanOn_00111(Particle values, int i)
     {
+        //S = vt - 1/2 a t^2
         values.Displacement[i] = values.FinalVelocity[i] * values.Time - 0.5f * (values.Acceleration[i] * Mathf.Pow(values.Time, 2));
         values.Key[i] = ReplaceAtIndex(0, '1', values.Key[i]);
     }
@@ -95,7 +106,7 @@ public class SuvatSolvers : MonoBehaviour
         values.Displacement[i] = 0.5f * (values.InitialVelocity[i] + values.FinalVelocity[i]) * values.Time;
         values.Key[i] = ReplaceAtIndex(0, '1', values.Key[i]);
     }
-    //Uses 01101
+    //Input condition used 01101
     public static void RanOn_01111(Particle values, int i)
     {
         RanOn_01101(values, i);
@@ -103,20 +114,13 @@ public class SuvatSolvers : MonoBehaviour
     // s = ut + 1/2 * a * t^2 rearranged for u
     public static void RanOn_10011(Particle values, int i)
     {
-        if (values.Time == 0)
-        {
-            values.inValidInput[i] = true;
-        }
-        else
-        {
-            values.InitialVelocity[i] = (values.Displacement[i] / values.Time) - 0.5f * (values.Acceleration[i] * values.Time);
-            values.Key[i] = ReplaceAtIndex(1, '1', values.Key[i]);
-        }
-
+        values.InitialVelocity[i] = (values.Displacement[i] / values.Time) - 0.5f * (values.Acceleration[i] * values.Time);
+        values.Key[i] = ReplaceAtIndex(1, '1', values.Key[i]);
     }
     // s = 1/2 (u + v)t rearranged for u
     public static void RanOn_10101(Particle values, int i)
     {
+        //Cannot divide by 0
         if (values.Time == 0)
         {
             values.inValidInput[i] = true;
@@ -131,6 +135,7 @@ public class SuvatSolvers : MonoBehaviour
     public static void RanOn_10110(Particle values, int i)
     {
         float InsideRoot = Mathf.Pow(values.FinalVelocity[i], 2) - 2 * values.Acceleration[i] * values.Displacement[i];
+        //Square root must be positive
         if (InsideRoot < 0)
         {
             values.inValidInput[i] = true;
@@ -151,6 +156,7 @@ public class SuvatSolvers : MonoBehaviour
     //s = 0.5 * *u+v)t , rearranged for v
     public static void RanOn_11001(Particle values, int i)
     {
+        //Cannot divide by 0 therefore will be invalid input.
         if (values.Time == 0)
         {
             values.inValidInput[i] = true;
@@ -166,6 +172,7 @@ public class SuvatSolvers : MonoBehaviour
     public static void RanOn_11010(Particle values, int i)
     {
         float insideRoot = Mathf.Pow(values.InitialVelocity[i], 2) + (2 * values.Acceleration[i] * values.Displacement[i]);
+        //Square root must be positive.Therefore invalid input if not true
         if (insideRoot < 0)
         {
             values.inValidInput[i] = true;
@@ -190,6 +197,7 @@ public class SuvatSolvers : MonoBehaviour
     // V^2 = u^2 + 2as reaaragned for a
     public static void RanOn_11100(Particle values, int i)
     {
+        //Cannot divide by 0 which would cause invalid inputs
         if (values.Displacement[i] == 0)
         {
             values.inValidInput[i] = true;
@@ -203,6 +211,7 @@ public class SuvatSolvers : MonoBehaviour
     //V = u + at , rearranged for a
     public static void RanOn_11101(Particle values, int i)
     {
+        //Cannot divide by 0
         if (values.Time == 0)
         {
             values.inValidInput[i] = true;
@@ -216,8 +225,10 @@ public class SuvatSolvers : MonoBehaviour
     //V = u + at , rearranged for t
     public static void RanOn_11110(Particle values, int i)
     {
+        //Diffrent equations are used depending on acceleration
         if (values.Acceleration[i] == 0)
         {
+            //Cannot divide by 0
             if ((values.InitialVelocity[i] + values.FinalVelocity[i]) != 0)
             {
                 values.Time = 2 * values.Displacement[i] / (values.InitialVelocity[i] + values.FinalVelocity[i]);
@@ -229,6 +240,7 @@ public class SuvatSolvers : MonoBehaviour
         }
         else
         {
+            //Time calculations change the Key in 3 dimentions because time is shared
             values.Time = (values.FinalVelocity[i] - values.InitialVelocity[i]) / values.Acceleration[i];
             values.Key[0] = ReplaceAtIndex(4, '1', values.Key[0]);
             values.Key[1] = ReplaceAtIndex(4, '1', values.Key[1]);
@@ -242,10 +254,13 @@ public class SuvatSolvers : MonoBehaviour
     {
         try
         {
+            //Creates a char array for each character in word
             char[] letters = word.ToCharArray();
             letters[index] = value;
+            //creates a string from the array
             return new string(letters);
         }
+        //if index out of range
         catch
         {
             return "";
