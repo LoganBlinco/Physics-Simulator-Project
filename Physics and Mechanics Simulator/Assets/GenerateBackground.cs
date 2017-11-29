@@ -85,6 +85,7 @@ public class GenerateBackground : MonoBehaviour {
             {
                 //s = u^2 / 2a + r
                 newMax = -Mathf.Pow(u, 2) / (2 * a) + initialPos;
+                //A special case for calculations
                 newMin = Case_One_Min(u, a, t) + initialPos;
             }
             else if (u <= 0 && a > 0)
@@ -144,6 +145,7 @@ public class GenerateBackground : MonoBehaviour {
         temp = MyMaths.Vector_Ceil(temp);
         for (int i = 0; i < 3; i++)
         {
+            //Number of instances to be created must be positive
             NumberOfInstances[i] = MyMaths.Magnitude(temp[i]);
         }
     }
@@ -172,10 +174,12 @@ public class GenerateBackground : MonoBehaviour {
         }
     }
 
-    //Method used when calculating vertex
+    //Method used when calculating vertex in a special case
     private static float Case_One_Min(float u, float a, float t)
     {
         //when t = 0,displacement = 0
+        //Minimum occurs at either t = 0 or t max
+
         //s = ut + 1/2 at^2
         float maxTime = u * t + 0.5f * a * Mathf.Pow(t, 2);
         if (maxTime < 0)

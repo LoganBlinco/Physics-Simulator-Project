@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour {
     public static int targetIndex;
 
 
-    //Reference to dropbox where target comes from
+    //Reference to dropbox where target comes from in UI
     public static Dropdown DropBoxTarget;
 
     public static float moveSpeed;

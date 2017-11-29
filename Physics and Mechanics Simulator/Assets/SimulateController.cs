@@ -17,9 +17,10 @@ public class SimulateController : MonoBehaviour {
 
     //change of time between frames
     static float deltaT;
-    
+
+    //Boolean state depending if the program is simulating or not
     public static bool isSimulating;
-    //Simulations which has occured in simulation
+    //Simulation time which has occured in simulation
     public static float simulationTime;
     //maximum time for simulation
     public static float maxTime;
@@ -65,7 +66,7 @@ public class SimulateController : MonoBehaviour {
         maxTime = 0;
         simulationSpeed = 0;
     }
-    //Gets the maximum time which any of the simulations have
+    //Gets the maximum time from all particles to be simulated
     private static void GetMaxTime()
     {
         for (int i = 0; i < Particle.Instances.Count; i++)
@@ -139,6 +140,7 @@ public class SimulateController : MonoBehaviour {
     {
         for (int i =0;i<Particle.Instances.Count;i++)
         {
+            //Performs movement for the particle with index i
             MoveParticles_Controller(i);
         }
     }
