@@ -38,26 +38,27 @@ public class Suvat : MonoBehaviour {
         }
     }
 
+    //Checks if atleast 3 inputs in a single dimention have been inputted
+    //If so program calculates all values
+    //If not program outputs error message to user
     private static void ValidateCheck(ref Particle values)
     {
         if (values.GetNumberOfInputs()[0] >= 3 || values.GetNumberOfInputs()[1] >= 3 || values.GetNumberOfInputs()[2] >= 3)
         {
+            //Caclulates the values of quantities in all dimentions
             values = SuvatSolvers.FindEquation(values);
         }
         else
         {
             string msg = "You must input atleast 3 quantities in one of the dimentions";
-            //Must do
-            //Must do
-            //Unity.CreateMessagebox(msg);
-            Debug.Log("Invalid input");
+            Debug.Log(msg);
         }
     }
 
 
     #region Getting inputs
 
-    //Runs the methods required to get the Suvat inputs in all dimentions required
+    //Runs the methods required to get the Suvat inputs in all dimentions required from the UI.
     private static void getSuvat(ref Particle values, int dimentions)
     {
         if (dimentions >= 1)
@@ -97,8 +98,13 @@ public class Suvat : MonoBehaviour {
         }
     }
 
+    //Gets the inputs from the user for each Suvat quantitity in the X dimention
+    //If the input is not NULL then Key is updated for the dimention and element
     private static void GetInput_Suvat_x(ref Particle values, int dimentions)
     {
+        //float.parse converts a string to float type
+
+        //Reference to the UI element
         Suvat_UiController controller = Suvat_UiController.instance;
         if (controller.S_x.text != "")
         {
@@ -130,8 +136,13 @@ public class Suvat : MonoBehaviour {
             values.InitialPosition[0] = float.Parse(controller.R_x.text);
         }
     }
+    //Gets the inputs from the user for each Suvat quantitity in the Y dimention
+    //If the input is not NULL then Key is updated for the dimention and element
     private static void GetInput_Suvat_y(ref Particle values, int dimentions)
     {
+        //float.parse converts a string to float type
+
+        //Reference to the UI element
         Suvat_UiController controller = Suvat_UiController.instance;
         if (controller.S_y.text != "")
         {
@@ -150,7 +161,7 @@ public class Suvat : MonoBehaviour {
         }
         if (controller.A_y.text != "")
         {
-            //+= because gravity may be added by the toggle
+            //+= because gravity may be added by the toggle , thus cannot be strickly equal
             values.Acceleration[1] += float.Parse(controller.A_y.text);
             values.Key[1] = ReplaceAtIndex(3, '1', values.Key[1]);
         }
@@ -159,8 +170,13 @@ public class Suvat : MonoBehaviour {
             values.InitialPosition[1] = float.Parse(controller.R_y.text);
         }
     }
+    //Gets the inputs from the user for each Suvat quantitity in the Z dimention
+    //If the input is not NULL then Key is updated for the dimention and element
     private static void GetInput_Suvat_z(ref Particle values, int dimentions)
     {
+        //float.parse converts a string to float type
+
+        //Reference to the UI element
         Suvat_UiController controller = Suvat_UiController.instance;
         if (controller.S_z.text != "")
         {
@@ -216,6 +232,7 @@ public class Suvat : MonoBehaviour {
 
     #endregion
 
+    //Repalces a character in a string and returns the new string
     public static string ReplaceAtIndex(int index, char value, string word)
     {
         try
