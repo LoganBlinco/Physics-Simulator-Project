@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Suvat : MonoBehaviour {
@@ -22,36 +23,45 @@ public class Suvat : MonoBehaviour {
         //gets the suvat values in all dimentions given 
         getSuvat(ref values, dimentions);
         //Checks that 3 or more inputs have been entered.
-        ValidateCheck(ref values);
-        //Updates the suvat values displayed to the user
-        Suvat_UiController.instance.UpdateUI(values);
-        //Stores the instance into the Instances list in Particle.
-        //Try must be used because the index may not be deffined yet if a particle has not been created with such index yet
-        //if no particle with index has been created then it must be the final particle.
-        try
-        {
-            Particle.Instances[particle] = values;
-        }
-        catch
-        {
-            Particle.Instances.Add(values);
-        }
-    }
-
-    //Checks if atleast 3 inputs in a single dimention have been inputted
-    //If so program calculates all values
-    //If not program outputs error message to user
-    private static void ValidateCheck(ref Particle values)
-    {
-        if (values.GetNumberOfInputs()[0] >= 3 || values.GetNumberOfInputs()[1] >= 3 || values.GetNumberOfInputs()[2] >= 3)
+        if (IsValid(ref values))
         {
             //Caclulates the values of quantities in all dimentions
             values = SuvatSolvers.FindEquation(values);
+            //Updates the suvat values displayed to the user
+            Suvat_UiController.instance.UpdateUI(values);
+            //Stores the instance into the Instances list in Particle.
+            //Try must be used because the index may not be deffined yet if a particle has not been created with such index yet
+            //if no particle with index has been created then it must be the final particle.
+            try
+            {
+                Particle.Instances[particle] = values;
+            }
+            catch
+            {
+                Particle.Instances.Add(values);
+            }
         }
         else
         {
-            string msg = "You must input atleast 3 quantities in one of the dimentions";
-            Debug.Log(msg);
+            string title = "Invalid input";
+            string message = "You must enter at least 3 quantities in a dimention";
+            //Creates message box with title , message and button with text "Ok"
+            EditorUtility.DisplayDialog(title, message, "Ok");
+        }
+
+    }
+
+    //Checks if atleast 3 inputs in a single dimention have been inputted
+    //Returns true or false
+    private static bool IsValid(ref Particle values)
+    {
+        if (values.GetNumberOfInputs()[0] >= 3 || values.GetNumberOfInputs()[1] >= 3 || values.GetNumberOfInputs()[2] >= 3)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

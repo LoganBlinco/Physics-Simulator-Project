@@ -358,5 +358,29 @@ public class Suvat_UiController : MonoBehaviour {
         Gravity.isOn = false;
     }
 
+    public void OnTextChanged(InputField box)
+    {
+        try
+        {
+            string fieldInput = box.text;
+            int size = fieldInput.Length;
+            char lastChar = fieldInput[size - 1];
+            //Checks if the character is a number (0-9) and return true or false
+            if (Char.IsNumber(lastChar) || lastChar == '.' || lastChar == '-' || lastChar == '+')
+            {
+                return;
+            }
+            else
+            {
+                //Remove character
+                box.text = fieldInput.Substring(0, size - 1);
+            }
+        }
+        catch(IndexOutOfRangeException e)
+        {
+
+        }
+    }
+
 
 }
