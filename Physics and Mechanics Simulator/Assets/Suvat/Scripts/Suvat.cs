@@ -159,7 +159,10 @@ public class Suvat : MonoBehaviour {
         if (controller.Time.text != "")
         {
             values.Time = float.Parse(controller.Time.text);
+            //Time shared between all dimentions
             values.Key[0] = ReplaceAtIndex(4, '1', values.Key[0]);
+            values.Key[1] = ReplaceAtIndex(4, '1', values.Key[0]);
+            values.Key[2] = ReplaceAtIndex(4, '1', values.Key[0]);
         }
         if (controller.R_x.text != "")
         {
