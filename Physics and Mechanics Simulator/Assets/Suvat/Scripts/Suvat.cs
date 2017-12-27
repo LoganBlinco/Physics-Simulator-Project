@@ -23,7 +23,7 @@ public class Suvat : MonoBehaviour {
         //gets the suvat values in all dimentions given 
         getSuvat(ref values, dimentions);
         //Checks that 3 or more inputs have been entered.
-        if (IsValid(ref values))
+        if (IsValid(ref values, dimentions))
         {
             //Caclulates the values of quantities in all dimentions
             values = SuvatSolvers.FindEquation(values);
@@ -44,7 +44,7 @@ public class Suvat : MonoBehaviour {
         else
         {
             string title = "Invalid input";
-            string message = "You must enter at least 3 quantities in a dimention";
+            string message = "You must enter at least 3 quantities in a dimention and two quantities in all other dimentions active";
             //Creates message box with title , message and button with text "Ok"
             EditorUtility.DisplayDialog(title, message, "Ok");
         }
@@ -52,10 +52,17 @@ public class Suvat : MonoBehaviour {
     }
 
     //Checks if atleast 3 inputs in a single dimention have been inputted
+    //Checks if dimentions active have atleast 2 dimentiosn entered (min amount for calculation)
     //Returns true or false
-    private static bool IsValid(ref Particle values)
+    private static bool IsValid(ref Particle values, int dimentions)
     {
-        if (values.GetNumberOfInputs()[0] >= 3 || values.GetNumberOfInputs()[1] >= 3 || values.GetNumberOfInputs()[2] >= 3)
+        //Bool based on if the program has atleast 1 dimention with three inputs
+        bool minThreeInputs = values.GetNumberOfInputs()[0] >= 3 || values.GetNumberOfInputs()[1] >= 3 || values.GetNumberOfInputs()[2] >= 3;
+
+        //Gets the number of inputs above 2 from all dimentions active
+        int numberAboveTwo = GetNumberAboveN(values,2,dimentions);
+        //Must have atleast 3 inputs and other dimentions have more than 2 inputs
+        if (minThreeInputs == true && numberAboveTwo == dimentions)
         {
             return true;
         }
@@ -63,6 +70,19 @@ public class Suvat : MonoBehaviour {
         {
             return false;
         }
+    }
+    //Returns the number of dimentions which have got >= N number of inputs
+    private static int GetNumberAboveN(Particle values, int N, int dimentions)
+    {
+        int numberAboveN = 0;
+        for (int i = 0; i < dimentions; i++)
+        {
+            if (values.GetNumberOfInputs()[i] >= N)
+            {
+                numberAboveN += 1;
+            }
+        }
+        return numberAboveN;
     }
 
 
