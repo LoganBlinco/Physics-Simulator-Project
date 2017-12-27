@@ -66,182 +66,182 @@ public class SuvatSolvers : MonoBehaviour
         return values;
     }
     //S = (v^2-u^2) / 2a
-    private static void RanOn_01110(Particle values, int i)
+    private static void RanOn_01110(Particle values, int dimention)
     {
         //cannot devide by 0.Therefore would be invalid input
-        if (values.Acceleration[i] != 0)
+        if (values.Acceleration[dimention] != 0)
         {
             //S = (v^2-u^2) / 2a
-            values.Displacement[0] = (Mathf.Pow(values.FinalVelocity[i], 2) - Mathf.Pow(values.InitialVelocity[i], 2)) / (2 * values.Acceleration[i]);
-            values.Key[i] = ReplaceAtIndex(0, '1', values.Key[i]);
+            values.Displacement[dimention] = (Mathf.Pow(values.FinalVelocity[dimention], 2) - Mathf.Pow(values.InitialVelocity[dimention], 2)) / (2 * values.Acceleration[dimention]);
+            values.Key[dimention] = ReplaceAtIndex(0, '1', values.Key[dimention]);
         }
         else
         {
-            values.inValidInput[i] = true;
+            values.inValidInput[dimention] = true;
         }
     }
 
     //S = vt - 1/2 a t^2
-    private static void RanOn_00111(Particle values, int i)
+    private static void RanOn_00111(Particle values, int dimention)
     {
         //S = vt - 1/2 a t^2
-        values.Displacement[i] = values.FinalVelocity[i] * values.Time - 0.5f * (values.Acceleration[i] * Mathf.Pow(values.Time, 2));
-        values.Key[i] = ReplaceAtIndex(0, '1', values.Key[i]);
+        values.Displacement[dimention] = values.FinalVelocity[dimention] * values.Time - 0.5f * (values.Acceleration[dimention] * Mathf.Pow(values.Time, 2));
+        values.Key[dimention] = ReplaceAtIndex(0, '1', values.Key[dimention]);
     }
 
     //sets inValidInput = true (all inputs calculated)
-    private static void RanOn_11111(Particle values, int i)
+    private static void RanOn_11111(Particle values, int dimention)
     {
-        values.inValidInput[i] = true;
+        values.inValidInput[dimention] = true;
     }
     // s = ut + 1/2 * a * t^2
-    public static void RanOn_01011(Particle values, int i)
+    public static void RanOn_01011(Particle values, int dimention)
     {
-        values.Displacement[i] = values.InitialVelocity[i] * values.Time + 0.5f * values.Acceleration[i] * Mathf.Pow(values.Time, 2);
-        values.Key[i] = ReplaceAtIndex(0, '1', values.Key[i]);
+        values.Displacement[dimention] = values.InitialVelocity[dimention] * values.Time + 0.5f * values.Acceleration[dimention] * Mathf.Pow(values.Time, 2);
+        values.Key[dimention] = ReplaceAtIndex(0, '1', values.Key[dimention]);
     }
     // s = 1/2 (u + v) t
-    public static void RanOn_01101(Particle values, int i)
+    public static void RanOn_01101(Particle values, int dimention)
     {
-        values.Displacement[i] = 0.5f * (values.InitialVelocity[i] + values.FinalVelocity[i]) * values.Time;
-        values.Key[i] = ReplaceAtIndex(0, '1', values.Key[i]);
+        values.Displacement[dimention] = 0.5f * (values.InitialVelocity[dimention] + values.FinalVelocity[dimention]) * values.Time;
+        values.Key[dimention] = ReplaceAtIndex(0, '1', values.Key[dimention]);
     }
     //Input condition used 01101
-    public static void RanOn_01111(Particle values, int i)
+    public static void RanOn_01111(Particle values, int dimention)
     {
-        RanOn_01101(values, i);
+        RanOn_01101(values, dimention);
     }
     // s = ut + 1/2 * a * t^2 rearranged for u
-    public static void RanOn_10011(Particle values, int i)
+    public static void RanOn_10011(Particle values, int dimention)
     {
-        values.InitialVelocity[i] = (values.Displacement[i] / values.Time) - 0.5f * (values.Acceleration[i] * values.Time);
-        values.Key[i] = ReplaceAtIndex(1, '1', values.Key[i]);
+        values.InitialVelocity[dimention] = (values.Displacement[dimention] / values.Time) - 0.5f * (values.Acceleration[dimention] * values.Time);
+        values.Key[dimention] = ReplaceAtIndex(1, '1', values.Key[dimention]);
     }
     // s = 1/2 (u + v)t rearranged for u
-    public static void RanOn_10101(Particle values, int i)
+    public static void RanOn_10101(Particle values, int dimention)
     {
         //Cannot divide by 0
         if (values.Time == 0)
         {
-            values.inValidInput[i] = true;
+            values.inValidInput[dimention] = true;
         }
         else
         {
-            values.InitialVelocity[i] = 2 * (values.Displacement[i] / values.Time) - values.FinalVelocity[i];
-            values.Key[i] = ReplaceAtIndex(1, '1', values.Key[i]);
+            values.InitialVelocity[dimention] = 2 * (values.Displacement[dimention] / values.Time) - values.FinalVelocity[dimention];
+            values.Key[dimention] = ReplaceAtIndex(1, '1', values.Key[dimention]);
         }
     }
     // V^2 = u^2 + 2as reaaragned for u
-    public static void RanOn_10110(Particle values, int i)
+    public static void RanOn_10110(Particle values, int dimention)
     {
-        float InsideRoot = Mathf.Pow(values.FinalVelocity[i], 2) - 2 * values.Acceleration[i] * values.Displacement[i];
+        float InsideRoot = Mathf.Pow(values.FinalVelocity[dimention], 2) - 2 * values.Acceleration[dimention] * values.Displacement[dimention];
         //Square root must be positive
         if (InsideRoot < 0)
         {
-            values.inValidInput[i] = true;
+            values.inValidInput[dimention] = true;
         }
         else
         {
-            values.InitialVelocity[i] = Mathf.Sqrt(InsideRoot);
-            values.Key[i] = ReplaceAtIndex(1, '1', values.Key[i]);
+            values.InitialVelocity[dimention] = Mathf.Sqrt(InsideRoot);
+            values.Key[dimention] = ReplaceAtIndex(1, '1', values.Key[dimention]);
         }
     }
     //v = u + at , rearranged for u
-    public static void RanOn_10111(Particle values, int i)
+    public static void RanOn_10111(Particle values, int dimention)
     {
-        values.InitialVelocity[i] = values.FinalVelocity[i] - values.Acceleration[i] * values.Time;
-        values.Key[i] = ReplaceAtIndex(1, '1', values.Key[i]);
+        values.InitialVelocity[dimention] = values.FinalVelocity[dimention] - values.Acceleration[dimention] * values.Time;
+        values.Key[dimention] = ReplaceAtIndex(1, '1', values.Key[dimention]);
     }
 
     //s = 0.5 * *u+v)t , rearranged for v
-    public static void RanOn_11001(Particle values, int i)
+    public static void RanOn_11001(Particle values, int dimention)
     {
         //Cannot divide by 0 therefore will be invalid input.
         if (values.Time == 0)
         {
-            values.inValidInput[i] = true;
+            values.inValidInput[dimention] = true;
         }
         else
         {
-            values.FinalVelocity[i] = 2 * (values.Displacement[i] / values.Time) - values.InitialVelocity[i];
-            values.Key[i] = ReplaceAtIndex(2, '1', values.Key[i]);
+            values.FinalVelocity[dimention] = 2 * (values.Displacement[dimention] / values.Time) - values.InitialVelocity[dimention];
+            values.Key[dimention] = ReplaceAtIndex(2, '1', values.Key[dimention]);
 
         }
     }
     // V^2 = u^2 + 2as
-    public static void RanOn_11010(Particle values, int i)
+    public static void RanOn_11010(Particle values, int dimention)
     {
-        float insideRoot = Mathf.Pow(values.InitialVelocity[i], 2) + (2 * values.Acceleration[i] * values.Displacement[i]);
+        float insideRoot = Mathf.Pow(values.InitialVelocity[dimention], 2) + (2 * values.Acceleration[dimention] * values.Displacement[dimention]);
         //Square root must be positive.Therefore invalid input if not true
         if (insideRoot < 0)
         {
-            values.inValidInput[i] = true;
+            values.inValidInput[dimention] = true;
         }
         else
         {
-            values.FinalVelocity[i] = MyMaths.SquareRoot(insideRoot);
+            values.FinalVelocity[dimention] = MyMaths.SquareRoot(insideRoot);
             //Checking direction which is lost by squaring
-            if (values.Acceleration[i] < 0 && values.Displacement[i] <= 0)
+            if (values.Acceleration[dimention] < 0 && values.Displacement[dimention] <= 0)
             {
-                values.FinalVelocity[i] = -values.FinalVelocity[i];
+                values.FinalVelocity[dimention] = -values.FinalVelocity[dimention];
             }
-            values.Key[i] = ReplaceAtIndex(2, '1', values.Key[i]);
+            values.Key[dimention] = ReplaceAtIndex(2, '1', values.Key[dimention]);
         }
     }
     //V = u + at
-    public static void RanOn_11011(Particle values, int i)
+    public static void RanOn_11011(Particle values, int dimention)
     {
-        values.FinalVelocity[i] = values.InitialVelocity[i] + values.Acceleration[i] * values.Time;
-        values.Key[i] = ReplaceAtIndex(2, '1', values.Key[i]);
+        values.FinalVelocity[dimention] = values.InitialVelocity[dimention] + values.Acceleration[dimention] * values.Time;
+        values.Key[dimention] = ReplaceAtIndex(2, '1', values.Key[dimention]);
     }
     // V^2 = u^2 + 2as reaaragned for a
-    public static void RanOn_11100(Particle values, int i)
+    public static void RanOn_11100(Particle values, int dimention)
     {
         //Cannot divide by 0 which would cause invalid inputs
-        if (values.Displacement[i] == 0)
+        if (values.Displacement[dimention] == 0)
         {
-            values.inValidInput[i] = true;
+            values.inValidInput[dimention] = true;
         }
         else
         {
-            values.Acceleration[i] = (Mathf.Pow(values.FinalVelocity[i], 2) - Mathf.Pow(values.InitialVelocity[i], 2)) / (2 * values.Displacement[i]);
-            values.Key[i] = ReplaceAtIndex(3, '1', values.Key[i]);
+            values.Acceleration[dimention] = (Mathf.Pow(values.FinalVelocity[dimention], 2) - Mathf.Pow(values.InitialVelocity[dimention], 2)) / (2 * values.Displacement[dimention]);
+            values.Key[dimention] = ReplaceAtIndex(3, '1', values.Key[dimention]);
         }
     }
     //V = u + at , rearranged for a
-    public static void RanOn_11101(Particle values, int i)
+    public static void RanOn_11101(Particle values, int dimention)
     {
         //Cannot divide by 0
         if (values.Time == 0)
         {
-            values.inValidInput[i] = true;
+            values.inValidInput[dimention] = true;
         }
         else
         {
-            values.Acceleration[i] = (values.FinalVelocity[i] - values.InitialVelocity[i]) / values.Time;
-            values.Key[i] = ReplaceAtIndex(3, '1', values.Key[i]);
+            values.Acceleration[dimention] = (values.FinalVelocity[dimention] - values.InitialVelocity[dimention]) / values.Time;
+            values.Key[dimention] = ReplaceAtIndex(3, '1', values.Key[dimention]);
         }
     }
     //V = u + at , rearranged for t
-    public static void RanOn_11110(Particle values, int i)
+    public static void RanOn_11110(Particle values, int dimention)
     {
         //Diffrent equations are used depending on acceleration
-        if (values.Acceleration[i] == 0)
+        if (values.Acceleration[dimention] == 0)
         {
             //Cannot divide by 0
-            if ((values.InitialVelocity[i] + values.FinalVelocity[i]) != 0)
+            if ((values.InitialVelocity[dimention] + values.FinalVelocity[dimention]) != 0)
             {
-                values.Time = 2 * values.Displacement[i] / (values.InitialVelocity[i] + values.FinalVelocity[i]);
+                values.Time = 2 * values.Displacement[dimention] / (values.InitialVelocity[dimention] + values.FinalVelocity[dimention]);
             }
             else
             {
-                values.inValidInput[i] = true;
+                values.inValidInput[dimention] = true;
             }
         }
         else
         {
             //Time calculations change the Key in 3 dimentions because time is shared
-            values.Time = (values.FinalVelocity[i] - values.InitialVelocity[i]) / values.Acceleration[i];
+            values.Time = (values.FinalVelocity[dimention] - values.InitialVelocity[dimention]) / values.Acceleration[dimention];
             values.Key[0] = ReplaceAtIndex(4, '1', values.Key[0]);
             values.Key[1] = ReplaceAtIndex(4, '1', values.Key[1]);
             values.Key[2] = ReplaceAtIndex(4, '1', values.Key[2]);
