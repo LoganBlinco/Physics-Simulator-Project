@@ -58,8 +58,10 @@ public class Suvat : MonoBehaviour {
     {
         //Bool based on if the program has atleast 1 dimention with three inputs
         bool minThreeInputs = values.GetNumberOfInputs()[0] >= 3 || values.GetNumberOfInputs()[1] >= 3 || values.GetNumberOfInputs()[2] >= 3;
+        Debug.Log("Min three" + minThreeInputs);
         //Bool if all dimentions have 3 inputs
         bool allAboveThree = getAboveThree(values, dimentions);
+        Debug.Log("all above three" + allAboveThree);
 
         //Gets the number of inputs above 2 from all dimentions active
         int numberAboveTwo = GetNumberAboveN(values,2,dimentions);
@@ -97,11 +99,11 @@ public class Suvat : MonoBehaviour {
             if (values.GetNumberOfInputs()[i] >= N)
             {
                 //If time is one of the quantities then an additional quantitiy must be entered
-                if (values.Key[i][3] == '1' && values.GetNumberOfInputs()[i] - 1 >= N)
+                if (values.Key[i][4] == '1' && values.GetNumberOfInputs()[i] - 1 >= N)
                 {
                     numberAboveN += 1;
                 }
-                else if (values.Key[i][3] == '0')
+                else if (values.Key[i][4] == '0')
                 {
                     numberAboveN += 1;
                 }
