@@ -58,11 +58,14 @@ public class Suvat : MonoBehaviour {
     {
         //Bool based on if the program has atleast 1 dimention with three inputs
         bool minThreeInputs = values.GetNumberOfInputs()[0] >= 3 || values.GetNumberOfInputs()[1] >= 3 || values.GetNumberOfInputs()[2] >= 3;
+        //Bool if all dimentions have 3 inputs
+        bool allAboveThree = getAboveThree(values, dimentions);
 
         //Gets the number of inputs above 2 from all dimentions active
         int numberAboveTwo = GetNumberAboveN(values,2,dimentions);
-        //Must have atleast 3 inputs and other dimentions have more than 2 inputs
-        if (minThreeInputs == true && numberAboveTwo == dimentions)
+        Debug.Log(numberAboveTwo);
+        //Must have atleast 3 inputs and other dimentions have more than 2 inputs OR if all dimentions have 3 inputs
+        if ((minThreeInputs == true && numberAboveTwo == dimentions) || allAboveThree == true)
         {
             return true;
         }
@@ -71,7 +74,21 @@ public class Suvat : MonoBehaviour {
             return false;
         }
     }
-    //Returns the number of dimentions which have got >= N number of inputs
+    //Returns if all dmentions active have 3 or more inputs
+    private static bool getAboveThree(Particle values, int dimentions)
+    {
+        bool allAbove = true;
+        for (int i =0;i<dimentions;i++)
+        {
+            if (values.GetNumberOfInputs()[i] < 3)
+            {
+                allAbove = false;
+            }
+        }
+        return allAbove;
+    }
+
+    //Returns the number of dimentions which have got >= N number of inputs which are not time
     private static int GetNumberAboveN(Particle values, int N, int dimentions)
     {
         int numberAboveN = 0;
@@ -79,7 +96,15 @@ public class Suvat : MonoBehaviour {
         {
             if (values.GetNumberOfInputs()[i] >= N)
             {
-                numberAboveN += 1;
+                //If time is one of the quantities then an additional quantitiy must be entered
+                if (values.Key[i][3] == '1' && values.GetNumberOfInputs()[i] - 1 >= N)
+                {
+                    numberAboveN += 1;
+                }
+                else if (values.Key[i][3] == '0')
+                {
+                    numberAboveN += 1;
+                }
             }
         }
         return numberAboveN;
@@ -161,8 +186,8 @@ public class Suvat : MonoBehaviour {
             values.Time = float.Parse(controller.Time.text);
             //Time shared between all dimentions
             values.Key[0] = ReplaceAtIndex(4, '1', values.Key[0]);
-            values.Key[1] = ReplaceAtIndex(4, '1', values.Key[0]);
-            values.Key[2] = ReplaceAtIndex(4, '1', values.Key[0]);
+            values.Key[1] = ReplaceAtIndex(4, '1', values.Key[1]);
+            values.Key[2] = ReplaceAtIndex(4, '1', values.Key[2]);
         }
         if (controller.R_x.text != "")
         {
@@ -224,12 +249,12 @@ public class Suvat : MonoBehaviour {
         if (controller.V_z.text != "")
         {
             values.FinalVelocity[2] = float.Parse(controller.V_z.text);
-            values.Key[1] = ReplaceAtIndex(2, '1', values.Key[2]);
+            values.Key[2] = ReplaceAtIndex(2, '1', values.Key[2]);
         }
         if (controller.A_z.text != "")
         {
             values.Acceleration[2] = float.Parse(controller.A_z.text);
-            values.Key[1] = ReplaceAtIndex(3, '1', values.Key[2]);
+            values.Key[2] = ReplaceAtIndex(3, '1', values.Key[2]);
         }
         if (controller.R_z.text != "")
         {
