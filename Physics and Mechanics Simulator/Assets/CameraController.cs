@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour {
     public static bool isFreeRoam = true;
     //Zoom program begins with
     public static float currentZoom =8;
-    public static float maxZoom = 40;
+    public static float maxZoom = 80;
     public static float minZoom = 0.1f;
     //Amount changed per scroll on wheel
     public static float zoomMod = 1;

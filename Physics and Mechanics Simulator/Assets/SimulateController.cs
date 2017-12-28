@@ -111,11 +111,13 @@ public class SimulateController : MonoBehaviour {
             UpdateVelocity();
             //updates the time label on the UI using current simulation time
             UpdateTimeLabel();
+
+            //updating simulationTime by change
+            simulationTime += deltaT;
         }
         //Checks if time is more than maxTime
         CheckTime();
-        //updating simulationTime by change
-        simulationTime += deltaT;
+
         //Clamps value betwene 0 and the maxTime
         simulationTime = MyMaths.Clamp(simulationTime, 0, maxTime);
     }
