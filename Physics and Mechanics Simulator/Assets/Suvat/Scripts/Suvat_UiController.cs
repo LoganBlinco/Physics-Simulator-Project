@@ -205,6 +205,7 @@ public class Suvat_UiController : MonoBehaviour {
     {
         var temp_Time = Time.gameObject.transform.localScale;
         Time.gameObject.transform.localScale = new Vector3(size, temp_Time.y, temp_Time.z);
+        Time.text = Time.text;
     }
     private void changeFieldPosition(float x)
     {
