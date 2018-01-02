@@ -117,7 +117,6 @@ public class SimulateController : MonoBehaviour {
         }
         //Checks if time is more than maxTime
         CheckTime();
-
         //Clamps value betwene 0 and the maxTime
         simulationTime = MyMaths.Clamp(simulationTime, 0, maxTime);
     }

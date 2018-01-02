@@ -162,7 +162,7 @@ public class GenerateBackground : MonoBehaviour {
                 Vector3 Position = new Vector3(
                     min.x  + sizeOfSprite * i,
                     min.y  + sizeOfSprite * j,
-                    0);
+                    max.z + offset * sizeOfSprite);
                 //Creates an object at Position with no roation
                 GameObject temp = Instantiate(prefabs[value], Position, Quaternion.identity);
                 //Scales opject up by sizeOfSprite
