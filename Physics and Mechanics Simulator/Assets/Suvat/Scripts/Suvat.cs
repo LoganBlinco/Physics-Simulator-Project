@@ -58,14 +58,11 @@ public class Suvat : MonoBehaviour {
     {
         //Bool based on if the program has atleast 1 dimention with three inputs
         bool minThreeInputs = values.GetNumberOfInputs()[0] >= 3 || values.GetNumberOfInputs()[1] >= 3 || values.GetNumberOfInputs()[2] >= 3;
-        Debug.Log("Min three" + minThreeInputs);
         //Bool if all dimentions have 3 inputs
         bool allAboveThree = getAboveThree(values, dimentions);
-        Debug.Log("all above three" + allAboveThree);
 
         //Gets the number of inputs above 2 from all dimentions active
         int numberAboveTwo = GetNumberAboveN(values,2,dimentions);
-        Debug.Log(numberAboveTwo);
         //Must have atleast 3 inputs and other dimentions have more than 2 inputs OR if all dimentions have 3 inputs
         if ((minThreeInputs == true && numberAboveTwo == dimentions) || allAboveThree == true)
         {

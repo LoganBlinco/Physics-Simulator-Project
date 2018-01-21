@@ -9,9 +9,11 @@ public class Particle {
     //Stores a copy of the particles instance before simulation occured
     public Particle beforeSimulation;
 
-    /*
-     * Suvat variabels
-    */
+    //List of struct storing infomation for graphing motion
+    public List<ParticleProperties> ParticleValues = new List<ParticleProperties>();
+
+
+    #region Suvat Variables
     public Vector3 Displacement;
     public Vector3 InitialVelocity;
     public Vector3 FinalVelocity;
@@ -19,16 +21,21 @@ public class Particle {
     public float Time;
     public Vector3 InitialPosition;
 
+    #endregion
+
+    #region Key and inValidInput
     //Key stores the state of each variable in each dimention.1 meaning has been calculated , 0 means has not been calculated
     public string[] Key = { "00000", "00000", "00000" };
     //Dimentions has invalid input state
     public bool[] inValidInput = { false, false, false };
+#endregion
 
     //Ability for particle to collide with other particles
     public bool canCollide;
     //Ability for particle to be attracted and cause attraction by gravity.
     public bool hasGravity;
 
+    #region NumberOfInputs variables and methods
     //Number of inputs which have been calclated in each dimention
     private int[] NumberOfInputs = new int[3];
 
@@ -66,6 +73,9 @@ public class Particle {
     {
         NumberOfInputs[index] = value;
     }
+    #endregion
+
+    #region Mass , Restitution and radius
     private float _mass;
     public float Mass
     {
@@ -87,4 +97,5 @@ public class Particle {
         set { _radius = MyMaths.Magnitude(value); }
         get { return _radius; }
     }
+    #endregion
 }

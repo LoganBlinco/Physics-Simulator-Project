@@ -6,7 +6,7 @@ using System;
 
 public class SimulateController : MonoBehaviour {
 
-
+    #region Varaibles
     //Stores all gameobjects which have been created for simulation
     public static List<GameObject> ParticleInstances;
 
@@ -32,6 +32,7 @@ public class SimulateController : MonoBehaviour {
         get { return _simulationSpeed; }
         set { _simulationSpeed = MyMaths.Magnitude(value); }
     }
+    #endregion
 
     //Ran to begin a simulation
     public static void OnSimulateClicked()
@@ -112,6 +113,9 @@ public class SimulateController : MonoBehaviour {
             //updates the time label on the UI using current simulation time
             UpdateTimeLabel();
 
+            //Updates all the particle values which are used for graphing
+            UpdateParticleGraphingValues();
+
             //updating simulationTime by change
             simulationTime += deltaT;
         }
@@ -120,6 +124,23 @@ public class SimulateController : MonoBehaviour {
         //Clamps value betwene 0 and the maxTime
         simulationTime = MyMaths.Clamp(simulationTime, 0, maxTime);
     }
+    //Updates each particle being simulate's graphing values
+    private void UpdateParticleGraphingValues()
+    {
+        List<Particle> ParticleList = Particle.Instances;
+        for (int i =0;i< ParticleList.Count;i++)
+        {
+            ParticleProperties temp = new ParticleProperties
+            {
+                time = simulationTime,
+                velocity = ParticleList[i].FinalVelocity,
+                displacement = ParticleList[i].Displacement
+            };
+            Particle.Instances[i].ParticleValues.Add(temp);
+        }
+
+    }
+
     //Sets the time label to the currenty simulation time
     private void UpdateTimeLabel()
     {
@@ -136,6 +157,7 @@ public class SimulateController : MonoBehaviour {
         }
     }
 
+    #region Moving Particles
     //Moves every particle with an instance.
     private void MoveParticles()
     {
@@ -161,7 +183,9 @@ public class SimulateController : MonoBehaviour {
         //Moves to position
         ParticleInstances[index].transform.position = position;
     }
+    #endregion
 
+    #region Updating Velocity
     //Updates velocity of each particle by the time.deltatime
     private void UpdateVelocity()
     {
@@ -182,4 +206,5 @@ public class SimulateController : MonoBehaviour {
         //solves suvat equations
         Particle.Instances[index] = SuvatSolvers.FindEquation(Particle.Instances[index]);
     }
+    #endregion
 }
