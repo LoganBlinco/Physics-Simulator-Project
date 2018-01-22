@@ -6,6 +6,8 @@ using System;
 
 public class Suvat_UiController : MonoBehaviour {
 
+    #region Variables
+
     //stores reference to the UI controller instance
     //Allows it to be accessed anywhere in program
     public static Suvat_UiController instance;
@@ -44,6 +46,12 @@ public class Suvat_UiController : MonoBehaviour {
     //State is true or false
     public Toggle Gravity;
 
+
+    public Dropdown GraphDropBoxParticles;
+    public Dropdown GraphDropBoxDimention;
+
+
+    #endregion
 
     //unity method ran when the object is first instatiated
     //This occurs when the scene is first loaded in the case of the UIController
@@ -94,6 +102,8 @@ public class Suvat_UiController : MonoBehaviour {
     }
     #endregion
 
+    #region OnClicked
+
     //Ran when the Calculate button is clicked
     //Begins the calculation proccess
     public void OnCalculateClicked()
@@ -125,6 +135,8 @@ public class Suvat_UiController : MonoBehaviour {
         ParticleInfomationCanvas.SetActive(true);
         ParticleGraphCanvas.SetActive(false);
     }
+
+
     //Ran when Particle graphs is clicked
     //Sets the Particle grapghs panel active
     public void OnParticleGraphButtonClicked()
@@ -132,6 +144,8 @@ public class Suvat_UiController : MonoBehaviour {
         ParticleInfomationCanvas.SetActive(false);
         ParticleGraphCanvas.SetActive(true);
     }
+
+    #endregion
 
     #region Updating dimentions input fields
 
@@ -247,6 +261,7 @@ public class Suvat_UiController : MonoBehaviour {
         //Clears the dropbox's options
         DropBox_Particle.options.Clear();
         DropBox_CameraTarget.options.Clear();
+        GraphDropBoxParticles.options.Clear();
         string _text = "Free Roam ";
         //Adds the Free roam option to dropbox particles
         DropBox_CameraTarget.options.Add(new Dropdown.OptionData() { text = _text });
@@ -255,11 +270,13 @@ public class Suvat_UiController : MonoBehaviour {
         {
             DropBox_Particle.options.Add(oldOptions[i]);
             DropBox_CameraTarget.options.Add(oldOptions[i]);
+            GraphDropBoxParticles.options.Add(oldOptions[i]);
         }
         //Adds additioanl particle to options
         _text = "Particle " + size.ToString();
         DropBox_Particle.options.Add(new Dropdown.OptionData() { text = _text });
         DropBox_CameraTarget.options.Add(new Dropdown.OptionData() { text = _text });
+        GraphDropBoxParticles.options.Add(new Dropdown.OptionData() { text = _text });
         //Adds the add particle option to the Particle dropbox 
         _text = "Add Particle";
         DropBox_Particle.options.Add(new Dropdown.OptionData() { text = _text });
@@ -267,6 +284,9 @@ public class Suvat_UiController : MonoBehaviour {
         //A glitch means that the first selection does not occur therefore a dummy selection occurs to fix this 
         DropBox_Particle.value = size - 2;
         DropBox_Particle.value = size - 1;
+
+        DropBox_Particle.RefreshShownValue();
+        GraphDropBoxParticles.RefreshShownValue();
     }
 
     //Updates values in the User interface depending on the particle selected by the user

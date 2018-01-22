@@ -11,6 +11,7 @@ public class SimulateController : MonoBehaviour {
     public static List<GameObject> ParticleInstances;
 
     public GameObject velocityGraph;
+    public GameObject displacementGraph;
 
     //simulation speed slider reference from UI 
     public static Slider speedInput;
@@ -156,18 +157,29 @@ public class SimulateController : MonoBehaviour {
     //Plots graph
     private void UpdateParticlePoints()
     {
-        int indexSelected = 0;
-        //gets the velocity's of the particle in correct format
+        int indexSelected = Suvat_UiController.instance.GraphDropBoxParticles.value;
+        int dimention = Suvat_UiController.instance.GraphDropBoxDimention.value;
+        //stores the velocity's of the particle in correct format
         List<Vector2> velocityList = new List<Vector2>();
+        //stores the displacements of the particle
+        List<Vector2> displacementList = new List<Vector2>();
+
         Particle tempParticle = Particle.Instances[indexSelected];
         for (int i = 0; i < tempParticle.ParticleValues.Count; i++)
         {
             velocityList.Add(new Vector2(
                 tempParticle.ParticleValues[i].time,
-                tempParticle.ParticleValues[i].velocity.magnitude));
+                tempParticle.ParticleValues[i].velocity[dimention]));
+
+            displacementList.Add(new Vector2(
+                tempParticle.ParticleValues[i].time,
+                tempParticle.ParticleValues[i].displacement[dimention]));
         }
         //Updates the graph
+        velocityGraph.GetComponent<GraphMaker>()._tag = "VelocityGraphElemet";
         velocityGraph.GetComponent<GraphMaker>().CreateGraph(velocityList);
+        displacementGraph.GetComponent<GraphMaker>()._tag = "DisplacementGraphElement";
+        displacementGraph.GetComponent<GraphMaker>().CreateGraph(displacementList);
     }
 
     //Updates each particle being simulate's graphing values

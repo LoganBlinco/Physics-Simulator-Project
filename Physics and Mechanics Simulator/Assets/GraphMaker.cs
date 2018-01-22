@@ -11,6 +11,8 @@ public class GraphMaker : MonoBehaviour
     public GameObject pointPrefab;
     public GameObject linePrefab;
 
+    public string _tag = "GraphElement";
+
     //List containing the gameobjects of the points which get created and plotted
     public List<GameObject> pointsObjects = new List<GameObject>();
 
@@ -77,7 +79,6 @@ public class GraphMaker : MonoBehaviour
     //Resets values of variables to defaults
     private void InitializeVariables()
     {
-        string _tag = "GraphElement";
         //Destroyes objects create by the grapher
         DestroyObejctsWithTag(_tag);
         pointsObjects = new List<GameObject>();
@@ -93,10 +94,17 @@ public class GraphMaker : MonoBehaviour
     //Destroys anyobject with the input tag parameter in the scene
     public static void DestroyObejctsWithTag(string tag)
     {
-        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(tag);
-        for (int i = 0; i < gameObjects.Length; i++)
+        try
         {
-            Destroy(gameObjects[i]);
+            GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(tag);
+            for (int i = 0; i < gameObjects.Length; i++)
+            {
+                Destroy(gameObjects[i]);
+            }
+        }
+        catch(UnityException e)
+        {
+
         }
     }
     #endregion
@@ -167,6 +175,10 @@ public class GraphMaker : MonoBehaviour
         GameObject tempLine = Instantiate(linePrefab) as GameObject;
         //Sets parant to the gameobject attached to the script
         tempLine.transform.SetParent(transform);
+
+        //Changes tag so can be destroyed
+        tempLine.tag = _tag;
+
         //Reference to the Rect Transform of the line
         RectTransform imageRectTransform = tempLine.GetComponent<RectTransform>();
 
@@ -225,6 +237,7 @@ public class GraphMaker : MonoBehaviour
         //Parant is the object attached to this script (which is a sub parant of canvas allowing it to be seen)
         temp.transform.SetParent(transform);
         temp.name = "X = " + position.x.ToString();
+        temp.tag = _tag;
         //adds gameobject to the pointsObjects lists
         pointsObjects.Add(temp);
 
