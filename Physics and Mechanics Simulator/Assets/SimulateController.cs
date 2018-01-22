@@ -128,7 +128,7 @@ public class SimulateController : MonoBehaviour {
             UpdateVelocity();
             //updates the time label on the UI using current simulation time
             UpdateTimeLabel();
-
+            
             if (timeTillGraphUpdate <= 0)
             {
                 //Updates all the particle values which are used for graphing
@@ -149,15 +149,15 @@ public class SimulateController : MonoBehaviour {
         }
         //Checks if time is more than maxTime
         CheckTime();
-        //Clamps value betwene 0 and the maxTime
-        simulationTime = MyMaths.Clamp(simulationTime, 0, maxTime);
     }
 
     #region Graphing updates
     //Plots graph
     private void UpdateParticlePoints()
     {
+        //Particle selected by dropbox
         int indexSelected = Suvat_UiController.instance.GraphDropBoxParticles.value;
+        //Dimention selected by dropbox
         int dimention = Suvat_UiController.instance.GraphDropBoxDimention.value;
         //stores the velocity's of the particle in correct format
         List<Vector2> velocityList = new List<Vector2>();
@@ -175,7 +175,7 @@ public class SimulateController : MonoBehaviour {
                 tempParticle.ParticleValues[i].time,
                 tempParticle.ParticleValues[i].displacement[dimention]));
         }
-        //Updates the graph
+        //Tags must be changed so they do not delete each other
         velocityGraph.GetComponent<GraphMaker>()._tag = "VelocityGraphElemet";
         velocityGraph.GetComponent<GraphMaker>().CreateGraph(velocityList);
         displacementGraph.GetComponent<GraphMaker>()._tag = "DisplacementGraphElement";
@@ -208,9 +208,14 @@ public class SimulateController : MonoBehaviour {
         LabelTime.text = "Time :" + value2DP + "s";
     }
     //Checks if simulation time is greater than maxTime to end simulation
+    //If the simulationTime > maxTime when another frame should be loaded because it means that the full time has not been completed
     private void CheckTime()
     {
-        if (simulationTime >= maxTime)
+        if (simulationTime > maxTime)
+        {
+            simulationTime = maxTime;
+        }
+        else if (simulationTime == maxTime)
         {
             isSimulating = false;
         }
