@@ -10,6 +10,11 @@ public class SimulateController : MonoBehaviour {
     //Stores all gameobjects which have been created for simulation
     public static List<GameObject> ParticleInstances;
 
+    //References to the graph game objects
+    public GameObject VelocityGraph;
+    public GameObject DisplacementGraph;
+
+
     //simulation speed slider reference from UI 
     public static Slider speedInput;
     //refernece to the current simulation time Label in UI
@@ -115,6 +120,8 @@ public class SimulateController : MonoBehaviour {
 
             //Updates all the particle values which are used for graphing
             UpdateParticleGraphingValues();
+            //Displays infomation of particle on graph
+            //DisplayParticleGraphs();
 
             //updating simulationTime by change
             simulationTime += deltaT;
@@ -124,6 +131,36 @@ public class SimulateController : MonoBehaviour {
         //Clamps value betwene 0 and the maxTime
         simulationTime = MyMaths.Clamp(simulationTime, 0, maxTime);
     }
+
+    private void DisplayParticleGraphs()
+    {
+        int currentIndex = 0;
+        if (GraphMaker.graphCreated == true)
+        {
+            int index = Particle.Instances[currentIndex].ParticleValues.Count;
+            Vector2 point = new Vector2(
+                Particle.Instances[currentIndex].ParticleValues[index - 1].time,
+                Particle.Instances[currentIndex].ParticleValues[index - 1].velocity.magnitude);
+            VelocityGraph.GetComponent<GraphMaker>().AddPoint(point);
+        }
+        else
+        {
+            Debug.Log(simulationTime);
+            List<Vector2> velocity = new List<Vector2>();
+            List<Vector2> displacement = new List<Vector2>();
+
+            for (int i = 0; i < Particle.Instances[currentIndex].ParticleValues.Count; i++)
+            {
+                velocity.Add(new Vector2(
+                   Particle.Instances[currentIndex].ParticleValues[i].time,
+                   Particle.Instances[currentIndex].ParticleValues[i].velocity.magnitude));
+            }
+            VelocityGraph.GetComponent<GraphMaker>().CreateGraph(velocity);
+            GraphMaker.graphCreated = true;
+        }
+
+    }
+
     //Updates each particle being simulate's graphing values
     private void UpdateParticleGraphingValues()
     {
