@@ -10,6 +10,8 @@ public class SimulateController : MonoBehaviour {
     //Stores all gameobjects which have been created for simulation
     public static List<GameObject> ParticleInstances;
 
+    public GameObject velocityGraph;
+
     //simulation speed slider reference from UI 
     public static Slider speedInput;
     //refernece to the current simulation time Label in UI
@@ -17,6 +19,13 @@ public class SimulateController : MonoBehaviour {
 
     //change of time between frames
     static float deltaT;
+
+    //Time between graph updates
+    static float timePerGraphUpdate = 0.5f;
+    //Time since last graph update
+    static float timeTillGraphUpdate = 0.0f;
+
+
 
     //Boolean state depending if the program is simulating or not
     public static bool isSimulating;
@@ -33,6 +42,8 @@ public class SimulateController : MonoBehaviour {
         set { _simulationSpeed = MyMaths.Magnitude(value); }
     }
     #endregion
+
+    #region Starting Methods
 
     //Ran to begin a simulation
     public static void OnSimulateClicked()
@@ -97,6 +108,10 @@ public class SimulateController : MonoBehaviour {
         ParticleInstances[index].transform.localScale = Vector3.one * Radius;
     }
 
+    #endregion
+
+    #region Update Methods
+
     //Ran when every frame is first loaded
     public void Update()
     {
@@ -113,17 +128,48 @@ public class SimulateController : MonoBehaviour {
             //updates the time label on the UI using current simulation time
             UpdateTimeLabel();
 
-            //Updates all the particle values which are used for graphing
-            UpdateParticleGraphingValues();
+            if (timeTillGraphUpdate <= 0)
+            {
+                //Updates all the particle values which are used for graphing
+                UpdateParticleGraphingValues();
+                //Updates points which are plotted on graph
+                UpdateParticlePoints();
+
+                timeTillGraphUpdate = timePerGraphUpdate;
+            }
+            else
+            {
+                timeTillGraphUpdate -= Time.deltaTime;
+            }
 
             //updating simulationTime by change
             simulationTime += deltaT;
+
         }
         //Checks if time is more than maxTime
         CheckTime();
         //Clamps value betwene 0 and the maxTime
         simulationTime = MyMaths.Clamp(simulationTime, 0, maxTime);
     }
+
+    #region Graphing updates
+    //Plots graph
+    private void UpdateParticlePoints()
+    {
+        int indexSelected = 0;
+        //gets the velocity's of the particle in correct format
+        List<Vector2> velocityList = new List<Vector2>();
+        Particle tempParticle = Particle.Instances[indexSelected];
+        for (int i = 0; i < tempParticle.ParticleValues.Count; i++)
+        {
+            velocityList.Add(new Vector2(
+                tempParticle.ParticleValues[i].time,
+                tempParticle.ParticleValues[i].velocity.magnitude));
+        }
+        //Updates the graph
+        velocityGraph.GetComponent<GraphMaker>().CreateGraph(velocityList);
+    }
+
     //Updates each particle being simulate's graphing values
     private void UpdateParticleGraphingValues()
     {
@@ -140,6 +186,7 @@ public class SimulateController : MonoBehaviour {
         }
 
     }
+    #endregion
 
     //Sets the time label to the currenty simulation time
     private void UpdateTimeLabel()
@@ -156,6 +203,8 @@ public class SimulateController : MonoBehaviour {
             isSimulating = false;
         }
     }
+
+    #endregion
 
     #region Moving Particles
     //Moves every particle with an instance.
