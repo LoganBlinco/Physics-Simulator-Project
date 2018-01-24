@@ -46,9 +46,12 @@ public class Suvat_UiController : MonoBehaviour {
     //State is true or false
     public Toggle Gravity;
 
-
+    //Drop boxes for particle selected and dimention selected when graphing
     public Dropdown GraphDropBoxParticles;
     public Dropdown GraphDropBoxDimention;
+
+    //Database entry field for the address
+    public InputField DatabaseInputField;
 
 
     #endregion
@@ -110,6 +113,14 @@ public class Suvat_UiController : MonoBehaviour {
     {
         Suvat.OnCalculateClicked();
     }
+
+    //Ran when the Database based calculaate button is clicked
+    //Begins the calaculation process
+    public void OnDatabaseCalculateClicked()
+    {
+        Suvat.OnDatabaseCalculateClicked();
+    }
+
 
     //Ran when the reset button is clicked
     public void OnResetClicked()
