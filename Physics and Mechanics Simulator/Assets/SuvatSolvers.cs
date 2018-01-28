@@ -36,6 +36,7 @@ public class SuvatSolvers : MonoBehaviour
         //Prevents an infinite loop
         int j = 0;
         int maxj = 10;
+
         //While their are still values to calculate in any dimentions
         //and not all dimentions have invalid inputs
         while (((values.GetNumberOfInputs()[0] != 5 && values.GetNumberOfInputs()[1] != 5 && values.GetNumberOfInputs()[2] != 5) || (values.inValidInput[0] == false || values.inValidInput[1] == false || values.inValidInput[2] == false)) && (j < maxj))
@@ -46,6 +47,7 @@ public class SuvatSolvers : MonoBehaviour
                 i = 0;
                 //Calls the corressponding equation
                 Equations[values.Key[i]]();
+
             }
             //Dimention has 3 or more inputs
             if (values.GetNumberOfInputs()[1] >= 3)
@@ -232,6 +234,10 @@ public class SuvatSolvers : MonoBehaviour
             if ((values.InitialVelocity[dimention] + values.FinalVelocity[dimention]) != 0)
             {
                 values.Time = 2 * values.Displacement[dimention] / (values.InitialVelocity[dimention] + values.FinalVelocity[dimention]);
+                values.Key[0] = ReplaceAtIndex(4, '1', values.Key[0]);
+                values.Key[1] = ReplaceAtIndex(4, '1', values.Key[1]);
+                values.Key[2] = ReplaceAtIndex(4, '1', values.Key[2]);
+                Debug.Log(values.Time);
             }
             else
             {

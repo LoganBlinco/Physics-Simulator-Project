@@ -114,14 +114,6 @@ public class Suvat_UiController : MonoBehaviour {
         Suvat.OnCalculateClicked();
     }
 
-    //Ran when the Database based calculaate button is clicked
-    //Begins the calaculation process
-    public void OnDatabaseCalculateClicked()
-    {
-        Suvat.OnDatabaseCalculateClicked();
-    }
-
-
     //Ran when the reset button is clicked
     public void OnResetClicked()
     {

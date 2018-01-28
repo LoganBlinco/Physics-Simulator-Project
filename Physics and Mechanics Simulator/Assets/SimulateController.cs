@@ -26,6 +26,11 @@ public class SimulateController : MonoBehaviour {
     //Time since last graph update
     static float timeTillGraphUpdate = 0.0f;
 
+    //Reference to graph dropbox for particle selected
+    public static Dropdown GraphDropBoxParticles;
+    //Reference to dimention dropbox for graphing
+    public static Dropdown GraphDropBoxDimention;
+
 
 
     //Boolean state depending if the program is simulating or not
@@ -49,6 +54,7 @@ public class SimulateController : MonoBehaviour {
     //Ran to begin a simulation
     public static void OnSimulateClicked()
     {
+        Debug.Log("Simulate clicked");
         //Resetting varibales
         Clear();
         //gets max simulation time
@@ -142,9 +148,9 @@ public class SimulateController : MonoBehaviour {
             {
                 timeTillGraphUpdate -= Time.deltaTime;
             }
-
             //updating simulationTime by change
             simulationTime += deltaT;
+
 
         }
         //Checks if time is more than maxTime
@@ -156,9 +162,9 @@ public class SimulateController : MonoBehaviour {
     private void UpdateParticlePoints()
     {
         //Particle selected by dropbox
-        int indexSelected = Suvat_UiController.instance.GraphDropBoxParticles.value;
+        int indexSelected = GraphDropBoxParticles.value;
         //Dimention selected by dropbox
-        int dimention = Suvat_UiController.instance.GraphDropBoxDimention.value;
+        int dimention = GraphDropBoxDimention.value;
         //stores the velocity's of the particle in correct format
         List<Vector2> velocityList = new List<Vector2>();
         //stores the displacements of the particle
