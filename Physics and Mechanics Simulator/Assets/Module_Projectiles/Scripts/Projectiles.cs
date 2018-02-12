@@ -20,6 +20,7 @@ public class Projectiles : MonoBehaviour {
     private static bool boolProjectionAngle = false;
 
 
+
     public static void OnCalculateClicked()
     {
         Controller = Projectiles_UiController.instance;
@@ -75,8 +76,7 @@ public class Projectiles : MonoBehaviour {
             numberOfInputs += 1;
         }
         #endregion
-    }
-
+	}
 
     //Checks if input is valid and returns true or false
     private static bool IsValid(ref Particle values)

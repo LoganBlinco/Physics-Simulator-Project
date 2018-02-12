@@ -52,7 +52,8 @@ public class CameraController : MonoBehaviour {
             Destroy(gameObject);
         }
         //Sets start zoom
-        Camera.main.orthographicSize = currentZoom;
+        //Camera.main.orthographicSize = currentZoom;
+
     }
 
     //Called every frame
