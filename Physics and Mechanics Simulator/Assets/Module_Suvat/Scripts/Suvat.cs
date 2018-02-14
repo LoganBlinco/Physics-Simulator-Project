@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using UnityEditor;
 using UnityEngine;
 
 public class Suvat : MonoBehaviour {
@@ -48,7 +47,7 @@ public class Suvat : MonoBehaviour {
             string title = "Invalid input";
             string message = "You must enter at least 3 quantities in a dimention and two quantities in all other dimentions active";
             //Creates message box with title , message and button with text "Ok"
-            EditorUtility.DisplayDialog(title, message, "Ok");
+            //EditorUtility.DisplayDialog(title, message, "Ok");
         }
 
     }

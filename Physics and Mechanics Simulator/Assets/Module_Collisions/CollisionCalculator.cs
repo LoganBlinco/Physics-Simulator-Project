@@ -4,41 +4,53 @@ using UnityEngine;
 
 public class CollisionCalculator : MonoBehaviour {
 
+    //Stores index of the particle in the CollisionParticles.ParticleInstances list
 	public int particleIndex;
+    //Bool preventing double calculations when two particles collide
+    //This would be due to each one calling the OnTriggerEnter method
 	private bool hasCollided = false;
 
-	private void OnTriggerEnter(Collider other)
+    #region OnTriggers
+    //Called when a trigger collider interacts with a rigid body with a collider
+    private void OnTriggerEnter(Collider other)
 	{
         if (CollisionsSimulationController.isSimulating == true)
         {
             if (other.gameObject.tag == "Particle")
             {
-                Debug.Log("Particle");
+                //Performs calculations for particle to particle collision
                 ParticleCollisionCalculation(other);
             }
             else if (other.gameObject.tag == "Border")
             {
-                Debug.Log("Border");
+                //Performs calculations for particle to border collision
                 BorderCollisionCalculation(other);
             }
+            //Allowing me to find any objects which have not been tagged
+            //A useful testing procedure
             else
             {
                 Debug.Log(other.gameObject.tag);
             }
         }
-
 	}
+    //Called when the colliders exit each other
 	private void OnTriggerExit(Collider other)
 	{
+        //If a particle to particle collision has occured then the collision process has ended therefore hasCollided = false (no longer colliding)
         if (other.gameObject.tag == "Particle")
         {
             other.gameObject.GetComponent<CollisionCalculator>().hasCollided = false;
             hasCollided = false;
         }
-
 	}
-	private void BorderCollisionCalculation(Collider other)
+    #endregion
+
+    #region Border Collision
+    //Calculations when a border collision occurs
+    private void BorderCollisionCalculation(Collider other)
 	{
+        //Gets restitution calculaues from the slider and from particle
         float BorderRestitution = Collisions_InputController.Instance.Slider_BorderRestitution.value;
         float Restitution = CollisionsParticle.ParticleInstances[particleIndex].restitution;
 
@@ -46,6 +58,7 @@ public class CollisionCalculator : MonoBehaviour {
         //Horizontal border (y velocity changes)
         if (other.transform.localScale.x > other.transform.localScale.y)
         {
+            //If collided with a horizontal border then only the Y is afected by reversing the direction and multiplying by the restitutions
             CollisionsParticle.ParticleInstances[particleIndex].currentVelocity = new Vector3(
                 previousVelocity.x,
                 -1 * (BorderRestitution * Restitution) * previousVelocity.y,
@@ -54,27 +67,30 @@ public class CollisionCalculator : MonoBehaviour {
         //Vertical border ( x velocity changes)
         else if (other.transform.localScale.x < other.transform.localScale.y)
         {
+            //If collided with a vertical border then only the X is afected by reversing the direction and multiplying by the restitutions
             CollisionsParticle.ParticleInstances[particleIndex].currentVelocity = new Vector3(
                 -1 * (BorderRestitution * Restitution) * previousVelocity.x,
                 previousVelocity.y,
                 previousVelocity.z);
         }
 	}
+    #endregion
 
-
-	private void ParticleCollisionCalculation(Collider other)
+    #region Particle Collision
+    //Controls the calculation process for particle to particle collisions
+    private void ParticleCollisionCalculation(Collider other)
 	{
 		int otherIndex = other.gameObject.GetComponent<CollisionCalculator> ().particleIndex;
-        Debug.Log(hasCollided);
+        //Preventing double calculations
 		if (hasCollided == false)
 		{
-			Debug.Log ("This has been ran");
 			other.gameObject.GetComponent<CollisionCalculator> ().hasCollided = true;
 			hasCollided = true;
+            //Performs the maths
 			CalculateCollision (CollisionsParticle.ParticleInstances[particleIndex], CollisionsParticle.ParticleInstances[otherIndex]);
 		}
 	}
-
+    //Performs and controls the maths of the calculations
 	private void CalculateCollision(CollisionsParticle first , CollisionsParticle second)
 	{
 		//Getting unit direction vector
@@ -89,13 +105,14 @@ public class CollisionCalculator : MonoBehaviour {
 
 		float first_e = first.restitution;
 		float second_e = second.restitution;
+        //Relative restitution
 		float e = first_e * second_e;
 
 		float m = first.mass;
 		float M = second.mass;
-
+        //maths 
 		first.currentVelocity = CalculateAfterVelocityFirst(m, M, FirstParrelleVelocity, SecondParrelleVelocity, e) + FirstPerpendicularVelocity;
-		second.currentVelocity = CalculateAfterVelocitySecond(m, M, FirstParrelleVelocity, SecondParrelleVelocity, e) + FirstPerpendicularVelocity;
+		second.currentVelocity = CalculateAfterVelocitySecond(m, M, FirstParrelleVelocity, SecondParrelleVelocity, e) + SecondPerpendicularVelocity;
 	}
 
 	public static Vector3 CalculateParrelelVelocity(Vector3 velocity, Vector3 unitDirection)
@@ -117,5 +134,5 @@ public class CollisionCalculator : MonoBehaviour {
 		float bottomQuotient = m + M;
 		return (1 / bottomQuotient) * topQuotient;
 	}
-
+    #endregion
 }

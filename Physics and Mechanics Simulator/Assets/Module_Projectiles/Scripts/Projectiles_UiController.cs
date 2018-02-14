@@ -182,7 +182,7 @@ public class Projectiles_UiController : MonoBehaviour {
             }
         }
         //Catch occurs when backspace occurs
-        catch (System.IndexOutOfRangeException e)
+        catch (System.IndexOutOfRangeException)
         {
 
         }

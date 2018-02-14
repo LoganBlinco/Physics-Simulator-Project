@@ -102,7 +102,7 @@ public class GraphMaker : MonoBehaviour
                 Destroy(gameObjects[i]);
             }
         }
-        catch(UnityException e)
+        catch(UnityException)
         {
 
         }

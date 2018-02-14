@@ -303,7 +303,7 @@ public class Suvat_UiController : MonoBehaviour {
             //Updates UI using a particles values
             UpdateUI(Particle.Instances[current]);
         }
-        catch (ArgumentOutOfRangeException e)
+        catch (ArgumentOutOfRangeException)
         {
             //If no particle is found the default values should be used
             ResetUI();

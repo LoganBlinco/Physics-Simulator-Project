@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class Projectiles : MonoBehaviour {
@@ -40,7 +39,7 @@ public class Projectiles : MonoBehaviour {
             string title = "Invalid input";
             string message = "You must enter atleast 3 quantities and the time duration!";
             //Creates message box with title , message and button with text "Ok"
-            EditorUtility.DisplayDialog(title, message, "Ok");
+            //EditorUtility.DisplayDialog(title, message, "Ok");
         }
     }
 
