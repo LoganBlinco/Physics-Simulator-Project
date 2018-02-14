@@ -40,6 +40,16 @@ public class CollisionsSimulationController : MonoBehaviour {
     }
     #endregion
 
+    #region Graph variables
+    public GameObject GraphX;
+    public GameObject GraphY;
+
+    private float timePerUpdate = 0.5f;
+    private float timeTillUpdate = 0.0f;
+
+
+    #endregion 
+
     #region Update Methods
     // Update is called once per frame
     void Update () {
@@ -50,9 +60,38 @@ public class CollisionsSimulationController : MonoBehaviour {
 			UpdateTimeLabel ();
 			MoveParticles ();
             UpdateParticleLabel();
+            UpdateParticleGraphValues();
 			simulationTime += deltaT;
 		}
 	}
+
+    private void UpdateParticleGraphValues()
+    {
+        if (timeTillUpdate <= 0)
+        {
+            foreach(CollisionsParticle particle in CollisionsParticle.ParticleInstances)
+            {
+                particle.momentumGraphPointsX.Add(new Vector3(
+                    simulationTime,
+                    particle.mass * particle.currentVelocity.x));
+                particle.momentumGraphPointsY.Add(new Vector3(
+                    simulationTime,
+                    particle.mass * particle.currentVelocity.y));
+            }
+            int index = Collisions_InputController.Instance.DropBoxParticleGraph.value;
+            GraphX.GetComponent<GraphMaker>()._tag = "XMomentum";
+            GraphX.GetComponent<GraphMaker>().CreateGraph(CollisionsParticle.ParticleInstances[index].momentumGraphPointsX);
+            GraphY.GetComponent<GraphMaker>()._tag = "YMomentum";
+            GraphY.GetComponent<GraphMaker>().CreateGraph(CollisionsParticle.ParticleInstances[index].momentumGraphPointsY);
+
+            timeTillUpdate = timePerUpdate;
+        }
+        else
+        {
+            timeTillUpdate -= Time.deltaTime;
+        }
+    }
+
     //Updates partic
     private void UpdateParticleLabel()
     {

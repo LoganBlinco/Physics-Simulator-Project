@@ -54,6 +54,8 @@ public class Collisions_InputController : MonoBehaviour {
 
     //Dropbox containing particle options
 	public Dropdown DropBoxParticle;
+
+    public Dropdown DropBoxParticleGraph;
     //Current particle selected from the dropbox
 	public int ParticleIndexSelected = 0;
 
@@ -75,13 +77,32 @@ public class Collisions_InputController : MonoBehaviour {
 	public Slider Slider_Radius;
     //Label storing value of slider
 	public Text Label_Radius;
-	#endregion
+    #endregion
 
-	#endregion
+    #endregion
 
-	#region ParticleSliderUpdates
+    #region Particle Infomation / Particle graph selection
+    //References to UI elements
+    public GameObject PanelParticleInfomation;
+    public GameObject PanelParticeGraph;
+
+    //Selecting the particle infomation panel
+    public void OnParticleInfomationClicked()
+    {
+        PanelParticleInfomation.gameObject.SetActive(true);
+        PanelParticeGraph.gameObject.SetActive(false);
+    }
+    //Selecting the particle graph panel
+    public void OnParticleGraphClicked()
+    {
+        PanelParticleInfomation.gameObject.SetActive(false);
+        PanelParticeGraph.gameObject.SetActive(true);
+    }
+    #endregion
+
+    #region ParticleSliderUpdates
     //When slider is changed must update label and current particles value
-	public void OnMassSliderChanged()
+    public void OnMassSliderChanged()
 	{
         //Updates Label
 		OnSliderChanged(Slider_Mass, Label_Mass);
@@ -141,7 +162,10 @@ public class Collisions_InputController : MonoBehaviour {
 	{
         //Creates the reference to the UI instance
 		Instance = this;
-	}
+        //Selecting the particle infomation panel
+        PanelParticleInfomation.gameObject.SetActive(true);
+        PanelParticeGraph.gameObject.SetActive(false);
+    }
     #endregion
 
     #region DropBox updates
@@ -170,6 +194,7 @@ public class Collisions_InputController : MonoBehaviour {
 		string _text = "Particle "+(size).ToString();
         //Sets new options to be the next particle
 		DropBoxParticle.options [size-1] = new Dropdown.OptionData () { text = _text };
+        DropBoxParticleGraph.options.Add(new Dropdown.OptionData() { text = _text });
 		_text = "Add Particle";
         //Option to add particle added at end of list
 		DropBoxParticle.options.Add(new Dropdown.OptionData() { text = _text });

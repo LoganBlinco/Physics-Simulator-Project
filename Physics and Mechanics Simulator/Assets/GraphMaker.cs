@@ -50,6 +50,7 @@ public class GraphMaker : MonoBehaviour
     public void CreateGraph(List<Vector2> pointsToPlot)
     {
         InitializeVariables();
+        int size = pointsToPlot.Count;
         points = pointsToPlot;
 
 
@@ -58,12 +59,15 @@ public class GraphMaker : MonoBehaviour
         VerticalHeight = transform.GetComponent<RectTransform>().rect.height;
 
         //Sorts the vectors in the list variable [points] so that the x values are in assending order
+        //Dont need to sort because come in time order
         Sort(ref points);
 
         //minimum or maximum value in the list [points] at dimention 0 or 1 (x or y)
         minX = GetMin(points, 0);
+        //minimum X value is always 0
+        //minX = 0;
         minY = GetMin(points, 1);
-        maxX = GetMax(points, 0);
+        maxX = pointsToPlot[size - 1].x;
         maxY = GetMax(points, 1);
 
         //Calculates the values for the xRatio and yRatio variabels
@@ -225,6 +229,11 @@ public class GraphMaker : MonoBehaviour
                 (transform.position.x + HorizontalHeight * leftPaddingPercent) + (points[i].x - minX) * xRatio,
                 (transform.position.y + VerticalHeight * bottomPaddingPercent) + (points[i].y - minY) * yRatio,
                 0.0f);
+            Debug.Log(transform.position.x);
+            Debug.Log(HorizontalHeight);
+            Debug.Log(xRatio);
+            Debug.Log(points[i].x - minX);
+            Debug.Log(position);
 
             CreatePoint(position);
         }
@@ -233,10 +242,12 @@ public class GraphMaker : MonoBehaviour
     private void CreatePoint(Vector3 position)
     {
         //Creates the prefab using the pointPrefab at location = position with no rotation
-        GameObject temp = Instantiate(pointPrefab, position, Quaternion.identity) as GameObject;
+        GameObject temp = Instantiate(pointPrefab) as GameObject;
         //Parant is the object attached to this script (which is a sub parant of canvas allowing it to be seen)
         temp.transform.SetParent(transform);
         temp.name = "X = " + position.x.ToString();
+        temp.transform.position = position;
+
         temp.tag = _tag;
         //adds gameobject to the pointsObjects lists
         pointsObjects.Add(temp);

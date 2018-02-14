@@ -13,6 +13,13 @@ public class CollisionsParticle : MonoBehaviour {
 
     #endregion
 
+    #region Variables for graph
+
+    public List<Vector2> momentumGraphPointsX = new List<Vector2>();
+    public List<Vector2> momentumGraphPointsY = new List<Vector2>();
+
+    #endregion
+
     #region Particle properties
     //Reference to the GameObject in the scene which IS the particle 
     public GameObject MyGameObject;

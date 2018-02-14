@@ -67,6 +67,8 @@ public class Suvat_UiController : MonoBehaviour {
         CameraController.DropBoxTarget = DropBox_CameraTarget;
         SimulateController.LabelTime = Label_Time;
 
+        SimulateController.GraphDropBoxDimention = GraphDropBoxDimention;
+        SimulateController.GraphDropBoxParticles = GraphDropBoxParticles;
 
         //begins program with Particle infomation selected
         //Enabled Particle infomation panel
