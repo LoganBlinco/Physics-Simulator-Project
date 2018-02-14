@@ -44,7 +44,10 @@ public class CollisionsSimulationController : MonoBehaviour {
     public GameObject GraphX;
     public GameObject GraphY;
 
+    //Time for each graph update
+    //Lower value = more processing
     private float timePerUpdate = 1f;
+    //Time remaining until next graph update
     private float timeTillUpdate = 0.0f;
 
 
@@ -64,21 +67,19 @@ public class CollisionsSimulationController : MonoBehaviour {
 			simulationTime += deltaT;
 		}
 	}
-
+    //Ran to control the updating of the quantity graphs
     private void UpdateParticleGraphValues()
     {
         if (timeTillUpdate <= 0)
         {
             foreach(CollisionsParticle particle in CollisionsParticle.ParticleInstances)
             {
-                particle.momentumGraphPointsX.Add(new Vector3(
-                    simulationTime,
-                    particle.mass * particle.currentVelocity.x));
-                particle.momentumGraphPointsY.Add(new Vector3(
-                    simulationTime,
-                    particle.mass * particle.currentVelocity.y));
+                //Updates the values which will be used to plot
+                UpdateGraphPointValues(particle);
             }
+            //Index of particle user has selected for graphing
             int index = Collisions_InputController.Instance.DropBoxParticleGraph.value;
+            //Updating graphs
             GraphX.GetComponent<GraphMaker>().CreateGraph(CollisionsParticle.ParticleInstances[index].momentumGraphPointsX);
             GraphY.GetComponent<GraphMaker>().CreateGraph(CollisionsParticle.ParticleInstances[index].momentumGraphPointsY);
 
@@ -89,6 +90,17 @@ public class CollisionsSimulationController : MonoBehaviour {
             timeTillUpdate -= Time.deltaTime;
         }
     }
+    //Updates the momentum points in the X and Y plane for the current simulation time
+    private void UpdateGraphPointValues(CollisionsParticle particle)
+    {
+        particle.momentumGraphPointsX.Add(new Vector2(
+            simulationTime,
+            particle.mass * particle.currentVelocity.x));
+        particle.momentumGraphPointsY.Add(new Vector2(
+            simulationTime,
+            particle.mass * particle.currentVelocity.y));
+    }
+
 
     //Updates partic
     private void UpdateParticleLabel()

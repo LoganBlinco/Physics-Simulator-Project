@@ -14,7 +14,9 @@ public class CollisionsParticle : MonoBehaviour {
     #endregion
 
     #region Variables for graph
-
+    //Stores points which are used for graphing
+    //First dimention for time
+    //Second dimention for momentum in the X or Y plane
     public List<Vector2> momentumGraphPointsX = new List<Vector2>();
     public List<Vector2> momentumGraphPointsY = new List<Vector2>();
 

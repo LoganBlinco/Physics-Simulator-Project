@@ -194,6 +194,7 @@ public class Collisions_InputController : MonoBehaviour {
 		string _text = "Particle "+(size).ToString();
         //Sets new options to be the next particle
 		DropBoxParticle.options [size-1] = new Dropdown.OptionData () { text = _text };
+        //The graph's particle selection only needs the adding to the option list
         DropBoxParticleGraph.options.Add(new Dropdown.OptionData() { text = _text });
 		_text = "Add Particle";
         //Option to add particle added at end of list
