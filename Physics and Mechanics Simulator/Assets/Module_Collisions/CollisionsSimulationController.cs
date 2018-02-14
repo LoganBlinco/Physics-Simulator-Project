@@ -44,7 +44,7 @@ public class CollisionsSimulationController : MonoBehaviour {
     public GameObject GraphX;
     public GameObject GraphY;
 
-    private float timePerUpdate = 0.5f;
+    private float timePerUpdate = 1f;
     private float timeTillUpdate = 0.0f;
 
 
@@ -79,9 +79,7 @@ public class CollisionsSimulationController : MonoBehaviour {
                     particle.mass * particle.currentVelocity.y));
             }
             int index = Collisions_InputController.Instance.DropBoxParticleGraph.value;
-            GraphX.GetComponent<GraphMaker>()._tag = "XMomentum";
             GraphX.GetComponent<GraphMaker>().CreateGraph(CollisionsParticle.ParticleInstances[index].momentumGraphPointsX);
-            GraphY.GetComponent<GraphMaker>()._tag = "YMomentum";
             GraphY.GetComponent<GraphMaker>().CreateGraph(CollisionsParticle.ParticleInstances[index].momentumGraphPointsY);
 
             timeTillUpdate = timePerUpdate;

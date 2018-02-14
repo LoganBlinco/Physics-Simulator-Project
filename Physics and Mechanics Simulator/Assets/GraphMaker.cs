@@ -50,7 +50,7 @@ public class GraphMaker : MonoBehaviour
     public void CreateGraph(List<Vector2> pointsToPlot)
     {
         InitializeVariables();
-        int size = pointsToPlot.Count;
+        int pointsToPlotSize = pointsToPlot.Count;
         points = pointsToPlot;
 
 
@@ -58,16 +58,12 @@ public class GraphMaker : MonoBehaviour
         HorizontalHeight = transform.GetComponent<RectTransform>().rect.width;
         VerticalHeight = transform.GetComponent<RectTransform>().rect.height;
 
-        //Sorts the vectors in the list variable [points] so that the x values are in assending order
-        //Dont need to sort because come in time order
-        Sort(ref points);
-
         //minimum or maximum value in the list [points] at dimention 0 or 1 (x or y)
-        minX = GetMin(points, 0);
         //minimum X value is always 0
-        //minX = 0;
+        minX = 0;
         minY = GetMin(points, 1);
-        maxX = pointsToPlot[size - 1].x;
+        //max x is always the final points x value
+        maxX = pointsToPlot[pointsToPlotSize - 1].x;
         maxY = GetMax(points, 1);
 
         //Calculates the values for the xRatio and yRatio variabels
@@ -84,7 +80,7 @@ public class GraphMaker : MonoBehaviour
     private void InitializeVariables()
     {
         //Destroyes objects create by the grapher
-        DestroyObejctsWithTag(_tag);
+        DestroyChildren();
         pointsObjects = new List<GameObject>();
         points = new List<Vector2>();
         minX = 0;
@@ -96,19 +92,11 @@ public class GraphMaker : MonoBehaviour
     }
 
     //Destroys anyobject with the input tag parameter in the scene
-    public static void DestroyObejctsWithTag(string tag)
+    public void DestroyChildren()
     {
-        try
+        foreach (Transform child in transform)
         {
-            GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(tag);
-            for (int i = 0; i < gameObjects.Length; i++)
-            {
-                Destroy(gameObjects[i]);
-            }
-        }
-        catch(UnityException)
-        {
-
+            GameObject.Destroy(child.gameObject);
         }
     }
     #endregion
@@ -229,12 +217,6 @@ public class GraphMaker : MonoBehaviour
                 (transform.position.x + HorizontalHeight * leftPaddingPercent) + (points[i].x - minX) * xRatio,
                 (transform.position.y + VerticalHeight * bottomPaddingPercent) + (points[i].y - minY) * yRatio,
                 0.0f);
-            Debug.Log(transform.position.x);
-            Debug.Log(HorizontalHeight);
-            Debug.Log(xRatio);
-            Debug.Log(points[i].x - minX);
-            Debug.Log(position);
-
             CreatePoint(position);
         }
     }
