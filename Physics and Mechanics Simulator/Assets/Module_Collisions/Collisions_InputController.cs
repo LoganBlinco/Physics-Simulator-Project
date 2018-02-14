@@ -120,7 +120,7 @@ public class Collisions_InputController : MonoBehaviour {
 	{
         //Updates Label
         OnSliderChanged(Slider_Radius, Label_Radius);
-		CollisionsParticle.ParticleInstances [ParticleIndexSelected].radius = Slider_Radius.value;
+		CollisionsParticle.ParticleInstances [ParticleIndexSelected].diameter = Slider_Radius.value;
 	}
     //Updates the labels text to store the value of slider rounded to 2 D.P
 	public void OnSliderChanged(Slider sliderChanged , Text LabelToUpdate)
@@ -165,13 +165,19 @@ public class Collisions_InputController : MonoBehaviour {
         //Selecting the particle infomation panel
         PanelParticleInfomation.gameObject.SetActive(true);
         PanelParticeGraph.gameObject.SetActive(false);
-    }
-    #endregion
+        PanelAbout.gameObject.SetActive(false);
+
+        BorderLeft = GameObject.Find("BorderLeft");
+        BorderRight = GameObject.Find("BorderRight");
+        BorderTop = GameObject.Find("BorderTop");
+        BorderBottom = GameObject.Find("BorderBottom");
+}
+#endregion
 
     #region DropBox updates
-    //Ran when the value of DropBox_Particle is changed
-    //Must check if add particle has been selected and if so add it
-    public void OnDropBoxParticleChanged()
+//Ran when the value of DropBox_Particle is changed
+//Must check if add particle has been selected and if so add it
+public void OnDropBoxParticleChanged()
 	{
         //Max number of options in dropbox
 		int maximum = DropBoxParticle.options.Count;
@@ -191,6 +197,7 @@ public class Collisions_InputController : MonoBehaviour {
     //Adds another particle option to the dropbox and upates the "Add particle" option
 	private void AddOptionToDropBox (int size)
 	{
+        Debug.Log("ran~");
 		string _text = "Particle "+(size).ToString();
         //Sets new options to be the next particle
 		DropBoxParticle.options [size-1] = new Dropdown.OptionData () { text = _text };
@@ -232,7 +239,7 @@ public class Collisions_InputController : MonoBehaviour {
 		InputField_VelocityY.text = values.currentVelocity.y.ToString ();
 		Slider_Mass.value = values.mass;
 		Slider_Restitution.value = values.restitution;
-		Slider_Radius.value = values.radius;
+		Slider_Radius.value = values.diameter;
 	}
     //Resets UI elements to default values
 	public void ResetUI()
@@ -243,5 +250,98 @@ public class Collisions_InputController : MonoBehaviour {
 		Slider_Restitution.value = 1;
 		Slider_Radius.value = 1;
 	}
+    #endregion
+
+    #region Creating random particles
+
+    private int numberOfRandom = 5;
+
+    private GameObject BorderLeft;
+    private GameObject BorderRight;
+    private GameObject BorderTop;
+    private GameObject BorderBottom;
+
+    public void OnRandomClicked()
+    {
+        //Empties list of particles created
+        CollisionsParticle.ParticleInstances = new List<CollisionsParticle>();
+        //Destroys any particle gameobjects in the scene
+        DestroyObjectsWithTag("Particle");
+        //Adds the particles options to the dropbox's (graph and selector)
+        AddRandomParticlesToDropBox();
+        //Creates the particles with values
+        for (int i =0;i<numberOfRandom;i++)
+        {
+            CreateRandomParticle();
+        }
+    }
+    //Creates and gives random values to particles
+    private void CreateRandomParticle()
+    {
+        //UnityEngine.Random.RandomRange generates a float between min and max
+        CollisionsParticle random = new CollisionsParticle();
+        random.initialVelocity = new Vector2(
+            UnityEngine.Random.RandomRange(-5f, 5f),
+            UnityEngine.Random.RandomRange(-5f, 5f));
+        random.mass = UnityEngine.Random.Range(1f, 5f);
+        random.restitution = UnityEngine.Random.Range(1f,1f);
+        Debug.Log(random.restitution);
+        random.diameter = UnityEngine.Random.Range(1f, 1.5f);
+        Vector3 newPosition = new Vector2(
+            UnityEngine.Random.Range(BorderLeft.transform.position.x, BorderRight.transform.position.x),
+            UnityEngine.Random.Range(BorderBottom.transform.position.y, BorderTop.transform.position.y));
+        random.MyGameObject.transform.position = newPosition;
+        CollisionsParticle.ParticleInstances.Add(random);
+    }
+    //Adds particle options to the dropboxs
+    private void AddRandomParticlesToDropBox()
+    {
+        //Removing all options
+        DropBoxParticleGraph.options.Clear();
+        DropBoxParticle.options.Clear();
+
+        string _text;
+        for (int i = 0; i < numberOfRandom; i++)
+        {
+            _text = "Particle " + (i + 1).ToString();
+            //Sets new options to be the next particle
+            DropBoxParticle.options.Add(new Dropdown.OptionData() { text = _text });
+            //The graph's particle selection only needs the adding to the option list
+            DropBoxParticleGraph.options.Add(new Dropdown.OptionData() { text = _text });
+        }
+        _text = "Add Particle";
+        //Option to add particle added at end of list
+        DropBoxParticle.options.Add(new Dropdown.OptionData() { text = _text });
+        DropBoxParticle.RefreshShownValue();
+    }
+    private void DestroyObjectsWithTag(string _tag)
+    {
+        GameObject[] objects = GameObject.FindGameObjectsWithTag(_tag);
+
+        for (var i = 0; i < objects.Length; i++)
+        {
+            Destroy(objects[i]);
+        }
+    }
+    #endregion
+
+    #region About section
+    //Reference to the about panel
+    public GameObject PanelAbout;
+
+    public void OnAboutClicked()
+    {
+        PanelAbout.gameObject.SetActive(true);
+        PanelParticeGraph.gameObject.SetActive(false);
+        PanelParticleInfomation.gameObject.SetActive(false);
+    }
+
+    public void OnAboutOkClicked()
+    {
+        PanelAbout.gameObject.SetActive(false);
+        PanelParticeGraph.gameObject.SetActive(false);
+        PanelParticleInfomation.gameObject.SetActive(true);
+    }
+
     #endregion
 }

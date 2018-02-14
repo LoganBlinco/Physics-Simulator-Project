@@ -22,7 +22,7 @@ public class Collisions : MonoBehaviour {
 		newParticle.initialVelocity = Vector3.zero;
 		newParticle.mass = 1.0f;
 		newParticle.restitution = 1.0f;
-		newParticle.radius = 1.0f;
+		newParticle.diameter = 1.0f;
         //Adds particle to the list which causes the prefab to be instatiated
 		CollisionsParticle.ParticleInstances.Add (newParticle);
 	}

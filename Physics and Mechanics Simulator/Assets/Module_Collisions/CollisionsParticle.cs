@@ -68,24 +68,24 @@ public class CollisionsParticle : MonoBehaviour {
 		set { _restitution = MyMaths.Clamp (value, 0, 1);}
 	}
 
-    //Radius cannot be negative or 0 and when assigned the  particles gameobject must be scaled accordingly
-	private float _radius = 1;
-	public float radius
+    //Diameter cannot be negative or 0 and when assigned the  particles gameobject must be scaled accordingly
+	private float _diameter = 1;
+	public float diameter
 	{
-		get {return _radius;}
+		get {return _diameter;}
 		set
         {
             if (value == 0)
             {
                 //Default value
-                _radius = 1;
+                _diameter = 1;
             }
             else
             {
-                _radius = MyMaths.Magnitude(value);
+                _diameter = MyMaths.Magnitude(value);
             }
-            //Sets the radius of the sphere gameobject representing the particle (sets all dimentions)
-			MyGameObject.transform.localScale = Vector3.one * _radius;
+            //Sets the Diameter of the sphere gameobject representing the particle (sets all dimentions)
+            MyGameObject.transform.localScale = Vector3.one * _diameter;
         }
 	}
     #endregion
@@ -105,7 +105,7 @@ public class CollisionsParticle : MonoBehaviour {
         //Instatiates prefab into scene
 		GameObject particleObject = Instantiate (PrefabSphere) as GameObject;
         //Scales the prefab
-		particleObject.transform.localScale = Vector3.one * radius;
+		particleObject.transform.localScale = Vector3.one * diameter;
         //Centers prefab to middle of scene
 		particleObject.transform.position = new Vector3 (0, 1, 0);
         //Assigns object to this instance

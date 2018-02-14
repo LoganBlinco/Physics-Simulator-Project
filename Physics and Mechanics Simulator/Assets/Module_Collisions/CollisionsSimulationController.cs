@@ -125,9 +125,17 @@ public class CollisionsSimulationController : MonoBehaviour {
         {
             Vector3 newPosition = particle.MyGameObject.transform.position + particle.currentVelocity * deltaT;
             //Clamps the particles position to inside of the borders
-            newPosition.x = MyMaths.Clamp(newPosition.x, BorderLeft.transform.position.x, BorderRight.transform.position.x);
-            newPosition.y = MyMaths.Clamp(newPosition.y, BorderBottom.transform.position.y, BorderTop.transform.position.y);
+            float diameter = particle.diameter;
 
+            float minX = BorderLeft.transform.position.x + diameter / 2 + (BorderLeft.GetComponent<Renderer>().bounds.size.x / 2) - 0.1f;
+            float maxX = BorderRight.transform.position.x - diameter / 2 - (BorderRight.GetComponent<Renderer>().bounds.size.x / 2) + 0.1f;
+
+            float minY = BorderBottom.transform.position.y + diameter / 2 + (BorderBottom.GetComponent<Renderer>().bounds.size.y / 2) - 0.1f;
+            float maxY = BorderTop.transform.position.y - diameter / 2 - (BorderTop.GetComponent<Renderer>().bounds.size.y / 2) + 0.1f;
+
+
+            newPosition.x = MyMaths.Clamp(newPosition.x, minX, maxX);
+            newPosition.y = MyMaths.Clamp(newPosition.y, minY , maxY);
             particle.MyGameObject.transform.position = newPosition;
         }
 	}
