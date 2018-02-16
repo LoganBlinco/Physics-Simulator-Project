@@ -49,6 +49,19 @@ public class Gravity_InputController : MonoBehaviour {
 
     #endregion
 
+    #region Simulation Sliders
+
+    public void OnSimulationSpeedChanged()
+    {
+        //Rounding to 2 Decimal places
+        string value2DP = Slider_SimulationSpeed.value.ToString("n2");
+        //Updates the label's text
+        Label_SimulationSpeed.text = "Speed = "+value2DP+"x";
+        GravitySimulationController.SimulationSpeed = Slider_SimulationSpeed.value;
+    }
+
+    #endregion
+
     #region DropBox updates
     //Ran when the value of DropBox_Particle is changed
     //Must check if add particle has been selected and if so add it
@@ -75,6 +88,7 @@ public class Gravity_InputController : MonoBehaviour {
         string _text = "Particle " + (size).ToString();
         //Sets new options to be the next particle
         DropBoxPlanet.options[size - 1] = new Dropdown.OptionData() { text = _text };
+        Dropbox_CameraTarget.options.Add(new Dropdown.OptionData() { text = _text });
         _text = "Add Particle";
         //Option to add particle added at end of list
         DropBoxPlanet.options.Add(new Dropdown.OptionData() { text = _text });
@@ -100,6 +114,25 @@ public class Gravity_InputController : MonoBehaviour {
             ResetUI();
         }
     }
+    #endregion
+
+    #region Camera DropBox
+
+    public Dropdown Dropbox_CameraTarget;
+
+    public void OnCameraTargetChanged()
+    {
+        if (Dropbox_CameraTarget.value == 0)
+        {
+            Gravity_CameraController.isFreeRoam = true;
+        }
+        else
+        {
+            Gravity_CameraController.isFreeRoam = false;
+        }
+    }
+
+
     #endregion
 
     #region Particle Slider Updates
@@ -134,6 +167,7 @@ public class Gravity_InputController : MonoBehaviour {
     public void Start()
     {
         Instance = this;
+        Gravity_CameraController.DropBoxTarget = Dropbox_CameraTarget;
         //Assigns prefab to the varaible from the resources folder
         //Generates the first object in the scene
         CreateFirstObject();
@@ -148,11 +182,9 @@ public class Gravity_InputController : MonoBehaviour {
         newParticle.diameter = 1.0f;
         //Adds particle to the list which causes the prefab to be instatiated
         GravityPlanets.PlanetInstances.Add(newParticle);
-        Debug.Log(GravityPlanets.PlanetInstances.Count);
     }
 
     #endregion
-
 
     #region Updating UI and resetting
 

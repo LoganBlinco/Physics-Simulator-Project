@@ -6,9 +6,19 @@ using System;
 
 public class GravitySimulationController : MonoBehaviour {
 
-    const float G = 6.7f;
+    static float G = 6.7f * Mathf.Pow(10,-11);
     //Makes 5 in game units be equal to the distance Moon to Earth
     const float distanceMod = 76880;
+
+    //5 units is equal to the distance earth to moon
+    static float newDistanceMod = 384 * Mathf.Pow(10, 6) / 5;
+    //10 masses is equal to the earth mass
+    static float newMassMod = 6.0f * Mathf.Pow(10, 24);
+
+    static float timeMod = 100;
+
+    static float newG =  timeMod * G * newMassMod / Mathf.Pow(newDistanceMod, 2);
+
 
     #region Variables
     //Stores the time in which the simulation has been occuring for
@@ -74,7 +84,7 @@ public class GravitySimulationController : MonoBehaviour {
                 sum += planet.mass * positionDelta / Mathf.Pow(MyMaths.Vector_Magnitude(positionDelta),3);
             }
         }
-        return G * sum;
+        return newG * sum;
     }
 
     //Updates time label to match with current simulation time
