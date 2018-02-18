@@ -8,6 +8,7 @@ public class GravityPlanets : MonoBehaviour {
     #region Header variables
     public static List<GravityPlanets> PlanetInstances = new List<GravityPlanets>();
     public static List<GameObject> PlanetPrefabs = new List<GameObject>();
+    public static UnityEngine.Object[] spriteList;
     #endregion
 
     #region Multipliers 
@@ -89,26 +90,25 @@ public class GravityPlanets : MonoBehaviour {
     private void CreatePlanetReferences()
     {
         PlanetPrefabs.Add(Resources.Load("GravityEarth") as GameObject);
+        spriteList = Resources.LoadAll("Sprites",typeof(Sprite));
     }
 
     //Controls the instatiation process of creating the particle
     private void CreateObject()
     {
-        System.Random generator = new System.Random();
-        int index = generator.Next(0, PlanetPrefabs.Count - 1);
-
         //Instatiates random prefab from options
-        GameObject planetObject = Instantiate(PlanetPrefabs[index]) as GameObject;
+        GameObject planetObject = Instantiate(PlanetPrefabs[0]) as GameObject;
         //Scales the prefab
         planetObject.transform.localScale = Vector3.one * diameter * diameterMod;
         //Centers prefab to middle of scene
         planetObject.transform.position = new Vector3(0, 1, 0);
         //Assigns object to this instance
         MyGameObject = planetObject;
-        //Assigns particles index value to the attached script 
-        //This is used when performing collision calculations
-        //planetObject.GetComponent<GravityCalculator>().particleIndex = GravityPlanets.PlanetInstances.Count;
 
+        System.Random generator = new System.Random();
+        int index = generator.Next(0, spriteList.Length - 1);
+        MyGameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)spriteList[index];
+        MyGameObject.GetComponent<GravityCollisions>().particleIndex = GravityPlanets.PlanetInstances.Count;
     }
     #endregion
 
