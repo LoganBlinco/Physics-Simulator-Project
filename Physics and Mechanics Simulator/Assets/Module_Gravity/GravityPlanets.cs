@@ -8,11 +8,12 @@ public class GravityPlanets : MonoBehaviour {
     #region Header variables
     public static List<GravityPlanets> PlanetInstances = new List<GravityPlanets>();
     public static List<GameObject> PlanetPrefabs = new List<GameObject>();
+    public static UnityEngine.Object[] PlanetSprites;
     #endregion
 
     #region Multipliers 
 
-    float diameterMod = 0.25f;
+    //public static float diameterMod = 1f;
 
     #endregion
 
@@ -56,7 +57,7 @@ public class GravityPlanets : MonoBehaviour {
     }
 
     //Diameter cannot be negative or 0 and when assigned the planet gameobject must be scaled accordingly
-    private float _diameter = 1;
+    private float _diameter = 0.25f;
     public float diameter
     {
         get { return _diameter; }
@@ -65,11 +66,11 @@ public class GravityPlanets : MonoBehaviour {
             if (value == 0)
             {
                 //Default value
-                _diameter = 1 * diameterMod;
+                _diameter = 0.25f;
             }
             else
             {
-                _diameter = MyMaths.Magnitude(value * diameterMod);
+                _diameter = MyMaths.Magnitude(value);
             }
             //Sets the Diameter of the sphere gameobject representing the particle (sets all dimentions)
             MyGameObject.transform.localScale = Vector3.one * _diameter;
@@ -89,26 +90,20 @@ public class GravityPlanets : MonoBehaviour {
     private void CreatePlanetReferences()
     {
         PlanetPrefabs.Add(Resources.Load("GravityEarth") as GameObject);
+		PlanetSprites = Resources.LoadAll ("Planet_Sprites", typeof(Sprite));
     }
 
     //Controls the instatiation process of creating the particle
     private void CreateObject()
     {
         System.Random generator = new System.Random();
-        int index = generator.Next(0, PlanetPrefabs.Count - 1);
+		int index = generator.Next(0, PlanetSprites.Length - 1);
 
-        //Instatiates random prefab from options
-        GameObject planetObject = Instantiate(PlanetPrefabs[index]) as GameObject;
-        //Scales the prefab
-        planetObject.transform.localScale = Vector3.one * diameter * diameterMod;
-        //Centers prefab to middle of scene
+        GameObject planetObject = Instantiate(PlanetPrefabs[0]) as GameObject;
         planetObject.transform.position = new Vector3(0, 1, 0);
-        //Assigns object to this instance
         MyGameObject = planetObject;
-        //Assigns particles index value to the attached script 
-        //This is used when performing collision calculations
-        //planetObject.GetComponent<GravityCalculator>().particleIndex = GravityPlanets.PlanetInstances.Count;
-
+		MyGameObject.GetComponent<SpriteRenderer> ().sprite = PlanetSprites[index] as Sprite;
+        diameter = 0.25f;
     }
     #endregion
 

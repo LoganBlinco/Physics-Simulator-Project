@@ -254,7 +254,7 @@ public void OnDropBoxParticleChanged()
 
     #region Creating random particles
 
-    private int numberOfRandom = 5;
+    private int numberOfRandom = 15;
 
     private GameObject BorderLeft;
     private GameObject BorderRight;

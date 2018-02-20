@@ -36,7 +36,7 @@ public class Gravity_InputController : MonoBehaviour {
 
     #endregion
 
-    #region Simulation Buttons
+    #region Simulation Controls
 
     public void OnPlayClicked()
     {
@@ -47,6 +47,13 @@ public class Gravity_InputController : MonoBehaviour {
         GravitySimulationController.isSimulating = false;
     }
 
+    public void OnSliderSimulationSpeedChanged()
+    {
+        GravitySimulationController.SimulationSpeed = Slider_SimulationSpeed.value;
+        //Rounding to 2 Decimal places
+        string value2DP = Slider_SimulationSpeed.value.ToString("n2");
+        Label_SimulationSpeed.text = "Speed = " + value2DP + "x";
+    }
     #endregion
 
     #region DropBox updates
@@ -115,6 +122,7 @@ public class Gravity_InputController : MonoBehaviour {
     {
         //Updates Label
         OnSliderChanged(Slider_Diameter, Label_Diameter);
+        Debug.Log(GravityPlanets.PlanetInstances[ParticleIndexSelected].diameter);
         GravityPlanets.PlanetInstances[ParticleIndexSelected].diameter = Slider_Diameter.value;
     }
     //Updates the labels text to store the value of slider rounded to 2 D.P
@@ -145,10 +153,11 @@ public class Gravity_InputController : MonoBehaviour {
         GravityPlanets newParticle = new GravityPlanets();
         newParticle.initialVelocity = Vector3.zero;
         newParticle.mass = 1.0f;
-        newParticle.diameter = 1.0f;
+        newParticle.diameter = 0.25f;
         //Adds particle to the list which causes the prefab to be instatiated
         GravityPlanets.PlanetInstances.Add(newParticle);
-        Debug.Log(GravityPlanets.PlanetInstances.Count);
+        OnRadiusChanged();
+        OnMassSliderChanged();
     }
 
     #endregion
@@ -163,6 +172,9 @@ public class Gravity_InputController : MonoBehaviour {
         Inputfield_VelocityY.text = values.currentVelocity.y.ToString();
         Slider_Mass.value = values.mass;
         Slider_Diameter.value = values.diameter;
+
+        OnMassSliderChanged();
+        OnRadiusChanged();
     }
     //Resets UI elements to default values
     public void ResetUI()
@@ -170,7 +182,7 @@ public class Gravity_InputController : MonoBehaviour {
         Inputfield_VelocityX.text = "";
         Inputfield_VelocityY.text = "";
         Slider_Mass.value = 1;
-        Slider_Diameter.value = 1;
+        Slider_Diameter.value = 0.25f;
     }
 
 
