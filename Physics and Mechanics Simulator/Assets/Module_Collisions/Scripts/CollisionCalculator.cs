@@ -6,9 +6,9 @@ public class CollisionCalculator : MonoBehaviour {
 
     //Stores index of the particle in the CollisionParticles.ParticleInstances list
 	public int particleIndex;
-    //Bool preventing double calculations when two particles collide
-    //This would be due to each one calling the OnTriggerEnter method
-	private bool hasCollided = false;
+
+
+    public List<GameObject> collidedObjects = new List<GameObject>();
 
     #region OnTriggers
     //Called when a trigger collider interacts with a rigid body with a collider
@@ -40,8 +40,8 @@ public class CollisionCalculator : MonoBehaviour {
         //If a particle to particle collision has occured then the collision process has ended therefore hasCollided = false (no longer colliding)
         if (other.gameObject.tag == "Particle")
         {
-            other.gameObject.GetComponent<CollisionCalculator>().hasCollided = false;
-            hasCollided = false;
+            other.gameObject.GetComponent<CollisionCalculator>().collidedObjects.Remove(gameObject);
+            collidedObjects.Remove(other.gameObject);
         }
 	}
     #endregion
@@ -82,12 +82,14 @@ public class CollisionCalculator : MonoBehaviour {
 	{
 		int otherIndex = other.gameObject.GetComponent<CollisionCalculator> ().particleIndex;
         //Preventing double calculations
-		if (hasCollided == false)
+		if (collidedObjects.Contains(other.gameObject) == false)
 		{
-			other.gameObject.GetComponent<CollisionCalculator> ().hasCollided = true;
-			hasCollided = true;
+            //other.gameObject.GetComponent<CollisionCalculator> ().hasCollided = true;
+            //hasCollided = true;
+            other.gameObject.GetComponent<CollisionCalculator>().collidedObjects.Add(gameObject);
+            collidedObjects.Add(other.gameObject);
             //Performs the maths
-			CalculateCollision (CollisionsParticle.ParticleInstances[particleIndex], CollisionsParticle.ParticleInstances[otherIndex]);
+            CalculateCollision (CollisionsParticle.ParticleInstances[particleIndex], CollisionsParticle.ParticleInstances[otherIndex]);
 		}
 	}
     //Performs and controls the maths of the calculations

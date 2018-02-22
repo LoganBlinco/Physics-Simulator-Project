@@ -285,11 +285,18 @@ public void OnDropBoxParticleChanged()
             UnityEngine.Random.RandomRange(-5f, 5f));
         random.mass = UnityEngine.Random.Range(1f, 5f);
         random.restitution = UnityEngine.Random.Range(1f,1f);
-        Debug.Log(random.restitution);
         random.diameter = UnityEngine.Random.Range(1f, 1.5f);
+
+        float minX = BorderLeft.transform.position.x + random.diameter / 2 + (BorderLeft.GetComponent<Renderer>().bounds.size.x / 2);
+        float maxX = BorderRight.transform.position.x - random.diameter / 2 - (BorderRight.GetComponent<Renderer>().bounds.size.x / 2);
+
+        float minY = BorderBottom.transform.position.y + random.diameter / 2 + (BorderBottom.GetComponent<Renderer>().bounds.size.y / 2);
+        float maxY = BorderTop.transform.position.y - random.diameter / 2 - (BorderTop.GetComponent<Renderer>().bounds.size.y / 2);
+
         Vector3 newPosition = new Vector2(
-            UnityEngine.Random.Range(BorderLeft.transform.position.x, BorderRight.transform.position.x),
-            UnityEngine.Random.Range(BorderBottom.transform.position.y, BorderTop.transform.position.y));
+    UnityEngine.Random.Range(minX,maxX),
+    UnityEngine.Random.Range(minY,maxY));
+
         random.MyGameObject.transform.position = newPosition;
         CollisionsParticle.ParticleInstances.Add(random);
     }
