@@ -8,7 +8,7 @@ public class CollisionsSimulationController : MonoBehaviour {
 
     #region UI References
     //Stores the time in which the simulation has been occuring for
-    public static float simulationTime = 0;
+    public float simulationTime = 0;
     //Displays to the user the time the simulation has occured for
     public Text Label_Time;
 
@@ -37,6 +37,8 @@ public class CollisionsSimulationController : MonoBehaviour {
         BorderRight = GameObject.Find("BorderRight");
         BorderTop = GameObject.Find("BorderTop");
         BorderBottom = GameObject.Find("BorderBottom");
+
+        isSimulating = false;
     }
     #endregion
 
@@ -59,7 +61,7 @@ public class CollisionsSimulationController : MonoBehaviour {
 		if (isSimulating == true)
 		{
             //Time between frames multiplied by speed factor
-			deltaT = Time.deltaTime * SimulationSpeed;
+            deltaT = Time.deltaTime * SimulationSpeed;
 			UpdateTimeLabel ();
 			MoveParticles ();
             UpdateParticleLabel();
@@ -108,7 +110,11 @@ public class CollisionsSimulationController : MonoBehaviour {
         //Gets index of current particle selected
         int index = Collisions_InputController.Instance.ParticleIndexSelected;
         //Updates UI to current values
-        Collisions_InputController.Instance.UpdateUI(CollisionsParticle.ParticleInstances[index]);
+        try
+        {
+            Collisions_InputController.Instance.UpdateUI(CollisionsParticle.ParticleInstances[index]);
+        }
+        catch (ArgumentOutOfRangeException) { }
     }
 
     //Updates time label to match with current simulation time
@@ -127,16 +133,17 @@ public class CollisionsSimulationController : MonoBehaviour {
             //Clamps the particles position to inside of the borders
             float diameter = particle.diameter;
 
-            float minX = BorderLeft.transform.position.x + diameter / 2 + (BorderLeft.GetComponent<Renderer>().bounds.size.x / 2) - 0.1f;
-            float maxX = BorderRight.transform.position.x - diameter / 2 - (BorderRight.GetComponent<Renderer>().bounds.size.x / 2) + 0.1f;
+            float minX = BorderLeft.transform.position.x + diameter / 2 + (BorderLeft.GetComponent<Renderer>().bounds.size.x / 2) -0.01f;
+            float maxX = BorderRight.transform.position.x - diameter / 2 - (BorderRight.GetComponent<Renderer>().bounds.size.x / 2) + 0.01f;
 
-            float minY = BorderBottom.transform.position.y + diameter / 2 + (BorderBottom.GetComponent<Renderer>().bounds.size.y / 2) - 0.1f;
-            float maxY = BorderTop.transform.position.y - diameter / 2 - (BorderTop.GetComponent<Renderer>().bounds.size.y / 2) + 0.1f;
+            float minY = BorderBottom.transform.position.y + diameter / 2 + (BorderBottom.GetComponent<Renderer>().bounds.size.y / 2) - 0.01f;
+            float maxY = BorderTop.transform.position.y - diameter / 2 - (BorderTop.GetComponent<Renderer>().bounds.size.y / 2) + 0.01f;
 
 
             newPosition.x = MyMaths.Clamp(newPosition.x, minX, maxX);
             newPosition.y = MyMaths.Clamp(newPosition.y, minY , maxY);
             particle.MyGameObject.transform.position = newPosition;
+
         }
 	}
     #endregion

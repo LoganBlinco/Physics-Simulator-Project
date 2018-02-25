@@ -5,7 +5,7 @@ using UnityEngine;
 using System;
 
 public class GravitySimulationController : MonoBehaviour {
-
+    //Simulation gravity constant (~ 10^11 times bigger than in real life)
     const float G = 6.7f;
     //Makes 5 in game units be equal to the distance Moon to Earth
     const float distanceMod = 76880;
@@ -69,6 +69,7 @@ public class GravitySimulationController : MonoBehaviour {
         foreach (GravityPlanets planet in GravityPlanets.PlanetInstances)
         {
             positionDelta = planet.MyGameObject.transform.position - attractor.MyGameObject.transform.position;
+            //Cannot divide by 0
             if (positionDelta != Vector3.zero)
             {
                 sum += planet.mass * positionDelta / Mathf.Pow(MyMaths.Vector_Magnitude(positionDelta),3);

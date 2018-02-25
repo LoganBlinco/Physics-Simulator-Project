@@ -9,48 +9,72 @@ public class Gravity_InputController : MonoBehaviour {
     //Stores refernce to the UI controller allowing external classes to access the UI
     public static Gravity_InputController Instance;
 
+    //Stores current particle selected for particle infomation
     public int ParticleIndexSelected =0;
 
     #region Simulation References
-
+    //Reference to the dropbox storing the Camera target
+    public Dropdown CameraTarget;
+    //Label displaying simulation time
     public Text Label_SimulationTime;
+    //Slider storing the simulation speed multiplier
     public Slider Slider_SimulationSpeed;
+    //Label showing the simulatio speed
     public Text Label_SimulationSpeed;
 
     #endregion
 
     #region Particle Infomation references
-
+    //References to Input field for velocity in X and Y dimention
     public InputField Inputfield_VelocityX;
     public InputField Inputfield_VelocityY;
-
+    //Slider for mass input
     public Slider Slider_Mass;
+    //Label for displaying Slider value
     public Text Label_Mass;
-
+    //Slider for diameter input
     public Slider Slider_Diameter;
+    //Label for displaying diameter value
     public Text Label_Diameter;
 
-    //Dropbox containing Planet options
+    //Dropbox containing selectable planets or to create a new planet
     public Dropdown DropBoxPlanet;
-
-
     #endregion
 
     #region Simulation Controls
+    //Called when the camera dropbox's value is changed
+    public void OnDropBoxCameraTargetChanged()
+    {
+        //Current index of item selected
+        int value = CameraTarget.value;
+        //Index 0 is the free roam option
+        if (value == 0)
+        {
+            GravityCameraController.isFreeRoam = true;
+        }
+        else
+        {
+            GravityCameraController.isFreeRoam = false;
+        }
+    }
 
+    //Ran when play button clicked
     public void OnPlayClicked()
     {
         GravitySimulationController.isSimulating = true;
     }
+    //Ran when pause button clicked
     public void OnPauseClicked()
     {
         GravitySimulationController.isSimulating = false;
     }
-
+    //Ran when simulation speed slider is changed
+    //Must update simulation speed 
     public void OnSliderSimulationSpeedChanged()
     {
+        //Sets value
         GravitySimulationController.SimulationSpeed = Slider_SimulationSpeed.value;
-        //Rounding to 2 Decimal places
+        //Updates Label value to 2 DP
         string value2DP = Slider_SimulationSpeed.value.ToString("n2");
         Label_SimulationSpeed.text = "Speed = " + value2DP + "x";
     }
@@ -80,8 +104,9 @@ public class Gravity_InputController : MonoBehaviour {
     private void AddOptionToDropBox(int size)
     {
         string _text = "Particle " + (size).ToString();
-        //Sets new options to be the next particle
+        //Adds additonal particle to the camera target and planet selection dropbox
         DropBoxPlanet.options[size - 1] = new Dropdown.OptionData() { text = _text };
+        CameraTarget.options.Add(new Dropdown.OptionData() { text = _text });
         _text = "Add Particle";
         //Option to add particle added at end of list
         DropBoxPlanet.options.Add(new Dropdown.OptionData() { text = _text });
@@ -122,7 +147,6 @@ public class Gravity_InputController : MonoBehaviour {
     {
         //Updates Label
         OnSliderChanged(Slider_Diameter, Label_Diameter);
-        Debug.Log(GravityPlanets.PlanetInstances[ParticleIndexSelected].diameter);
         GravityPlanets.PlanetInstances[ParticleIndexSelected].diameter = Slider_Diameter.value;
     }
     //Updates the labels text to store the value of slider rounded to 2 D.P
@@ -142,11 +166,10 @@ public class Gravity_InputController : MonoBehaviour {
     public void Start()
     {
         Instance = this;
-        //Assigns prefab to the varaible from the resources folder
-        //Generates the first object in the scene
+        //Generates the first planet in the scene
         CreateFirstObject();
     }
-
+    //Creates a planet to be centered in the screen when scene loads
     private void CreateFirstObject()
     {
         //Assigns default values to the particle
@@ -156,12 +179,11 @@ public class Gravity_InputController : MonoBehaviour {
         newParticle.diameter = 0.25f;
         //Adds particle to the list which causes the prefab to be instatiated
         GravityPlanets.PlanetInstances.Add(newParticle);
+        //Update values for UI
         OnRadiusChanged();
         OnMassSliderChanged();
     }
-
     #endregion
-
 
     #region Updating UI and resetting
 
@@ -172,7 +194,7 @@ public class Gravity_InputController : MonoBehaviour {
         Inputfield_VelocityY.text = values.currentVelocity.y.ToString();
         Slider_Mass.value = values.mass;
         Slider_Diameter.value = values.diameter;
-
+        //Updates UI values
         OnMassSliderChanged();
         OnRadiusChanged();
     }

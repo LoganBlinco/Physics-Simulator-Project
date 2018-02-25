@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Collisions_InputController : MonoBehaviour {
 
@@ -36,6 +37,17 @@ public class Collisions_InputController : MonoBehaviour {
 	{
 		CollisionsSimulationController.isSimulating = false;
 	}
+
+    //Resets the scene
+    public void OnResetClicked()
+    {
+        //Resets the static variables for simulations
+        SimulateController.isSimulating = false;
+        SimulateController.simulationSpeed = 1;
+        CollisionsParticle.ParticleInstances.Clear();
+        //Loads scene to refresh values
+        SceneManager.LoadScene("CollisionsScene");
+    }
     #endregion
 
     //Reference to the Slider storing the coefficient of restitution for the border walls
@@ -254,7 +266,7 @@ public void OnDropBoxParticleChanged()
 
     #region Creating random particles
 
-    private int numberOfRandom = 15;
+    private int numberOfRandom = 6;
 
     private GameObject BorderLeft;
     private GameObject BorderRight;

@@ -6,15 +6,12 @@ using UnityEngine;
 public class GravityPlanets : MonoBehaviour {
 
     #region Header variables
+    //Stores instances of GravityPlanets which have been created
     public static List<GravityPlanets> PlanetInstances = new List<GravityPlanets>();
+    //References to planet prefabs 
     public static List<GameObject> PlanetPrefabs = new List<GameObject>();
+    //Stores sprite objects which are used when creating planets
     public static UnityEngine.Object[] PlanetSprites;
-    #endregion
-
-    #region Multipliers 
-
-    //public static float diameterMod = 1f;
-
     #endregion
 
     #region Particle properties
@@ -82,11 +79,12 @@ public class GravityPlanets : MonoBehaviour {
     //Constructor which must create the prefab reference and instatiate the planets gameobject
     public GravityPlanets()
     {
+        //Creates referecnes to prefabs and sprites to be used as planets
         CreatePlanetReferences();
         //Instatiates the prefab
         CreateObject();
     }
-
+    //Creates sprite and prefab references 
     private void CreatePlanetReferences()
     {
         PlanetPrefabs.Add(Resources.Load("GravityEarth") as GameObject);
@@ -96,14 +94,21 @@ public class GravityPlanets : MonoBehaviour {
     //Controls the instatiation process of creating the particle
     private void CreateObject()
     {
-        System.Random generator = new System.Random();
-		int index = generator.Next(0, PlanetSprites.Length - 1);
 
         GameObject planetObject = Instantiate(PlanetPrefabs[0]) as GameObject;
         planetObject.transform.position = new Vector3(0, 1, 0);
         MyGameObject = planetObject;
-		MyGameObject.GetComponent<SpriteRenderer> ().sprite = PlanetSprites[index] as Sprite;
+        //Gets random number
+        System.Random generator = new System.Random();
+        int index = generator.Next(0, PlanetSprites.Length - 1);
+        //Random sprite is seected from the list
+        MyGameObject.GetComponent<SpriteRenderer> ().sprite = PlanetSprites[index] as Sprite;
+        //Default value
         diameter = 0.25f;
+
+        //Assigns particles index value to the attached script 
+        //This is used when performing collision calculations
+        MyGameObject.GetComponent<GravityCalculator>().particleIndex = GravityPlanets.PlanetInstances.Count;
     }
     #endregion
 
