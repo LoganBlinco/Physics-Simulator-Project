@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Gravity_InputController : MonoBehaviour {
 
@@ -42,6 +43,18 @@ public class Gravity_InputController : MonoBehaviour {
     #endregion
 
     #region Simulation Controls
+    //Resets the scene
+    public void OnResetClicked()
+    {
+        //Resets the static variables for simulations
+        GravitySimulationController.isSimulating = false;
+        GravitySimulationController.SimulationSpeed = 1;
+        GravityPlanets.PlanetInstances.Clear();
+        //Loads scene to refresh values
+        SceneManager.LoadScene("GravityScene");
+    }
+
+
     //Called when the camera dropbox's value is changed
     public void OnDropBoxCameraTargetChanged()
     {
@@ -233,7 +246,6 @@ public class Gravity_InputController : MonoBehaviour {
         GravityPlanets.PlanetInstances[ParticleIndexSelected].initialVelocity = Velocity;
     }
     #endregion
-
 
     #region Inputfield Validation
     //Prevents invalid data being entered into inputfields
