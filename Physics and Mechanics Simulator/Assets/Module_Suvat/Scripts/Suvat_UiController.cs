@@ -402,10 +402,7 @@ public class Suvat_UiController : MonoBehaviour {
                 box.text = fieldInput.Substring(0, size - 1);
             }
         }
-        catch(IndexOutOfRangeException)
-        {
-
-        }
+        catch (IndexOutOfRangeException) { }
     }
 
 

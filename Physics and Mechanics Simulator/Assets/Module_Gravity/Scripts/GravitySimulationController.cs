@@ -5,10 +5,19 @@ using UnityEngine;
 using System;
 
 public class GravitySimulationController : MonoBehaviour {
-    //Simulation gravity constant (~ 10^11 times bigger than in real life)
-    const float G = 6.7f;
-    //Makes 5 in game units be equal to the distance Moon to Earth
-    const float distanceMod = 76880;
+
+    //Newtons universal gravitational constant
+    static float NewtonG = 6.7f * Mathf.Pow(10, -11);
+
+    //6 units is equal to the distance earth to moon
+    static float newDistanceMod = 384 * Mathf.Pow(10, 6) / 6;
+    //1 mass is equal to the earth mass
+    static float newMassMod = 6.0f * Mathf.Pow(10, 24);
+    //Module wide speed up
+    static float timeMod = 100;
+    //New force multiplier (the new G)
+    static float G = timeMod * NewtonG * newMassMod / Mathf.Pow(newDistanceMod, 2);
+
 
     #region Variables
     //Stores the time in which the simulation has been occuring for

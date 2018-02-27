@@ -234,4 +234,34 @@ public class Gravity_InputController : MonoBehaviour {
     }
     #endregion
 
+
+    #region Inputfield Validation
+    //Prevents invalid data being entered into inputfields
+    public void OnTextChanged(InputField box)
+    {
+        try
+        {
+            //Gets current input
+            string fieldInput = box.text;
+            int size = fieldInput.Length;
+            //Only needs to check last character
+            char lastChar = fieldInput[size - 1];
+            //Checks if the character is a number (0-9) and return true or false
+            if (Char.IsNumber(lastChar) || lastChar == '.' || lastChar == '-' || lastChar == '+')
+            {
+                return;
+            }
+            else
+            {
+                //Remove character
+                //Removes the last character
+                box.text = fieldInput.Substring(0, size - 1);
+            }
+        }
+        //Catch occurs if backspace was used
+        catch (IndexOutOfRangeException) { }
+    }
+
+
+    #endregion
 }
