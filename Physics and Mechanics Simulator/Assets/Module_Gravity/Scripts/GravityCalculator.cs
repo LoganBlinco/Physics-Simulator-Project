@@ -37,8 +37,6 @@ public class GravityCalculator : MonoBehaviour {
     private void ParticleCollisionCalculation(Collider other)
     {
         int otherIndex = other.gameObject.GetComponent<GravityCalculator>().particleIndex;
-        Debug.Log(particleIndex);
-        Debug.Log(otherIndex);
         //Preventing double calculations
         if (collidedObjects.Contains(other.gameObject) == false)
         {

@@ -6,6 +6,8 @@ using System;
 
 public class GravitySimulationController : MonoBehaviour {
 
+    #region Equation constants
+
     //Newtons universal gravitational constant
     static float NewtonG = 6.7f * Mathf.Pow(10, -11);
 
@@ -16,7 +18,9 @@ public class GravitySimulationController : MonoBehaviour {
     //Module wide speed up
     static float timeMod = 100;
     //New force multiplier (the new G)
-    static float G = timeMod * NewtonG * newMassMod / Mathf.Pow(newDistanceMod, 2);
+    public static float G = timeMod * NewtonG * newMassMod / Mathf.Pow(newDistanceMod, 2);
+
+    #endregion
 
     #region Graph variables
     public GameObject GraphSpeed;
@@ -30,7 +34,6 @@ public class GravitySimulationController : MonoBehaviour {
 
 
     #endregion 
-
 
     #region Variables
     //Stores the time in which the simulation has been occuring for

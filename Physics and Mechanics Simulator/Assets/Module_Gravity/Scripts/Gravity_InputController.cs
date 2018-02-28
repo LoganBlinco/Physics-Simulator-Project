@@ -221,6 +221,7 @@ public class Gravity_InputController : MonoBehaviour {
     //When the scene is first loaded the first particle should be in the scene ready for manipulation
     public void Start()
     {
+        Debug.Log("Scnee2);");
         Instance = this;
         //Generates the first planet in the scene
         CreateFirstObject();
@@ -229,16 +230,20 @@ public class Gravity_InputController : MonoBehaviour {
     //Creates a planet to be centered in the screen when scene loads
     private void CreateFirstObject()
     {
-        //Assigns default values to the particle
-        GravityPlanets newParticle = new GravityPlanets();
-        newParticle.initialVelocity = Vector3.zero;
-        newParticle.mass = 1.0f;
-        newParticle.diameter = 0.25f;
-        //Adds particle to the list which causes the prefab to be instatiated
-        GravityPlanets.PlanetInstances.Add(newParticle);
-        //Update values for UI
-        OnRadiusChanged();
-        OnMassSliderChanged();
+        if (GravityPlanets.PlanetInstances.Count == 0)
+        {
+            //Assigns default values to the particle
+            GravityPlanets newParticle = new GravityPlanets();
+            newParticle.initialVelocity = Vector3.zero;
+            newParticle.mass = 1.0f;
+            newParticle.diameter = 0.25f;
+            //Adds particle to the list which causes the prefab to be instatiated
+            GravityPlanets.PlanetInstances.Add(newParticle);
+            //Update values for UI
+            OnRadiusChanged();
+            OnMassSliderChanged();
+            Debug.Log("Object made");
+        }
     }
     #endregion
 
@@ -320,4 +325,14 @@ public class Gravity_InputController : MonoBehaviour {
 
 
     #endregion
+
+    #region Premade system Controller
+
+    public void OnDropBox_PresetsChanged()
+    {
+        Gravity_PremadeSystems temp = new Gravity_PremadeSystems();
+        temp.EarthMoonSystem();
+    }
+    #endregion
+
 }
