@@ -92,6 +92,7 @@ public class Gravity_InputController : MonoBehaviour {
         GravitySimulationController.isSimulating = false;
         GravitySimulationController.SimulationSpeed = 1;
         GravityPlanets.PlanetInstances.Clear();
+        Gravity_PremadeSystems.DestroyObjectsWithTag("Particle");
         //Loads scene to refresh values
         SceneManager.LoadScene("GravityScene");
     }
@@ -221,7 +222,6 @@ public class Gravity_InputController : MonoBehaviour {
     //When the scene is first loaded the first particle should be in the scene ready for manipulation
     public void Start()
     {
-        Debug.Log("Scnee2);");
         Instance = this;
         //Generates the first planet in the scene
         CreateFirstObject();
@@ -242,7 +242,6 @@ public class Gravity_InputController : MonoBehaviour {
             //Update values for UI
             OnRadiusChanged();
             OnMassSliderChanged();
-            Debug.Log("Object made");
         }
     }
     #endregion
@@ -327,11 +326,20 @@ public class Gravity_InputController : MonoBehaviour {
     #endregion
 
     #region Premade system Controller
-
+    public Dropdown DropboxPreMadeSystems;
     public void OnDropBox_PresetsChanged()
     {
-        Gravity_PremadeSystems temp = new Gravity_PremadeSystems();
-        temp.EarthMoonSystem();
+        int value = DropboxPreMadeSystems.value;
+        switch(value)
+        {
+            case 0:
+                OnResetClicked();
+                break;
+            case 1:
+                Gravity_PremadeSystems temp = new Gravity_PremadeSystems();
+                temp.EarthMoonSystem();
+                break;
+        }
     }
     #endregion
 
