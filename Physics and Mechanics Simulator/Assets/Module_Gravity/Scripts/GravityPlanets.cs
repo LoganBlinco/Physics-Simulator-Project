@@ -14,6 +14,15 @@ public class GravityPlanets : MonoBehaviour {
     public static UnityEngine.Object[] PlanetSprites;
     #endregion
 
+    #region Graph variables
+    //Stores values which will be used for plotting graph
+    // x = time
+    // y = quantity
+    public List<Vector2> graphPointsSpeed = new List<Vector2>();
+    public List<Vector2> graphPointsAcceleration = new List<Vector2>();
+
+    #endregion
+
     #region Particle properties
     //Reference to the GameObject in the scene which IS the particle 
     public GameObject MyGameObject;

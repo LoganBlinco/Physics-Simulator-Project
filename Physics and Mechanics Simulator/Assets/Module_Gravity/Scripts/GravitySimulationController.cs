@@ -18,10 +18,23 @@ public class GravitySimulationController : MonoBehaviour {
     //New force multiplier (the new G)
     static float G = timeMod * NewtonG * newMassMod / Mathf.Pow(newDistanceMod, 2);
 
+    #region Graph variables
+    public GameObject GraphSpeed;
+    public GameObject GraphAcceleration;
+
+    //Time for each graph update
+    //Lower value = more processing
+    private float timePerUpdate = 1f;
+    //Time remaining until next graph update
+    private float timeTillUpdate = 0.0f;
+
+
+    #endregion 
+
 
     #region Variables
     //Stores the time in which the simulation has been occuring for
-    public static float simulationTime = 0;
+    public float simulationTime = 0;
     //Displays to the user the time the simulation has occured for
     public Text Label_Time;
 
@@ -40,6 +53,8 @@ public class GravitySimulationController : MonoBehaviour {
     {
         if (isSimulating == true)
         {
+            //Controls updating the graph
+            UpdateParticleGraphValues();
             //Time between frames multiplied by speed factor
             deltaT = Time.deltaTime * SimulationSpeed;
             UpdateTimeLabel();
@@ -49,6 +64,36 @@ public class GravitySimulationController : MonoBehaviour {
 
             Gravity_InputController.Instance.UpdateUI(GravityPlanets.PlanetInstances[Gravity_InputController.Instance.ParticleIndexSelected]);
             simulationTime += deltaT;
+        }
+    }
+    //Updates graph values for current particle selected
+    private void UpdateParticleGraphValues()
+    {
+        //Only updates every X seconds
+        if (timeTillUpdate <= 0)
+        {
+            //Updates the points stored for every planet created
+            UpdateGraphValues();
+            //Index of particle user has selected for graphing
+            int index = Gravity_InputController.Instance.DropBoxGraphTarget.value;
+            //Updating graphs
+            Gravity_InputController.Instance.GraphAcceleration.GetComponent<GraphMaker>().CreateGraph(GravityPlanets.PlanetInstances[index].graphPointsAcceleration);
+            Gravity_InputController.Instance.GraphSpeed.GetComponent<GraphMaker>().CreateGraph(GravityPlanets.PlanetInstances[index].graphPointsSpeed);
+
+            timeTillUpdate = timePerUpdate;
+        }
+        else
+        {
+            timeTillUpdate -= Time.deltaTime;
+        }
+    }
+    //Updates the values of points to plot for every planet
+    private void UpdateGraphValues()
+    {
+        foreach(GravityPlanets planet in GravityPlanets.PlanetInstances)
+        {
+            planet.graphPointsSpeed.Add(new Vector2(simulationTime,planet.currentVelocity.magnitude));
+            planet.graphPointsAcceleration.Add(new Vector2(simulationTime,GetAccelleration(planet).magnitude));
         }
     }
 

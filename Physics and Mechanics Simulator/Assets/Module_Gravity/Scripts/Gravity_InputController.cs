@@ -42,6 +42,33 @@ public class Gravity_InputController : MonoBehaviour {
     public Dropdown DropBoxPlanet;
     #endregion
 
+    #region Panels
+
+    public GameObject PanelParticleInfomation;
+    public GameObject PanelParticleGraph;
+
+    public void OnPanelParticleInfomationClicked()
+    {
+        PanelParticleInfomation.SetActive(true);
+        PanelParticleGraph.SetActive(false);
+    }
+    public void OnPanelParticleGraphClicked()
+    {
+        PanelParticleInfomation.SetActive(false);
+        PanelParticleGraph.SetActive(true);
+    }
+
+
+    #endregion
+
+    #region Graph references
+
+    public GameObject GraphAcceleration;
+    public GameObject GraphSpeed;
+
+    public Dropdown DropBoxGraphTarget;
+    #endregion
+
     #region Simulation Controls
     //Resets the scene
     public void OnResetClicked()
@@ -120,6 +147,7 @@ public class Gravity_InputController : MonoBehaviour {
         //Adds additonal particle to the camera target and planet selection dropbox
         DropBoxPlanet.options[size - 1] = new Dropdown.OptionData() { text = _text };
         CameraTarget.options.Add(new Dropdown.OptionData() { text = _text });
+        DropBoxGraphTarget.options.Add(new Dropdown.OptionData() { text = _text });
         _text = "Add Particle";
         //Option to add particle added at end of list
         DropBoxPlanet.options.Add(new Dropdown.OptionData() { text = _text });
@@ -181,6 +209,7 @@ public class Gravity_InputController : MonoBehaviour {
         Instance = this;
         //Generates the first planet in the scene
         CreateFirstObject();
+        OnPanelParticleInfomationClicked();
     }
     //Creates a planet to be centered in the screen when scene loads
     private void CreateFirstObject()

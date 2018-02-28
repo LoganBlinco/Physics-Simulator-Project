@@ -42,7 +42,6 @@ public class GravityCalculator : MonoBehaviour {
         //Preventing double calculations
         if (collidedObjects.Contains(other.gameObject) == false)
         {
-            Debug.Log("Calculation needed");
             //Adds the object which has colllided to the list of collidedobjects
             other.gameObject.GetComponent<GravityCalculator>().collidedObjects.Add(gameObject);
             collidedObjects.Add(other.gameObject);
@@ -73,9 +72,6 @@ public class GravityCalculator : MonoBehaviour {
         //maths 
         first.currentVelocity = CalculateAfterVelocityFirst(m, M, FirstParrelleVelocity, SecondParrelleVelocity, e) + FirstPerpendicularVelocity;
         second.currentVelocity = CalculateAfterVelocitySecond(m, M, FirstParrelleVelocity, SecondParrelleVelocity, e) + SecondPerpendicularVelocity;
-
-        Debug.Log(first.currentVelocity);
-        Debug.Log(second.currentVelocity);
     }
 
     public static Vector3 CalculateParrelelVelocity(Vector3 velocity, Vector3 unitDirection)
