@@ -46,16 +46,31 @@ public class Gravity_InputController : MonoBehaviour {
 
     public GameObject PanelParticleInfomation;
     public GameObject PanelParticleGraph;
+    public GameObject PanelAboutMenu;
 
     public void OnPanelParticleInfomationClicked()
     {
         PanelParticleInfomation.SetActive(true);
         PanelParticleGraph.SetActive(false);
+        PanelAboutMenu.SetActive(false);
     }
     public void OnPanelParticleGraphClicked()
     {
         PanelParticleInfomation.SetActive(false);
         PanelParticleGraph.SetActive(true);
+        PanelAboutMenu.SetActive(false);
+    }
+    //When about is clicked the about panel should be loaded
+    public void OnAboutClicked()
+    {
+        PanelAboutMenu.SetActive(true);
+        PanelParticleInfomation.SetActive(false);
+        PanelParticleGraph.SetActive(false);
+    }
+    //When ok is clicked the Particle infomation panel should be shown and others hidden
+    public void OnAbout_OkClicked()
+    {
+        OnPanelParticleInfomationClicked();
     }
 
 
