@@ -327,20 +327,30 @@ public class Gravity_InputController : MonoBehaviour {
 
     #region Premade system Controller
     public Dropdown DropboxPreMadeSystems;
+    //Creates the corresponding system to index value
     public void OnDropBox_PresetsChanged()
     {
         int value = DropboxPreMadeSystems.value;
+        Gravity_PremadeSystems temp = new Gravity_PremadeSystems();
         switch(value)
         {
+            //Custom system
             case 0:
                 OnResetClicked();
                 break;
+            //Earth Moon system
             case 1:
-                Gravity_PremadeSystems temp = new Gravity_PremadeSystems();
                 temp.EarthMoonSystem();
+                break;
+            //Eclipse System
+            case 2:
+                temp.EclipseSystem();
+                break;
+            //Hyperbolic encounter
+            case 3:
+                temp.HyperbolicEncounter();
                 break;
         }
     }
     #endregion
-
 }
