@@ -6,9 +6,6 @@ public class Particle {
 
     //Stores reference to all instances of Particle created
     public static List<Particle> Instances = new List<Particle>();
-    //Stores a copy of the particles instance before simulation occured
-    public Particle beforeSimulation;
-
     //List of struct storing infomation for graphing motion
     public List<ParticleProperties> ParticleValues = new List<ParticleProperties>();
 

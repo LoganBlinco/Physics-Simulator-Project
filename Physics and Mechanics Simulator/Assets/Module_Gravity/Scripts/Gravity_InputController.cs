@@ -91,7 +91,7 @@ public class Gravity_InputController : MonoBehaviour {
         //Resets the static variables for simulations
         GravitySimulationController.isSimulating = false;
         GravitySimulationController.SimulationSpeed = 1;
-        GravityPlanets.PlanetInstances.Clear();
+        newParticle.ParticleInstances.Clear();
         Gravity_PremadeSystems.DestroyObjectsWithTag("Particle");
         //Loads scene to refresh values
         SceneManager.LoadScene("GravityScene");
@@ -150,7 +150,7 @@ public class Gravity_InputController : MonoBehaviour {
             //Adds additional particle to dropbox
             AddOptionToDropBox(maximum);
             //Creates new particle
-            GravityPlanets.PlanetInstances.Add(new GravityPlanets());
+            newParticle.ParticleInstances.Add(newParticle.CreateGravityParticle());
         }
         ParticleIndexSelected = DropBoxPlanet.value;
         //Updates the UI 
@@ -181,7 +181,7 @@ public class Gravity_InputController : MonoBehaviour {
         try
         {
             //Updates UI using a particles values
-            UpdateUI(GravityPlanets.PlanetInstances[current]);
+            UpdateUI(newParticle.ParticleInstances[current]);
         }
         catch (ArgumentOutOfRangeException)
         {
@@ -197,14 +197,14 @@ public class Gravity_InputController : MonoBehaviour {
     {
         //Updates Label
         OnSliderChanged(Slider_Mass, Label_Mass);
-        GravityPlanets.PlanetInstances [ParticleIndexSelected].mass = Slider_Mass.value;
+        newParticle.ParticleInstances [ParticleIndexSelected].mass = Slider_Mass.value;
     }
     //When slider is changed must update label and current particles value
     public void OnRadiusChanged()
     {
         //Updates Label
         OnSliderChanged(Slider_Diameter, Label_Diameter);
-        GravityPlanets.PlanetInstances[ParticleIndexSelected].diameter = Slider_Diameter.value;
+        newParticle.ParticleInstances[ParticleIndexSelected].diameter = Slider_Diameter.value;
     }
     //Updates the labels text to store the value of slider rounded to 2 D.P
     public void OnSliderChanged(Slider sliderChanged, Text LabelToUpdate)
@@ -230,18 +230,16 @@ public class Gravity_InputController : MonoBehaviour {
     //Creates a planet to be centered in the screen when scene loads
     private void CreateFirstObject()
     {
-        if (GravityPlanets.PlanetInstances.Count == 0)
+        if (newParticle.ParticleInstances.Count == 0)
         {
             //Assigns default values to the particle
-            GravityPlanets newParticle = new GravityPlanets();
-            newParticle.initialVelocity = Vector3.zero;
-            newParticle.mass = 1.0f;
-            newParticle.diameter = 0.25f;
-            //Adds particle to the list which causes the prefab to be instatiated
-            GravityPlanets.PlanetInstances.Add(newParticle);
+            newParticle particle = newParticle.CreateGravityParticle();
+
+            newParticle.ParticleInstances.Add(particle);
             //Update values for UI
             OnRadiusChanged();
             OnMassSliderChanged();
+            //remember restitution
         }
     }
     #endregion
@@ -249,7 +247,7 @@ public class Gravity_InputController : MonoBehaviour {
     #region Updating UI and resetting
 
     //Updates UI with values from a planet
-    public void UpdateUI(GravityPlanets values)
+    public void UpdateUI(newParticle values)
     {
         Inputfield_VelocityX.text = values.currentVelocity.x.ToString();
         Inputfield_VelocityY.text = values.currentVelocity.y.ToString();
@@ -277,7 +275,7 @@ public class Gravity_InputController : MonoBehaviour {
     public void OnUpdateVelocityClicked()
     {
         //gets current initial velocity
-        Vector2 Velocity = GravityPlanets.PlanetInstances[ParticleIndexSelected].initialVelocity;
+        Vector2 Velocity = newParticle.ParticleInstances[ParticleIndexSelected].initialVelocity;
         //If not empty
         if (Inputfield_VelocityX.text != "")
         {
@@ -291,7 +289,7 @@ public class Gravity_InputController : MonoBehaviour {
             Velocity.y = float.Parse(Inputfield_VelocityY.text);
         }
         //Updates velocity
-        GravityPlanets.PlanetInstances[ParticleIndexSelected].initialVelocity = Velocity;
+        newParticle.ParticleInstances[ParticleIndexSelected].initialVelocity = Velocity;
     }
     #endregion
 

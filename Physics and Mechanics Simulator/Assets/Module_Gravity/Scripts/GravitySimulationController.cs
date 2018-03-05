@@ -65,7 +65,7 @@ public class GravitySimulationController : MonoBehaviour {
             UpdateVelocity();
             UpdatePosition();
 
-            Gravity_InputController.Instance.UpdateUI(GravityPlanets.PlanetInstances[Gravity_InputController.Instance.ParticleIndexSelected]);
+            Gravity_InputController.Instance.UpdateUI(newParticle.ParticleInstances[Gravity_InputController.Instance.ParticleIndexSelected]);
             simulationTime += deltaT;
         }
     }
