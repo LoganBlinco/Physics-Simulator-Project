@@ -20,7 +20,7 @@ public class GravityMotionTracker : MonoBehaviour {
 	//Instatiates a prefab of marker where the object currently is
     private void PlaceMarker()
     {
-        if (GravitySimulationController.isSimulating == true)
+        if (newSimulateController.isSimulating == true)
         {
             GameObject temp = Instantiate(marker) as GameObject;
             temp.transform.position = new Vector3(

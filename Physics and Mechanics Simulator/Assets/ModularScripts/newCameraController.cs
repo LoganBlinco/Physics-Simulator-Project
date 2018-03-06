@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class GravityCameraController : MonoBehaviour {
-
+public class newCameraController : MonoBehaviour {
 
     //Contains reference to the object the camera must follow
     public static GameObject followTarget;
@@ -33,6 +32,7 @@ public class GravityCameraController : MonoBehaviour {
     //Amount changed per scroll on wheel
     public static float zoomMod = 1;
 
+
     //Called every frame
     private void Update()
     {
@@ -41,7 +41,7 @@ public class GravityCameraController : MonoBehaviour {
             ControlFreeRoam();
         }
         //Only allow particle lock when simulating to reduce calculations required
-        else if (GravitySimulationController.isSimulating == true)
+        else if (newSimulateController.isSimulating == true)
         {
             GetFollowTarget();
             ControlLockOn();
@@ -53,7 +53,11 @@ public class GravityCameraController : MonoBehaviour {
     {
         //Dropbox is from UI
         targetIndex = DropBoxTarget.value - 1;
-        followTarget = GravityPlanets.PlanetInstances[targetIndex].MyGameObject;
+        try
+        {
+            followTarget = newParticle.ParticleInstances[targetIndex].MyGameObject;
+        }
+        catch (System.ArgumentOutOfRangeException) { }
     }
     //Controls movemenet when in freeRoam mode
     private void ControlFreeRoam()
@@ -71,17 +75,22 @@ public class GravityCameraController : MonoBehaviour {
     private void ControlLockOn()
     {
         //Velocity is a percentage of the particle its following.Determined by the speed Mod.
-        Vector3 Velocity = GravityPlanets.PlanetInstances[targetIndex].currentVelocity + Vector3.one;
-        moveSpeed = Velocity.magnitude * speedMod;
+        try
+        {
+            Vector3 Velocity = newParticle.ParticleInstances[targetIndex].currentVelocity + Vector3.one;
+            moveSpeed = Velocity.magnitude * speedMod;
 
-        //Position to move to + the buffer.
-        //Buffer allows for an offset between camera and particle
-        TargetPosition = new Vector3(
-            followTarget.transform.position.x + buffer,
-            followTarget.transform.position.y + buffer,
-            transform.position.z);
-        //moves to the target position in a period of time (moveSpeed * deltaT)
-        transform.position = Vector3.Lerp(transform.position, TargetPosition, moveSpeed * Time.deltaTime);
+            //Position to move to + the buffer.
+            //Buffer allows for an offset between camera and particle
+            TargetPosition = new Vector3(
+                followTarget.transform.position.x + buffer,
+                followTarget.transform.position.y + buffer,
+                transform.position.z);
+            //moves to the target position in a period of time (moveSpeed * deltaT)
+            transform.position = Vector3.Lerp(transform.position, TargetPosition, moveSpeed * Time.deltaTime);
+        }
+        catch (System.ArgumentOutOfRangeException) { }
+
     }
     //Controls the zoom of the camera
     private void ControlZoom()
@@ -96,4 +105,10 @@ public class GravityCameraController : MonoBehaviour {
             Camera.main.orthographicSize = currentZoom; // Updates zoom
         }
     }
+
+
+
+
+
+
 }

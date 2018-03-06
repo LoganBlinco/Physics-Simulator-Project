@@ -480,7 +480,7 @@ public class newParticle : MonoBehaviour {
 
         //Assigns particles index value to the attached script 
         //This is used when performing collision calculations
-        MyGameObject.GetComponent<GravityCalculator>().particleIndex = newParticle.ParticleInstances.Count;
+        MyGameObject.GetComponent<newCollisionsController>().particleIndex = newParticle.ParticleInstances.Count;
     }
 
     //Creates sprite and prefab references 
@@ -514,6 +514,12 @@ public class newParticle : MonoBehaviour {
         particle.AddParticlePropery(newParticle.Properties.graphingValuesSpeed);
 
         particle.CreateGravityObject();
+        particle.graphingValuesAcceleration = new List<Vector2>();
+        particle.graphingValuesSpeed = new List<Vector2>();
+
+        //This is used when performing collision calculations
+        //particle.MyGameObject.GetComponent<newCollisionsController>().particleIndex = newParticle.ParticleInstances.Count;
+
 
         particle.initialVelocity = Vector3.zero;
         particle.diameter = 0.25f;

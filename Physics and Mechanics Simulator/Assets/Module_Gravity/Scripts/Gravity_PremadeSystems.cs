@@ -13,12 +13,12 @@ public class Gravity_PremadeSystems : MonoBehaviour {
         DestroyObjectsWithTag("Particle");
         //Destroys markers in the scene
         DestroyObjectsWithTag("Marker");
-        GravityPlanets.PlanetInstances.Clear();
+        newParticle.ParticleInstances.Clear();
 
         //Resetting Simulation Settings
-        GravitySimulationController.isSimulating = false;
-        GravitySimulationController.SimulationSpeed = 1;
-        Gravity_InputController.Instance.gameObject.GetComponent<GravitySimulationController>().simulationTime = 0;
+        newSimulateController.isSimulating = false;
+        newSimulateController.SimulationSpeed = 1;
+        Gravity_InputController.Instance.gameObject.GetComponent<newSimulateController>().simulationTime = 0;
 
         //Removing dropbox options because they may contain more than 2 particles or less
         Gravity_InputController.Instance.DropBoxGraphTarget.options.Clear();
@@ -35,7 +35,7 @@ public class Gravity_PremadeSystems : MonoBehaviour {
         //Create Earth-Moon Circular system
         EarthMoonSystem();
         //Changes the "moon" veloicty by multiplier
-        GravityPlanets.PlanetInstances[1].currentVelocity *= veloictyMultiplier;
+        newParticle.ParticleInstances[1].currentVelocity *= veloictyMultiplier;
     }
     #endregion
 
@@ -45,13 +45,13 @@ public class Gravity_PremadeSystems : MonoBehaviour {
     public void EarthMoonSystem()
     {
         CreateEarth();
-        CreateMoon(GravityPlanets.PlanetInstances[0]);
+        CreateMoon(newParticle.ParticleInstances[0]);
         //Adds particle , free roam and add particle options to the dropboxs
         AddToDropBoxs(2);
     }
-    private void CreateMoon(GravityPlanets earth)
+    private void CreateMoon(newParticle earth)
     {
-        GravityPlanets moon = new GravityPlanets();
+        newParticle moon = newParticle.CreateGravityParticle();
         moon.diameter = 0.1f;
         moon.mass = 0.012f;
         moon.MyGameObject.transform.position = new Vector3(
@@ -64,15 +64,15 @@ public class Gravity_PremadeSystems : MonoBehaviour {
         Vector3 deltaPosition = moon.MyGameObject.transform.position - earth.MyGameObject.transform.position;
         //Velocity in X component required for perfect circular motion
         moon.initialVelocity = new Vector3(
-            Mathf.Sqrt(GravitySimulationController.G * earth.mass / MyMaths.Vector_Magnitude(deltaPosition)),
+            Mathf.Sqrt(newSimulateController.G * earth.mass / MyMaths.Vector_Magnitude(deltaPosition)),
             0,
             0);
-        GravityPlanets.PlanetInstances.Add(moon);
+        newParticle.ParticleInstances.Add(moon);
     }
     //Creates the earth planet and gameobject
     private void CreateEarth()
     {
-        GravityPlanets earth = new GravityPlanets();
+        newParticle earth = newParticle.CreateGravityParticle();
         earth.MyGameObject.name = "Earth";
 
         earth.diameter = 0.25f;
@@ -84,7 +84,7 @@ public class Gravity_PremadeSystems : MonoBehaviour {
             0);
         //Changes sprite to an earth sprite
         earth.MyGameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load("Planet_Sprites\\earth-like", typeof(Sprite)) as Sprite;
-        GravityPlanets.PlanetInstances.Add(earth);
+        newParticle.ParticleInstances.Add(earth);
     }
     #endregion
 
@@ -92,7 +92,7 @@ public class Gravity_PremadeSystems : MonoBehaviour {
 
     public void HyperbolicEncounter()
     {
-        GravityPlanets bigMass = new GravityPlanets();
+        newParticle bigMass = newParticle.CreateGravityParticle();
 
         bigMass.diameter = 0.25f;
         bigMass.mass = 2.3f;
@@ -103,9 +103,9 @@ public class Gravity_PremadeSystems : MonoBehaviour {
             0);
         //Changes sprite to an earth sprite
         bigMass.MyGameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load("Planet_Sprites\\earth-like", typeof(Sprite)) as Sprite;
-        GravityPlanets.PlanetInstances.Add(bigMass);
+        newParticle.ParticleInstances.Add(bigMass);
 
-        GravityPlanets smallMass = new GravityPlanets();
+        newParticle smallMass = newParticle.CreateGravityParticle();
         smallMass.diameter = 0.1f;
         smallMass.mass = 0.01f;
         smallMass.MyGameObject.transform.position = new Vector3(
@@ -120,7 +120,7 @@ public class Gravity_PremadeSystems : MonoBehaviour {
             2.5f,
             -1f,
             0);
-        GravityPlanets.PlanetInstances.Add(smallMass);
+        newParticle.ParticleInstances.Add(smallMass);
 
         AddToDropBoxs(2);
     }

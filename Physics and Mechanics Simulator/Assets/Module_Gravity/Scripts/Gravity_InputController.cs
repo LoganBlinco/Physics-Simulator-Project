@@ -89,8 +89,8 @@ public class Gravity_InputController : MonoBehaviour {
     public void OnResetClicked()
     {
         //Resets the static variables for simulations
-        GravitySimulationController.isSimulating = false;
-        GravitySimulationController.SimulationSpeed = 1;
+        newSimulateController.isSimulating = false;
+        newSimulateController.SimulationSpeed = 1;
         newParticle.ParticleInstances.Clear();
         Gravity_PremadeSystems.DestroyObjectsWithTag("Particle");
         //Loads scene to refresh values
@@ -106,30 +106,30 @@ public class Gravity_InputController : MonoBehaviour {
         //Index 0 is the free roam option
         if (value == 0)
         {
-            GravityCameraController.isFreeRoam = true;
+            newCameraController.isFreeRoam = true;
         }
         else
         {
-            GravityCameraController.isFreeRoam = false;
+            newCameraController.isFreeRoam = false;
         }
     }
 
     //Ran when play button clicked
     public void OnPlayClicked()
     {
-        GravitySimulationController.isSimulating = true;
+        newSimulateController.isSimulating = true;
     }
     //Ran when pause button clicked
     public void OnPauseClicked()
     {
-        GravitySimulationController.isSimulating = false;
+        newSimulateController.isSimulating = false;
     }
     //Ran when simulation speed slider is changed
     //Must update simulation speed 
     public void OnSliderSimulationSpeedChanged()
     {
         //Sets value
-        GravitySimulationController.SimulationSpeed = Slider_SimulationSpeed.value;
+        newSimulateController.SimulationSpeed = Slider_SimulationSpeed.value;
         //Updates Label value to 2 DP
         string value2DP = Slider_SimulationSpeed.value.ToString("n2");
         Label_SimulationSpeed.text = "Speed = " + value2DP + "x";
