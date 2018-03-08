@@ -183,6 +183,21 @@ public class Collisions_InputController : MonoBehaviour {
         BorderRight = GameObject.Find("BorderRight");
         BorderTop = GameObject.Find("BorderTop");
         BorderBottom = GameObject.Find("BorderBottom");
+
+        CreateFirstParticle();
+    }
+
+
+    private void CreateFirstParticle()
+    {
+        //Assigns default values to the particle
+        newParticle particle = newParticle.CreateCollisionsParticle();
+        particle.initialVelocity = Vector3.zero;
+        particle.mass = 1.0f;
+        particle.restitution = 1.0f;
+        particle.diameter = 1.0f;
+        //Adds particle to the list which causes the prefab to be instatiated
+        newParticle.ParticleInstances.Add(particle);
     }
 #endregion
 

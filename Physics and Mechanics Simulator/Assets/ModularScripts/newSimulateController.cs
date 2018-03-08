@@ -204,7 +204,6 @@ public class newSimulateController : MonoBehaviour {
             UpdateGraphValues();
             //Index of particle user has selected for graphing
             int index = DropBoxTarget.value;
-            Debug.Log(index);
             //Updating graphs
             newParticle temp = newParticle.ParticleInstances[index];
             if (temp.hasGraphingValuesSpeed)
