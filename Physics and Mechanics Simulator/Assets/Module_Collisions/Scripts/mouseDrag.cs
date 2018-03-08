@@ -14,6 +14,9 @@ public class mouseDrag : MonoBehaviour {
     private GameObject BorderTop;
     private GameObject BorderBottom;
 
+    private int index;
+    private float diameter;
+
     //Ran when gameobject is first instatiated
     public void Start()
     {
@@ -28,14 +31,30 @@ public class mouseDrag : MonoBehaviour {
     //Ran when user hovers and clicks over a collider
     private void OnMouseDrag()
 	{
-        int index = gameObject.GetComponent<CollisionCalculator>().particleIndex;
-        float diameter = CollisionsParticle.ParticleInstances[index].diameter;
+        getIndex();
+        getDiameter();
 
         Vector3 mousePosition = new Vector3(
             Input.mousePosition.x,
             Input.mousePosition.y,
             distance);
         Vector3 objectPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+        transform.position = objectPosition;
+    }
+
+    public void Update()
+    {
+        ClampPosition();
+    }
+
+
+    private void ClampPosition()
+    {
+        getIndex();
+        getDiameter();
+
+        Vector3 objectPosition = transform.position;
         //changes object position but restricts the position to be inside of the borders
         float minX = BorderLeft.transform.position.x + diameter / 2 + (BorderLeft.GetComponent<Renderer>().bounds.size.x / 2);
         float maxX = BorderRight.transform.position.x - diameter / 2 - (BorderRight.GetComponent<Renderer>().bounds.size.x / 2);
@@ -45,7 +64,17 @@ public class mouseDrag : MonoBehaviour {
 
         objectPosition.x = MyMaths.Clamp(objectPosition.x, minX, maxX);
         objectPosition.y = MyMaths.Clamp(objectPosition.y, minY, maxY);
+
         transform.position = objectPosition;
+    }
+
+    private void getIndex()
+    {
+        index = gameObject.GetComponent<newCollisionsController>().particleIndex;
+    }
+    private void getDiameter()
+    {
+        diameter = newParticle.ParticleInstances[index].diameter;
     }
 
 }

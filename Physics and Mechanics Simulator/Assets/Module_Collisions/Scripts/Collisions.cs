@@ -18,12 +18,12 @@ public class Collisions : MonoBehaviour {
 	private void CreateFirstObject()
 	{
         //Assigns default values to the particle
-		CollisionsParticle newParticle = new CollisionsParticle ();
+		newParticle newParticle = newParticle.CreateCollisionsParticle();
 		newParticle.initialVelocity = Vector3.zero;
 		newParticle.mass = 1.0f;
 		newParticle.restitution = 1.0f;
 		newParticle.diameter = 1.0f;
         //Adds particle to the list which causes the prefab to be instatiated
-		CollisionsParticle.ParticleInstances.Add (newParticle);
+		newParticle.ParticleInstances.Add (newParticle);
 	}
 }
