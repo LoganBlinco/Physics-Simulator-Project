@@ -25,26 +25,26 @@ public class Collisions_InputController : MonoBehaviour {
         string value2DP = Slider_SimulationSpeed.value.ToString("n2");
         //Updates the label's text
         Label_SimulationSpeed.text = "Speed = " + value2DP.ToString() + "x";
-        newSimulateController.SimulationSpeed = Slider_SimulationSpeed.value;
+        CollisionsSimulationController.SimulationSpeed = Slider_SimulationSpeed.value;
     }
     //When play gets clicked simulation must begin
     public void OnPlayClicked()
 	{
-		newSimulateController.isSimulating = true;
+		CollisionsSimulationController.isSimulating = true;
 	}
     //When pause gets clicked simulation must stop
 	public void OnPauseClicked()
 	{
-        newSimulateController.isSimulating = false;
+		CollisionsSimulationController.isSimulating = false;
 	}
 
     //Resets the scene
     public void OnResetClicked()
     {
         //Resets the static variables for simulations
-        newSimulateController.isSimulating = false;
-        newSimulateController.SimulationSpeed = 1;
-        newParticle.ParticleInstances.Clear();
+        SimulateController.isSimulating = false;
+        SimulateController.simulationSpeed = 1;
+        CollisionsParticle.ParticleInstances.Clear();
         //Loads scene to refresh values
         SceneManager.LoadScene("CollisionsScene");
     }
@@ -118,21 +118,21 @@ public class Collisions_InputController : MonoBehaviour {
 	{
         //Updates Label
 		OnSliderChanged(Slider_Mass, Label_Mass);
-		newParticle.ParticleInstances [ParticleIndexSelected].mass = Slider_Mass.value;
+		CollisionsParticle.ParticleInstances [ParticleIndexSelected].mass = Slider_Mass.value;
 	}
     //When slider is changed must update label and current particles value
     public void OnRestitutionChanged()
 	{
         //Updates Label
         OnSliderChanged(Slider_Restitution, Label_Restitution);
-		newParticle.ParticleInstances [ParticleIndexSelected].restitution = Slider_Restitution.value;
+		CollisionsParticle.ParticleInstances [ParticleIndexSelected].restitution = Slider_Restitution.value;
 	}
     //When slider is changed must update label and current particles value
     public void OnRadiusChanged()
 	{
         //Updates Label
         OnSliderChanged(Slider_Radius, Label_Radius);
-		newParticle.ParticleInstances [ParticleIndexSelected].diameter = Slider_Radius.value;
+		CollisionsParticle.ParticleInstances [ParticleIndexSelected].diameter = Slider_Radius.value;
 	}
     //Updates the labels text to store the value of slider rounded to 2 D.P
 	public void OnSliderChanged(Slider sliderChanged , Text LabelToUpdate)
@@ -150,7 +150,7 @@ public class Collisions_InputController : MonoBehaviour {
     public void OnUpdateVelocityClicked()
 	{
         //gets current initial velocity
-		Vector2 Velocity = newParticle.ParticleInstances [ParticleIndexSelected].initialVelocity;
+		Vector2 Velocity = CollisionsParticle.ParticleInstances [ParticleIndexSelected].initialVelocity;
         //If not empty
 		if (InputField_VelocityX.text != "")
 		{
@@ -164,7 +164,7 @@ public class Collisions_InputController : MonoBehaviour {
             Velocity.y = float.Parse(InputField_VelocityY.text);
 		}
         //Updates velocity
-		newParticle.ParticleInstances [ParticleIndexSelected].initialVelocity = Velocity;
+		CollisionsParticle.ParticleInstances [ParticleIndexSelected].initialVelocity = Velocity;
 	}
     #endregion
 
@@ -178,8 +178,6 @@ public class Collisions_InputController : MonoBehaviour {
         PanelParticleInfomation.gameObject.SetActive(true);
         PanelParticeGraph.gameObject.SetActive(false);
         PanelAbout.gameObject.SetActive(false);
-
-        newParticle.ParticleInstances.Clear();
 
         BorderLeft = GameObject.Find("BorderLeft");
         BorderRight = GameObject.Find("BorderRight");
@@ -202,7 +200,7 @@ public void OnDropBoxParticleChanged()
             //Adds additional particle to dropbox
 			AddOptionToDropBox (maximum);
             //Creates new particle
-			newParticle.ParticleInstances.Add (newParticle.CreateCollisionsParticle());
+			CollisionsParticle.ParticleInstances.Add (new CollisionsParticle ());
 		}
         ParticleIndexSelected = DropBoxParticle.value;
         //Updates the UI 
@@ -234,7 +232,7 @@ public void OnDropBoxParticleChanged()
 		try
 		{
 			//Updates UI using a particles values
-			UpdateUI(newParticle.ParticleInstances[current]);
+			UpdateUI(CollisionsParticle.ParticleInstances[current]);
 		}
 		catch (ArgumentOutOfRangeException)
 		{
@@ -247,7 +245,7 @@ public void OnDropBoxParticleChanged()
     #region Update and Resetting UI
 
     //Updates UI with values from a particle
-    public void UpdateUI(newParticle values)
+    public void UpdateUI(CollisionsParticle values)
 	{
 		InputField_VelocityX.text = values.currentVelocity.x.ToString ();
 		InputField_VelocityY.text = values.currentVelocity.y.ToString ();
@@ -278,7 +276,7 @@ public void OnDropBoxParticleChanged()
     public void OnRandomClicked()
     {
         //Empties list of particles created
-        newParticle.ParticleInstances = new List<newParticle>();
+        CollisionsParticle.ParticleInstances = new List<CollisionsParticle>();
         //Destroys any particle gameobjects in the scene
         DestroyObjectsWithTag("Particle");
         //Adds the particles options to the dropbox's (graph and selector)
@@ -293,7 +291,7 @@ public void OnDropBoxParticleChanged()
     private void CreateRandomParticle()
     {
         //UnityEngine.Random.RandomRange generates a float between min and max
-        newParticle random = newParticle.CreateCollisionsParticle();
+        CollisionsParticle random = new CollisionsParticle();
         random.initialVelocity = new Vector2(
             UnityEngine.Random.RandomRange(-5f, 5f),
             UnityEngine.Random.RandomRange(-5f, 5f));
@@ -312,7 +310,7 @@ public void OnDropBoxParticleChanged()
     UnityEngine.Random.Range(minY,maxY));
 
         random.MyGameObject.transform.position = newPosition;
-        newParticle.ParticleInstances.Add(random);
+        CollisionsParticle.ParticleInstances.Add(random);
     }
     //Adds particle options to the dropboxs
     private void AddRandomParticlesToDropBox()

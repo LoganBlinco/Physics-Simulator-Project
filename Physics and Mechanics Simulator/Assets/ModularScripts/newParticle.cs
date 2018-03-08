@@ -40,8 +40,6 @@ public class newParticle : MonoBehaviour {
 
     public Dictionary<Properties, object> ObjectProperties = new Dictionary<Properties, object>();
 
-    #region Properties Look ups
-
     public bool hasMyGameObject => ObjectProperties.ContainsKey(Properties.MyGameObject);
     public bool hasParticlePrefabs => ObjectProperties.ContainsKey(Properties.ParticlePrefabs);
     public bool hasParticleSprites => ObjectProperties.ContainsKey(Properties.ParticleSprites);
@@ -68,8 +66,6 @@ public class newParticle : MonoBehaviour {
 
     public bool hasGravity => ObjectProperties.ContainsKey(Properties.gravity);
     public bool hasCollisions => ObjectProperties.ContainsKey(Properties.collisions);
-
-    #endregion
 
     public GameObject MyGameObject
     {
@@ -533,70 +529,6 @@ public class newParticle : MonoBehaviour {
         particle.collisions = true;
         return particle;
     }
-
-    #endregion
-
-    #region Collisions Based method
-
-    //Controls the instatiation process of creating the particle
-    public void CreateCollisionsObject()
-    {
-        CreateGravityPlanetReferences();
-
-        GameObject planetObject = Instantiate(ParticlePrefabs[0]) as GameObject;
-        planetObject.transform.position = new Vector3(0, 1, 0);
-        MyGameObject = planetObject;
-        //Default value
-        diameter = 1.0f;
-
-        //Assigns particles index value to the attached script 
-        //This is used when performing collision calculations
-        MyGameObject.GetComponent<newCollisionsController>().particleIndex = newParticle.ParticleInstances.Count;
-    }
-
-    //Creates sprite and prefab references 
-    private void CreateCollisionsPlanetReferences()
-    {
-        ParticlePrefabs = new List<GameObject>();
-        GameObject prefab = Resources.Load("CollisionsSphere") as GameObject;
-        List<GameObject> tempList = ParticlePrefabs;
-        if (hasParticlePrefabs)
-        {
-            tempList.Add(prefab);
-            ParticlePrefabs = tempList;
-        }
-    }
-
-    public static newParticle CreateCollisionsParticle()
-    {
-        newParticle particle = new newParticle();
-        particle.AddParticlePropery(newParticle.Properties.MyGameObject);
-        particle.AddParticlePropery(newParticle.Properties.ParticlePrefabs);
-        particle.AddParticlePropery(newParticle.Properties.initialVelocity);
-        particle.AddParticlePropery(newParticle.Properties.currentVelocity);
-        particle.AddParticlePropery(newParticle.Properties.diameter);
-        particle.AddParticlePropery(newParticle.Properties.restitution);
-        particle.AddParticlePropery(newParticle.Properties.mass);
-        particle.AddParticlePropery(newParticle.Properties.collisions);
-        particle.AddParticlePropery(newParticle.Properties.graphingValuesMomentumX);
-        particle.AddParticlePropery(newParticle.Properties.graphingValuesMomentumY);
-
-        particle.CreateCollisionsObject();
-        particle.graphingValuesAcceleration = new List<Vector2>();
-        particle.graphingValuesSpeed = new List<Vector2>();
-
-        //This is used when performing collision calculations
-        //particle.MyGameObject.GetComponent<newCollisionsController>().particleIndex = newParticle.ParticleInstances.Count;
-
-
-        particle.initialVelocity = Vector3.zero;
-        particle.diameter = 1.0f;
-        particle.restitution = 1;
-        particle.mass = 1.0f;
-        particle.collisions = true;
-        return particle;
-    }
-
 
     #endregion
 
