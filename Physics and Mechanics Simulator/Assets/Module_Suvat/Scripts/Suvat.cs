@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
 
 public class Suvat : MonoBehaviour {
@@ -14,7 +13,7 @@ public class Suvat : MonoBehaviour {
     public static void OnCalculateClicked()
     {
         //Creates new particle instance
-        Particle values = new Particle();
+        newParticle values = newParticle.CreateSuvatParticle();
         //gets number of dimentions used from UI
         int dimentions = Suvat_UiController.instance.DropBox_Dimentions.value + 1;
         //gets particle number from UI dropbox
@@ -35,19 +34,15 @@ public class Suvat : MonoBehaviour {
             //if no particle with index has been created then it must be the final particle.
             try
             {
-                Particle.Instances[particle] = values;
+                newParticle.ParticleInstances[particle] = values;
             }
             catch
             {
-                Particle.Instances.Add(values);
+                newParticle.ParticleInstances.Add(values);
             }
         }
         else
         {
-            string title = "Invalid input";
-            string message = "You must enter at least 3 quantities in a dimention and two quantities in all other dimentions active";
-            //Creates message box with title , message and button with text "Ok"
-            //EditorUtility.DisplayDialog(title, message, "Ok");
         }
 
     }
@@ -55,10 +50,10 @@ public class Suvat : MonoBehaviour {
     //Checks if atleast 3 inputs in a single dimention have been inputted
     //Checks if dimentions active have atleast 2 dimentiosn entered (min amount for calculation)
     //Returns true or false
-    private static bool IsValid(ref Particle values, int dimentions)
+    private static bool IsValid(ref newParticle values, int dimentions)
     {
         //Bool based on if the program has atleast 1 dimention with three inputs
-        bool minThreeInputs = values.GetNumberOfInputs()[0] >= 3 || values.GetNumberOfInputs()[1] >= 3 || values.GetNumberOfInputs()[2] >= 3;
+        bool minThreeInputs = values.numberOfInputs[0] >= 3 || values.numberOfInputs[1] >= 3 || values.numberOfInputs[2] >= 3;
         //Bool if all dimentions have 3 inputs
         bool allAboveThree = getAboveThree(values, dimentions);
 
@@ -75,12 +70,12 @@ public class Suvat : MonoBehaviour {
         }
     }
     //Returns if all dmentions active have 3 or more inputs
-    private static bool getAboveThree(Particle values, int dimentions)
+    private static bool getAboveThree(newParticle values, int dimentions)
     {
         bool allAbove = true;
         for (int i =0;i<dimentions;i++)
         {
-            if (values.GetNumberOfInputs()[i] < 3)
+            if (values.numberOfInputs[i] < 3)
             {
                 allAbove = false;
             }
@@ -89,19 +84,19 @@ public class Suvat : MonoBehaviour {
     }
 
     //Returns the number of dimentions which have got >= N number of inputs which are not time
-    private static int GetNumberAboveN(Particle values, int N, int dimentions)
+    private static int GetNumberAboveN(newParticle values, int N, int dimentions)
     {
         int numberAboveN = 0;
         for (int i = 0; i < dimentions; i++)
         {
-            if (values.GetNumberOfInputs()[i] >= N)
+            if (values.numberOfInputs[i] >= N)
             {
                 //If time is one of the quantities then an additional quantitiy must be entered
-                if (values.Key[i][4] == '1' && values.GetNumberOfInputs()[i] - 1 >= N)
+                if (values.key[i][4] == '1' && values.numberOfInputs[i] - 1 >= N)
                 {
                     numberAboveN += 1;
                 }
-                else if (values.Key[i][4] == '0')
+                else if (values.key[i][4] == '0')
                 {
                     numberAboveN += 1;
                 }
@@ -114,7 +109,7 @@ public class Suvat : MonoBehaviour {
     #region Getting inputs
 
     //Runs the methods required to get the Suvat inputs in all dimentions required from the UI.
-    private static void getSuvat(ref Particle values, int dimentions)
+    private static void getSuvat(ref newParticle values, int dimentions)
     {
         if (dimentions >= 1)
         {
@@ -133,29 +128,29 @@ public class Suvat : MonoBehaviour {
                 {
                     //Only two dimentions selected therefore the 2nd element (third dimention) has invalid inputs
                     //Ie: no inputs
-                    values.inValidInput[2] = true;
+                    values.invalidInputs[2] = true;
                 }
             }
             else
             {
                 //Only 1 dimention selcted.Therefore Y and Z are disabled (elements 1 and 2)
-                values.inValidInput[1] = true;
-                values.inValidInput[2] = true;
+                values.invalidInputs[1] = true;
+                values.invalidInputs[2] = true;
             }
 
         }
         else
         {
             //No dimentions are selected.Therefore all dimentions are disabled
-            values.inValidInput[0] = true;
-            values.inValidInput[1] = true;
-            values.inValidInput[2] = true;
+            values.invalidInputs[0] = true;
+            values.invalidInputs[1] = true;
+            values.invalidInputs[2] = true;
         }
     }
 
     //Gets the inputs from the user for each Suvat quantitity in the X dimention
     //If the input is not NULL then Key is updated for the dimention and element
-    private static void GetInput_Suvat_x(ref Particle values, int dimentions)
+    private static void GetInput_Suvat_x(ref newParticle values, int dimentions)
     {
         //float.parse converts a string to float type
 
@@ -163,40 +158,50 @@ public class Suvat : MonoBehaviour {
         Suvat_UiController controller = Suvat_UiController.instance;
         if (controller.S_x.text != "")
         {
-            values.Displacement[0] = float.Parse(controller.S_x.text);
-            values.Key[0] = ReplaceAtIndex(0, '1', values.Key[0]);
+            Vector3 temp = values.displacement;
+            temp[0] = float.Parse(controller.S_x.text);
+            values.displacement = temp;
+            values.key[0] = ReplaceAtIndex(0, '1', values.key[0]);
         }
         if (controller.U_x.text != "")
         {
-            values.InitialVelocity[0] = float.Parse(controller.U_x.text);
-            values.Key[0] = ReplaceAtIndex(1, '1', values.Key[0]);
+            Vector3 temp = values.initialVelocity;
+            temp[0] = float.Parse(controller.U_x.text);
+            values.initialVelocity = temp;
+            values.key[0] = ReplaceAtIndex(1, '1', values.key[0]);
         }
         if (controller.V_x.text != "")
         {
-            values.FinalVelocity[0] = float.Parse(controller.V_x.text);
-            values.Key[0] = ReplaceAtIndex(2, '1', values.Key[0]);
+            Vector3 temp = values.currentVelocity;
+            temp[0] = float.Parse(controller.V_x.text);
+            values.currentVelocity = temp;
+            values.key[0] = ReplaceAtIndex(2, '1', values.key[0]);
         }
         if (controller.A_x.text != "")
         {
-            values.Acceleration[0] = float.Parse(controller.A_x.text);
-            values.Key[0] = ReplaceAtIndex(3, '1', values.Key[0]);
+            Vector3 temp = values.acceleration;
+            temp[0] = float.Parse(controller.A_x.text);
+            values.acceleration = temp;
+            values.key[0] = ReplaceAtIndex(3, '1', values.key[0]);
         }
         if (controller.Time.text != "")
         {
-            values.Time = float.Parse(controller.Time.text);
+            values.motionTime = float.Parse(controller.Time.text);
             //Time shared between all dimentions
-            values.Key[0] = ReplaceAtIndex(4, '1', values.Key[0]);
-            values.Key[1] = ReplaceAtIndex(4, '1', values.Key[1]);
-            values.Key[2] = ReplaceAtIndex(4, '1', values.Key[2]);
+            values.key[0] = ReplaceAtIndex(4, '1', values.key[0]);
+            values.key[1] = ReplaceAtIndex(4, '1', values.key[1]);
+            values.key[2] = ReplaceAtIndex(4, '1', values.key[2]);
         }
         if (controller.R_x.text != "")
         {
-            values.InitialPosition[0] = float.Parse(controller.R_x.text);
+            Vector3 temp = values.initialPosition;
+            temp[0] = float.Parse(controller.R_x.text);
+            values.initialPosition = temp;
         }
     }
     //Gets the inputs from the user for each Suvat quantitity in the Y dimention
     //If the input is not NULL then Key is updated for the dimention and element
-    private static void GetInput_Suvat_y(ref Particle values, int dimentions)
+    private static void GetInput_Suvat_y(ref newParticle values, int dimentions)
     {
         //float.parse converts a string to float type
 
@@ -204,33 +209,43 @@ public class Suvat : MonoBehaviour {
         Suvat_UiController controller = Suvat_UiController.instance;
         if (controller.S_y.text != "")
         {
-            values.Displacement[1] = float.Parse(controller.S_y.text);
-            values.Key[1] = ReplaceAtIndex(0, '1', values.Key[1]);
+            Vector3 temp = values.displacement;
+            temp[1] = float.Parse(controller.S_y.text);
+            values.displacement = temp;
+            values.key[1] = ReplaceAtIndex(0, '1', values.key[1]);
         }
         if (controller.U_y.text != "")
         {
-            values.InitialVelocity[1] = float.Parse(controller.U_y.text);
-            values.Key[1] = ReplaceAtIndex(1, '1', values.Key[1]);
+            Vector3 temp = values.initialVelocity;
+            temp[1] = float.Parse(controller.U_y.text);
+            values.initialVelocity = temp;
+            values.key[1] = ReplaceAtIndex(1, '1', values.key[1]);
         }
         if (controller.V_y.text != "")
         {
-            values.FinalVelocity[1] = float.Parse(controller.V_y.text);
-            values.Key[1] = ReplaceAtIndex(2, '1', values.Key[1]);
+            Vector3 temp = values.currentVelocity;
+            temp[1] = float.Parse(controller.V_y.text);
+            values.currentVelocity = temp;
+            values.key[1] = ReplaceAtIndex(2, '1', values.key[1]);
         }
         if (controller.A_y.text != "")
         {
             //+= because gravity may be added by the toggle , thus cannot be strickly equal
-            values.Acceleration[1] += float.Parse(controller.A_y.text);
-            values.Key[1] = ReplaceAtIndex(3, '1', values.Key[1]);
+            Vector3 temp = values.acceleration;
+            temp[1] += float.Parse(controller.A_y.text);
+            values.acceleration = temp;
+            values.key[1] = ReplaceAtIndex(3, '1', values.key[1]);
         }
         if (controller.R_y.text != "")
         {
-            values.InitialPosition[1] = float.Parse(controller.R_y.text);
+            Vector3 temp = values.initialPosition;
+            temp[1] = float.Parse(controller.R_y.text);
+            values.initialPosition = temp;
         }
     }
     //Gets the inputs from the user for each Suvat quantitity in the Z dimention
     //If the input is not NULL then Key is updated for the dimention and element
-    private static void GetInput_Suvat_z(ref Particle values, int dimentions)
+    private static void GetInput_Suvat_z(ref newParticle values, int dimentions)
     {
         //float.parse converts a string to float type
 
@@ -238,33 +253,43 @@ public class Suvat : MonoBehaviour {
         Suvat_UiController controller = Suvat_UiController.instance;
         if (controller.S_z.text != "")
         {
-            values.Displacement[2] = float.Parse(controller.S_z.text);
-            values.Key[2] = ReplaceAtIndex(0, '1', values.Key[2]);
+            Vector3 temp = values.displacement;
+            temp[2] = float.Parse(controller.S_z.text);
+            values.displacement = temp;
+            values.key[2] = ReplaceAtIndex(0, '1', values.key[2]);
         }
         if (controller.U_z.text != "")
         {
-            values.InitialVelocity[2] = float.Parse(controller.U_z.text);
-            values.Key[2] = ReplaceAtIndex(1, '1', values.Key[2]);
+            Vector3 temp = values.initialVelocity;
+            temp[2] = float.Parse(controller.U_z.text);
+            values.initialVelocity = temp;
+            values.key[2] = ReplaceAtIndex(1, '1', values.key[2]);
         }
         if (controller.V_z.text != "")
         {
-            values.FinalVelocity[2] = float.Parse(controller.V_z.text);
-            values.Key[2] = ReplaceAtIndex(2, '1', values.Key[2]);
+            Vector3 temp = values.currentVelocity;
+            temp[2] = float.Parse(controller.V_z.text);
+            values.currentVelocity = temp;
+            values.key[2] = ReplaceAtIndex(2, '1', values.key[2]);
         }
         if (controller.A_z.text != "")
         {
-            values.Acceleration[2] = float.Parse(controller.A_z.text);
-            values.Key[2] = ReplaceAtIndex(3, '1', values.Key[2]);
+            Vector3 temp = values.acceleration;
+            temp[2] = float.Parse(controller.A_z.text);
+            values.acceleration = temp;
+            values.key[2] = ReplaceAtIndex(3, '1', values.key[2]);
         }
         if (controller.R_z.text != "")
         {
-            values.InitialPosition[2] = float.Parse(controller.R_z.text);
+            Vector3 temp = values.initialPosition;
+            temp[2] = float.Parse(controller.R_z.text);
+            values.initialPosition = temp;
         }
     }
 
 
     //Gets non suvat based inputs from the UI and sassigns values to the particle instance
-    private static void getMisc(ref Particle values)
+    private static void getMisc(ref newParticle values)
     {
         //Reference to the UI instance that being used
         Suvat_UiController controller = Suvat_UiController.instance;
@@ -272,19 +297,19 @@ public class Suvat : MonoBehaviour {
         if (controller.Radius.text != "" && controller.Radius.text != "0")
         {
             //converts text to float from the input field
-            values.Radius = float.Parse(controller.Radius.text);
+            values.diameter = float.Parse(controller.Radius.text);
         }
         else
         {
             //If the radius has not been stated or =0 then a default value of 1 is assigned.
-            values.Radius = 1;
+            values.diameter = 1;
         }
         //If the gravity toggle has been enabled
         if (controller.Gravity.isOn == true)
         {
             //gravity must be added.Gravity is negative therefore a vector subtraction occurs of the magnitude of gravity.
             //Y component only
-            values.Acceleration -= new Vector3(0, Gravity, 0);
+            values.acceleration -= new Vector3(0, Gravity, 0);
         }
     }
 

@@ -63,13 +63,6 @@ public class Suvat_UiController : MonoBehaviour {
         //Creates reference for all methods to access.
         instance = this;
 
-        //Gives the Camera and Simulate Controllers a reference to the required Dropboxes and Labels,
-        CameraController.DropBoxTarget = DropBox_CameraTarget;
-        SimulateController.LabelTime = Label_Time;
-
-        SimulateController.GraphDropBoxDimention = GraphDropBoxDimention;
-        SimulateController.GraphDropBoxParticles = GraphDropBoxParticles;
-
         //begins program with Particle infomation selected
         //Enabled Particle infomation panel
         //Disables Particle graphs panel
@@ -86,14 +79,14 @@ public class Suvat_UiController : MonoBehaviour {
     //Pauses simulation
     public void OnPauseClicked()
     {
-        SimulateController.isSimulating = false;
+        newSimulateController.isSimulating = false;
     }
 
     //Ran when play button is clicked
     //Plays simulation
     public void OnPlayClicked()
     {
-        SimulateController.isSimulating = true;
+        newSimulateController.isSimulating = true;
     }
 
     //Ran when the SimulationSpeed slider changes value due to user input
@@ -127,10 +120,8 @@ public class Suvat_UiController : MonoBehaviour {
     {
         //Calculates values required for simulation
         Suvat.OnCalculateClicked();
-        //Creates reference in SImulateController to the Speed Slider in UI
-        SimulateController.speedInput = Slider_SimulationSpeed;
         //Begins the simulation process in the SimulateController class
-        SimulateController.OnSimulateClicked();
+        newSimulateController.isSimulating = true;
     }
 
     //Ran when Particle infomation is clicked
@@ -244,7 +235,7 @@ public class Suvat_UiController : MonoBehaviour {
         //"Add Particle" is the last option
         //therefore maximum -1
         //cannot add a particle while simulation is occuring
-        if (value == maximum - 1 && SimulateController.isSimulating == false)
+        if (value == maximum - 1 && newSimulateController.isSimulating == false)
         {
             //Adds the additional particle to the dropbox's
             AddOptionToDropBox(maximum);
@@ -303,7 +294,7 @@ public class Suvat_UiController : MonoBehaviour {
         try
         {
             //Updates UI using a particles values
-            UpdateUI(Particle.Instances[current]);
+            UpdateUI(newParticle.ParticleInstances[current]);
         }
         catch (ArgumentOutOfRangeException)
         {
@@ -317,41 +308,41 @@ public class Suvat_UiController : MonoBehaviour {
         int value = DropBox_CameraTarget.value;
         if (value == 0)
         {
-            CameraController.isFreeRoam = true;
+            newCameraController.isFreeRoam = true;
         }
         else
         {
-            CameraController.isFreeRoam = false;
+            newCameraController.isFreeRoam = false;
         }
     }
 
 
     //Updates values of the UI with the values inside of the Particle parameter given in each dimention
-    public void UpdateUI(Particle values)
+    public void UpdateUI(newParticle values)
     {
-        S_x.text = values.Displacement[0].ToString();
-        S_y.text = values.Displacement[1].ToString();
-        S_z.text = values.Displacement[2].ToString();
+        S_x.text = values.displacement[0].ToString();
+        S_y.text = values.displacement[1].ToString();
+        S_z.text = values.displacement[2].ToString();
 
-        U_x.text = values.InitialVelocity[0].ToString();
-        U_y.text = values.InitialVelocity[1].ToString();
-        U_z.text = values.InitialVelocity[2].ToString();
+        U_x.text = values.initialVelocity[0].ToString();
+        U_y.text = values.initialVelocity[1].ToString();
+        U_z.text = values.initialVelocity[2].ToString();
 
-        V_x.text = values.FinalVelocity[0].ToString();
-        V_y.text = values.FinalVelocity[1].ToString();
-        V_z.text = values.FinalVelocity[2].ToString();
+        V_x.text = values.currentVelocity[0].ToString();
+        V_y.text = values.currentVelocity[1].ToString();
+        V_z.text = values.currentVelocity[2].ToString();
 
-        A_x.text = values.Acceleration[0].ToString();
-        A_y.text = values.Acceleration[1].ToString();
-        A_z.text = values.Acceleration[2].ToString();
+        A_x.text = values.acceleration[0].ToString();
+        A_y.text = values.acceleration[1].ToString();
+        A_z.text = values.acceleration[2].ToString();
 
-        Time.text = values.Time.ToString();
+        Time.text = values.motionTime.ToString();
 
-        R_x.text = values.InitialPosition[0].ToString();
-        R_y.text = values.InitialPosition[1].ToString();
-        R_z.text = values.InitialPosition[2].ToString();
+        R_x.text = values.initialPosition[0].ToString();
+        R_y.text = values.initialPosition[1].ToString();
+        R_z.text = values.initialPosition[2].ToString();
 
-        Radius.text = values.Radius.ToString();
+        Radius.text = values.diameter.ToString();
     }
 
     //Resets particle input fields contents to empty string or default values

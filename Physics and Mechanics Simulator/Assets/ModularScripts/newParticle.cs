@@ -28,6 +28,7 @@ public class newParticle : MonoBehaviour {
         collisions,
         graphingValuesSpeed,
         graphingValuesAcceleration,
+        graphingValuesDistance,
         graphingValuesMomentumX,
         graphingValuesMomentumY,
     }
@@ -39,6 +40,8 @@ public class newParticle : MonoBehaviour {
 
 
     public Dictionary<Properties, object> ObjectProperties = new Dictionary<Properties, object>();
+
+    #region Properties States
 
     public bool hasMyGameObject => ObjectProperties.ContainsKey(Properties.MyGameObject);
     public bool hasParticlePrefabs => ObjectProperties.ContainsKey(Properties.ParticlePrefabs);
@@ -63,10 +66,14 @@ public class newParticle : MonoBehaviour {
     public bool hasGraphingValuesAcceleration => ObjectProperties.ContainsKey(Properties.graphingValuesAcceleration);
     public bool hasGraphingValuesMomentumX => ObjectProperties.ContainsKey(Properties.graphingValuesMomentumX);
     public bool hasGraphingValuesMomentumY => ObjectProperties.ContainsKey(Properties.graphingValuesMomentumY);
+    public bool hasGraphingValuesDistance => ObjectProperties.ContainsKey(Properties.graphingValuesDistance);
 
     public bool hasGravity => ObjectProperties.ContainsKey(Properties.gravity);
     public bool hasCollisions => ObjectProperties.ContainsKey(Properties.collisions);
 
+    #endregion
+
+    #region Prefabs and GameObjects
     public GameObject MyGameObject
     {
         get
@@ -86,7 +93,6 @@ public class newParticle : MonoBehaviour {
             else { throw new NotSupportedException("This particle has no Gameobject"); }
         }
     }
-
     public List<GameObject> ParticlePrefabs
     {
         get
@@ -111,7 +117,6 @@ public class newParticle : MonoBehaviour {
             else { throw new NotSupportedException("This particle has no Particle Prefabs"); }
         }
     }
-
     public UnityEngine.Object[] ParticleSprites
     {
         get
@@ -131,7 +136,7 @@ public class newParticle : MonoBehaviour {
             else { throw new NotSupportedException("This particle has no Particle Sprites"); }
         }
     }
-
+    #endregion
 
     #region SUVATR variables 
     public Vector3 displacement
@@ -232,7 +237,7 @@ public class newParticle : MonoBehaviour {
         {
             if (hasMotionTime)
             {
-                ObjectProperties[Properties.motionTime] = value;
+                ObjectProperties[Properties.motionTime] = MyMaths.Magnitude(value);
             }
             else { throw new NotSupportedException("This particle has no time"); }
         }
@@ -258,9 +263,97 @@ public class newParticle : MonoBehaviour {
         }
     }
 
-    // TODO Add Key
+    public string[] key
+    {
+        get
+        {
+            if (hasKey)
+            {
+                return (string[])ObjectProperties[Properties.key];
+            }
+            else { throw new NotSupportedException("This particle has no Key"); }
+        }
+        set
+        {
+            if (hasKey)
+            {
+                ObjectProperties[Properties.key] = value;
+            }
+            else { throw new NotSupportedException("This particle has no Key"); }
+        }
+    }
+
+    public bool[] invalidInputs
+    {
+        get
+        {
+            if (hasInvalidInput)
+            {
+                return (bool[])ObjectProperties[Properties.invalidInput];
+            }
+            else { throw new NotSupportedException("This particle has no invalid inputs"); }
+        }
+        set
+        {
+            if (hasInvalidInput)
+            {
+                ObjectProperties[Properties.invalidInput] = value;
+            }
+            else { throw new NotSupportedException("This particle has no invalid inputs"); }
+        }
+    }
+
+    public int[] numberOfInputs
+    {
+        get
+        {
+            if (hasNumberOfInputs)
+            {
+                UpdateNumberOfInputs();
+                return (int[])ObjectProperties[Properties.numberOfInputs];
+            }
+            else { throw new NotSupportedException("This particle has no number of inputs"); }
+        }
+        set
+        {
+            if (hasNumberOfInputs)
+            {
+                ObjectProperties[Properties.numberOfInputs] = value;
+            }
+            else { throw new NotSupportedException("This particle has no number of inputs"); }
+        }
+    }
+
+    //Re-calculates the NumberOfInputs by using the Key
+    public void UpdateNumberOfInputs()
+    {
+        int dimention;
+        //for every dimention
+        for (dimention = 0; dimention < 3; dimention++)
+        {
+            int numInputs = 0;
+            //for every character
+            foreach(char character in key[dimention])
+            {
+                //if character = '1' , meaning value has been calculated
+                if (character == '1')
+                {
+                    //valid inputs increases by one
+                    numInputs += 1;
+                }
+            }
+            SetNumberOfInputs(dimention, numInputs);
+        }
+    }
+
+    //Sets NumberOfInputs in an index value
+    public void SetNumberOfInputs(int index, int value)
+    {
+        numberOfInputs[index] = value;
+    }
+
+
     //TODO Add numberOfInputs
-    //TODO Add invalidInputs
     #endregion
 
     #region Diameter , restitutution , Mass
@@ -416,6 +509,25 @@ public class newParticle : MonoBehaviour {
             else { throw new NotSupportedException("This particle has no accleration graph"); }
         }
     }
+    public List<Vector2> graphingValuesDistance
+    {
+        get
+        {
+            if (hasGraphingValuesDistance)
+            {
+                return (List<Vector2>)ObjectProperties[Properties.graphingValuesDistance];
+            }
+            else { throw new NotSupportedException("This particle has no distance graph"); }
+        }
+        set
+        {
+            if (hasGraphingValuesDistance)
+            {
+                ObjectProperties[Properties.graphingValuesDistance] = value;
+            }
+            else { throw new NotSupportedException("This particle has no distance graph"); }
+        }
+    }
 
     public List<Vector2> graphingValuesMomentumX
     {
@@ -458,7 +570,6 @@ public class newParticle : MonoBehaviour {
     }
 
     #endregion
-
 
     #region Gravity only methods
 
@@ -592,5 +703,37 @@ public class newParticle : MonoBehaviour {
     }
 
     #endregion
+
+    #region Suvat Particles
+
+    public static newParticle CreateSuvatParticle()
+    {
+        newParticle particle = new newParticle();
+        particle.AddParticlePropery(newParticle.Properties.MyGameObject);
+        particle.AddParticlePropery(newParticle.Properties.ParticlePrefabs);
+        particle.AddParticlePropery(newParticle.Properties.displacement);
+        particle.AddParticlePropery(newParticle.Properties.initialVelocity);
+        particle.AddParticlePropery(newParticle.Properties.currentVelocity);
+        particle.AddParticlePropery(newParticle.Properties.acceleration);
+        particle.AddParticlePropery(newParticle.Properties.motionTime);
+        particle.AddParticlePropery(newParticle.Properties.initialPosition);
+        particle.AddParticlePropery(newParticle.Properties.diameter);
+        particle.AddParticlePropery(newParticle.Properties.restitution);
+        particle.AddParticlePropery(newParticle.Properties.mass);
+        particle.AddParticlePropery(newParticle.Properties.graphingValuesSpeed);
+        particle.AddParticlePropery(newParticle.Properties.graphingValuesDistance);
+
+        particle.ParticlePrefabs.Add(Resources.Load("Sphere") as GameObject);
+        particle.key = new string[] {"00000","00000","00000"};
+        particle.numberOfInputs = new int[] { 0, 0, 0 };
+        particle.graphingValuesSpeed = new List<Vector2>();
+        particle.graphingValuesDistance = new List<Vector2>();
+        return particle;
+    }
+
+
+
+    #endregion
+
 
 }

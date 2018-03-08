@@ -67,15 +67,17 @@ public class GenerateBackground : MonoBehaviour {
         float u;
         //max time
         float t;
-        for (int i = 0; i < Particle.Instances.Count; i++)
+        for (int i = 0; i < newParticle.ParticleInstances.Count; i++)
         {
             newMin = 0;
             newMax = 0;
 
-            initialPos = Particle.Instances[i].InitialPosition[dimention];
-            a = Particle.Instances[i].Acceleration[dimention];
-            u = Particle.Instances[i].InitialVelocity[dimention];
-            t = SimulateController.maxTime;
+            initialPos = newParticle.ParticleInstances[i].initialPosition[dimention];
+            a = newParticle.ParticleInstances[i].acceleration[dimention];
+            u = newParticle.ParticleInstances[i].initialVelocity[dimention];
+            t = 50;
+            //TODO fix maxtime
+            //t = SimulateController.maxTime;
 
             /* 
              * Calculating the maximum and minimum values of the particle during simulation

@@ -308,8 +308,8 @@ public void OnDropBoxParticleChanged()
         //UnityEngine.Random.RandomRange generates a float between min and max
         newParticle random = newParticle.CreateCollisionsParticle();
         random.initialVelocity = new Vector2(
-            UnityEngine.Random.RandomRange(-5f, 5f),
-            UnityEngine.Random.RandomRange(-5f, 5f));
+            UnityEngine.Random.Range(-5f, 5f),
+            UnityEngine.Random.Range(-5f, 5f));
         random.mass = UnityEngine.Random.Range(1f, 5f);
         random.restitution = UnityEngine.Random.Range(1f,1f);
         random.diameter = UnityEngine.Random.Range(1f, 1.5f);
