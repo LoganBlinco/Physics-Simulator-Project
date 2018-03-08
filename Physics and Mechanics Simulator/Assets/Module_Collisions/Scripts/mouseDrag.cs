@@ -28,8 +28,8 @@ public class mouseDrag : MonoBehaviour {
     //Ran when user hovers and clicks over a collider
     private void OnMouseDrag()
 	{
-        int index = gameObject.GetComponent<CollisionCalculator>().particleIndex;
-        float diameter = CollisionsParticle.ParticleInstances[index].diameter;
+        int index = gameObject.GetComponent<newCollisionsController>().particleIndex;
+        float diameter = newParticle.ParticleInstances[index].diameter;
 
         Vector3 mousePosition = new Vector3(
             Input.mousePosition.x,

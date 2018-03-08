@@ -77,6 +77,41 @@ public class newSimulateController : MonoBehaviour {
 
             UpdateUI();
             simulationTime += deltaT;
+
+            if (simulationType == SimulationTypes.Collisions)
+            {
+                ClampParticles();
+            }
+        }
+    }
+
+    private void ClampParticles()
+    {
+
+        //GameObject.Find looks in the scene view for a gameobject with name ("NAME")
+        GameObject BorderLeft = GameObject.Find("BorderLeft");
+        GameObject BorderRight = GameObject.Find("BorderRight");
+        GameObject BorderTop = GameObject.Find("BorderTop");
+        GameObject BorderBottom = GameObject.Find("BorderBottom");
+
+         
+        foreach (newParticle particle in newParticle.ParticleInstances)
+        {
+            Vector3 newPosition = particle.MyGameObject.transform.position + particle.currentVelocity * deltaT;
+            //Clamps the particles position to inside of the borders
+            float diameter = particle.diameter;
+
+            float minX = BorderLeft.transform.position.x + diameter / 2 + (BorderLeft.GetComponent<Renderer>().bounds.size.x / 2) - 0.01f;
+            float maxX = BorderRight.transform.position.x - diameter / 2 - (BorderRight.GetComponent<Renderer>().bounds.size.x / 2) + 0.01f;
+
+            float minY = BorderBottom.transform.position.y + diameter / 2 + (BorderBottom.GetComponent<Renderer>().bounds.size.y / 2) - 0.01f;
+            float maxY = BorderTop.transform.position.y - diameter / 2 - (BorderTop.GetComponent<Renderer>().bounds.size.y / 2) + 0.01f;
+
+
+            newPosition.x = MyMaths.Clamp(newPosition.x, minX, maxX);
+            newPosition.y = MyMaths.Clamp(newPosition.y, minY, maxY);
+            particle.MyGameObject.transform.position = newPosition;
+
         }
     }
 

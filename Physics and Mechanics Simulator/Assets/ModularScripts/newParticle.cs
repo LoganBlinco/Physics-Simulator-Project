@@ -532,4 +532,65 @@ public class newParticle : MonoBehaviour {
 
     #endregion
 
+    #region Collisions Particles
+
+
+    public static newParticle CreateCollisionsParticle()
+    {
+        newParticle particle = new newParticle();
+        particle.AddParticlePropery(newParticle.Properties.MyGameObject);
+        particle.AddParticlePropery(newParticle.Properties.ParticlePrefabs);
+        particle.AddParticlePropery(newParticle.Properties.initialVelocity);
+        particle.AddParticlePropery(newParticle.Properties.currentVelocity);
+        particle.AddParticlePropery(newParticle.Properties.diameter);
+        particle.AddParticlePropery(newParticle.Properties.restitution);
+        particle.AddParticlePropery(newParticle.Properties.mass);
+        particle.AddParticlePropery(newParticle.Properties.collisions);
+        particle.AddParticlePropery(newParticle.Properties.graphingValuesMomentumX);
+        particle.AddParticlePropery(newParticle.Properties.graphingValuesMomentumY);
+
+        particle.CreateCollisionsObject();
+        particle.graphingValuesMomentumX = new List<Vector2>();
+        particle.graphingValuesMomentumY = new List<Vector2>();
+
+        //This is used when performing collision calculations
+        //particle.MyGameObject.GetComponent<newCollisionsController>().particleIndex = newParticle.ParticleInstances.Count;
+
+
+        particle.initialVelocity = Vector3.zero;
+        particle.diameter = 0.25f;
+        particle.restitution = 1;
+        particle.mass = 1.0f;
+        particle.collisions = true;
+        return particle;
+    }
+
+    //Controls the instatiation process of creating the particle
+    private void CreateCollisionsObject()
+    {
+        CreateCollisionsParticleReference();
+
+        GameObject particleObject = Instantiate(ParticlePrefabs[0]) as GameObject;
+
+        //Centers prefab to middle of scene
+        particleObject.transform.position = new Vector3(0, 1, 0);
+        //Assigns object to this instance
+        MyGameObject = particleObject;
+        //Assigns particles index value to the attached script 
+        //This is used when performing collision calculations
+        particleObject.GetComponent<newCollisionsController>().particleIndex = newParticle.ParticleInstances.Count;
+    }
+
+    //Creates sprite and prefab references 
+    private void CreateCollisionsParticleReference()
+    {
+        ParticlePrefabs = new List<GameObject>();
+        if (hasParticlePrefabs)
+        {
+            ParticlePrefabs.Add(Resources.Load("CollisionsSphere") as GameObject);
+        }
+    }
+
+    #endregion
+
 }
