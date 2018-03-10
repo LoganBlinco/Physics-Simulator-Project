@@ -37,6 +37,7 @@ public class newSimulateController : MonoBehaviour {
     public Text TimeLabel;
 
     #region Variables
+
     //Stores the time in which the simulation has been occuring for
     public float simulationTime = 0;
 
@@ -224,6 +225,10 @@ public class newSimulateController : MonoBehaviour {
                 {
                     GraphY.GetComponent<GraphMaker>().CreateGraph(temp.graphingValuesMomentumY);
                 }
+                if (temp.hasGraphingValuesDistance)
+                {
+                    GraphY.GetComponent<GraphMaker>().CreateGraph(temp.graphingValuesDistance);
+                }
             }
             timeTillUpdate = timePerUpdate;
         }
@@ -254,8 +259,19 @@ public class newSimulateController : MonoBehaviour {
             {
                 UpdateGraphValuesMomentumY(particle);
             }
+            if(particle.hasGraphingValuesDistance)
+            {
+                UpdateGraphValuesDistance(particle);
+            }
 
         }
+    }
+
+    private void UpdateGraphValuesDistance(newParticle particle)
+    {
+        particle.graphingValuesDistance.Add(new Vector2(
+            simulationTime,
+            (particle.MyGameObject.transform.position - particle.initialPosition).magnitude));
     }
 
     private void UpdateGraphValuesMomentumY(newParticle particle)

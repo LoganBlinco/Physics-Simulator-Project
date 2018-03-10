@@ -41,10 +41,7 @@ public class Suvat : MonoBehaviour {
                 newParticle.ParticleInstances.Add(values);
             }
         }
-        else
-        {
-        }
-
+        else { }
     }
 
     //Checks if atleast 3 inputs in a single dimention have been inputted
@@ -52,14 +49,19 @@ public class Suvat : MonoBehaviour {
     //Returns true or false
     private static bool IsValid(ref newParticle values, int dimentions)
     {
+        Debug.Log("Is valid ran");
         //Bool based on if the program has atleast 1 dimention with three inputs
-        bool minThreeInputs = values.numberOfInputs[0] >= 3 || values.numberOfInputs[1] >= 3 || values.numberOfInputs[2] >= 3;
+        int[] numberOfInputs = values.numberOfInputs;
+        bool minThreeInputs = numberOfInputs[0] >= 3 || numberOfInputs[1] >= 3 || numberOfInputs[2] >= 3;
+        Debug.Log("Is valid ran");
         //Bool if all dimentions have 3 inputs
         bool allAboveThree = getAboveThree(values, dimentions);
 
         //Gets the number of inputs above 2 from all dimentions active
         int numberAboveTwo = GetNumberAboveN(values,2,dimentions);
+        Debug.Log("Is valid ran");
         //Must have atleast 3 inputs and other dimentions have more than 2 inputs OR if all dimentions have 3 inputs
+        Debug.Log("Isvalid done");
         if ((minThreeInputs == true && numberAboveTwo == dimentions) || allAboveThree == true)
         {
             return true;
@@ -73,9 +75,10 @@ public class Suvat : MonoBehaviour {
     private static bool getAboveThree(newParticle values, int dimentions)
     {
         bool allAbove = true;
+        int[] numberOfInputs = values.numberOfInputs;
         for (int i =0;i<dimentions;i++)
         {
-            if (values.numberOfInputs[i] < 3)
+            if (numberOfInputs[i] < 3)
             {
                 allAbove = false;
             }
@@ -87,12 +90,13 @@ public class Suvat : MonoBehaviour {
     private static int GetNumberAboveN(newParticle values, int N, int dimentions)
     {
         int numberAboveN = 0;
+        int[] numberOfinputs = values.numberOfInputs;
         for (int i = 0; i < dimentions; i++)
         {
-            if (values.numberOfInputs[i] >= N)
+            if (numberOfinputs[i] >= N)
             {
                 //If time is one of the quantities then an additional quantitiy must be entered
-                if (values.key[i][4] == '1' && values.numberOfInputs[i] - 1 >= N)
+                if (values.key[i][4] == '1' && numberOfinputs[i] - 1 >= N)
                 {
                     numberAboveN += 1;
                 }

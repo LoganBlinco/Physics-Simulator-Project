@@ -309,24 +309,16 @@ public class newParticle : MonoBehaviour {
         {
             if (hasNumberOfInputs)
             {
-                UpdateNumberOfInputs();
-                return (int[])ObjectProperties[Properties.numberOfInputs];
-            }
-            else { throw new NotSupportedException("This particle has no number of inputs"); }
-        }
-        set
-        {
-            if (hasNumberOfInputs)
-            {
-                ObjectProperties[Properties.numberOfInputs] = value;
+                return GetNumberOfInputs();
             }
             else { throw new NotSupportedException("This particle has no number of inputs"); }
         }
     }
 
     //Re-calculates the NumberOfInputs by using the Key
-    public void UpdateNumberOfInputs()
+    public int[] GetNumberOfInputs()
     {
+        int[] numberOfInputs = new int[3];
         int dimention;
         //for every dimention
         for (dimention = 0; dimention < 3; dimention++)
@@ -342,14 +334,17 @@ public class newParticle : MonoBehaviour {
                     numInputs += 1;
                 }
             }
-            SetNumberOfInputs(dimention, numInputs);
+            numberOfInputs[dimention] = numInputs;
         }
+        return numberOfInputs;
     }
 
     //Sets NumberOfInputs in an index value
     public void SetNumberOfInputs(int index, int value)
     {
+        //Debug.Log("Set ran");
         numberOfInputs[index] = value;
+        //Debug.Log("Set wended");
     }
 
 
@@ -716,6 +711,9 @@ public class newParticle : MonoBehaviour {
         particle.AddParticlePropery(newParticle.Properties.currentVelocity);
         particle.AddParticlePropery(newParticle.Properties.acceleration);
         particle.AddParticlePropery(newParticle.Properties.motionTime);
+        particle.AddParticlePropery(newParticle.Properties.key);
+        particle.AddParticlePropery(newParticle.Properties.numberOfInputs);
+        particle.AddParticlePropery(newParticle.Properties.invalidInput);
         particle.AddParticlePropery(newParticle.Properties.initialPosition);
         particle.AddParticlePropery(newParticle.Properties.diameter);
         particle.AddParticlePropery(newParticle.Properties.restitution);
@@ -723,13 +721,43 @@ public class newParticle : MonoBehaviour {
         particle.AddParticlePropery(newParticle.Properties.graphingValuesSpeed);
         particle.AddParticlePropery(newParticle.Properties.graphingValuesDistance);
 
-        particle.ParticlePrefabs.Add(Resources.Load("Sphere") as GameObject);
+        particle.CreateSuvatObject();
+
+        particle.displacement = new Vector3();
+        particle.initialVelocity = new Vector3();
+        particle.currentVelocity = new Vector3();
+        particle.acceleration = new Vector3();
+        particle.initialPosition = new Vector3();
+
         particle.key = new string[] {"00000","00000","00000"};
-        particle.numberOfInputs = new int[] { 0, 0, 0 };
+        particle.invalidInputs = new bool[] { false, false, false };
         particle.graphingValuesSpeed = new List<Vector2>();
         particle.graphingValuesDistance = new List<Vector2>();
         return particle;
     }
+
+    private void CreateSuvatObject()
+    {
+        CreateSuvatObjectReference();
+
+        GameObject particleObject = Instantiate(ParticlePrefabs[0]) as GameObject;
+
+        //Assigns object to this instance
+        MyGameObject = particleObject;
+        //Assigns particles index value to the attached script 
+        //This is used when performing collision calculations
+        particleObject.GetComponent<newCollisionsController>().particleIndex = ParticleInstances.Count;
+    }
+
+    private void CreateSuvatObjectReference()
+    {
+        ParticlePrefabs = new List<GameObject>();
+        if (hasParticlePrefabs)
+        {
+            ParticlePrefabs.Add(Resources.Load("Sphere") as GameObject);
+        }
+    }
+
 
 
 

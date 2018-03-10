@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Suvat_UiController : MonoBehaviour {
 
@@ -112,7 +113,12 @@ public class Suvat_UiController : MonoBehaviour {
     //Ran when the reset button is clicked
     public void OnResetClicked()
     {
-        ResetUI();
+        //Resets the static variables for simulations
+        newSimulateController.isSimulating = false;
+        newSimulateController.SimulationSpeed = 1;
+        newParticle.ParticleInstances.Clear();
+        //Loads scene to refresh values
+        SceneManager.LoadScene("Suvat");
     }
 
     //Ran when the Simulation button is clicked
