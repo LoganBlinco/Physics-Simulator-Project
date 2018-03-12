@@ -7,6 +7,7 @@ public class newParticle : MonoBehaviour {
 
     public static List<newParticle> ParticleInstances = new List<newParticle>();
 
+    //Variables which will be stored for the particle
     public enum Properties
     {
         MyGameObject, 
@@ -32,17 +33,18 @@ public class newParticle : MonoBehaviour {
         graphingValuesMomentumX,
         graphingValuesMomentumY,
     }
-
+    //Adding properties to the particle of type propertyType
     public void AddParticlePropery(Properties propertyType)
     {
         ObjectProperties[propertyType] = null;
     }
 
-
+    //Dictionary storing values of properties which have been added
     public Dictionary<Properties, object> ObjectProperties = new Dictionary<Properties, object>();
 
     #region Properties States
-
+    //Varaibles look up to determine if the particle has the property whihc is stored in the dictionary
+    //Returns true or false
     public bool hasMyGameObject => ObjectProperties.ContainsKey(Properties.MyGameObject);
     public bool hasParticlePrefabs => ObjectProperties.ContainsKey(Properties.ParticlePrefabs);
     public bool hasParticleSprites => ObjectProperties.ContainsKey(Properties.ParticleSprites);
@@ -74,6 +76,7 @@ public class newParticle : MonoBehaviour {
     #endregion
 
     #region Prefabs and GameObjects
+    //Reference to gameobject of THE particle
     public GameObject MyGameObject
     {
         get
@@ -93,6 +96,7 @@ public class newParticle : MonoBehaviour {
             else { throw new NotSupportedException("This particle has no Gameobject"); }
         }
     }
+    //Particle prefabs to be initilized from
     public List<GameObject> ParticlePrefabs
     {
         get
@@ -117,6 +121,7 @@ public class newParticle : MonoBehaviour {
             else { throw new NotSupportedException("This particle has no Particle Prefabs"); }
         }
     }
+    //Particle sprites to choose from (used for gravity)
     public UnityEngine.Object[] ParticleSprites
     {
         get
