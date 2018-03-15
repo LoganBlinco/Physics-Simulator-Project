@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class newParticle : MonoBehaviour {
 
+    //Varaible storing all instances of particles which have been created
     public static List<newParticle> ParticleInstances = new List<newParticle>();
 
-    //Variables which will be stored for the particle
+    //Variables which can be composed for the particle
     public enum Properties
     {
         MyGameObject, 
@@ -150,16 +151,20 @@ public class newParticle : MonoBehaviour {
         {
             if (hasDisplacement)
             {
+                //Casts return type as Vector3 from object
                 return (Vector3)ObjectProperties[Properties.displacement];
             }
+            //exception thrown when program attempts to call displacement if the particle does not have displacement as a varaible
             else { throw new NotSupportedException("This particle has Particle Displacement"); }
         }
         set
         {
             if (hasDisplacement)
             {
+                //Changes value to the inputs
                 ObjectProperties[Properties.displacement] = value;
             }
+            //exception thrown when user attempts to call displacement if the particle does not have displacement as a varaible
             else { throw new NotSupportedException("This particle has no Displacement"); }
         }
     }
@@ -574,11 +579,13 @@ public class newParticle : MonoBehaviour {
     #region Gravity only methods
 
     //Controls the instatiation process of creating the particle
-    public void CreateGravityObject()
+    private void CreateGravityObject()
     {
+        //Creates references for the ParticlePrefabs and ParticleSprites
         CreateGravityPlanetReferences();
-
+        //Only one prefab for Gravity
         GameObject planetObject = Instantiate(ParticlePrefabs[0]) as GameObject;
+        //Centered on the screen
         planetObject.transform.position = new Vector3(0, 1, 0);
         MyGameObject = planetObject;
         //Gets random number
@@ -591,23 +598,27 @@ public class newParticle : MonoBehaviour {
 
         //Assigns particles index value to the attached script 
         //This is used when performing collision calculations
-        MyGameObject.GetComponent<newCollisionsController>().particleIndex = newParticle.ParticleInstances.Count;
+        MyGameObject.GetComponent<newCollisionsController>().particleIndex = ParticleInstances.Count;
     }
 
     //Creates sprite and prefab references 
     private void CreateGravityPlanetReferences()
     {
+        //Initializes prefabs list
         ParticlePrefabs = new List<GameObject>();
-        GameObject grav = Resources.Load("GravityEarth") as GameObject;
-        List<GameObject> tempList = ParticlePrefabs;
         if (hasParticlePrefabs)
         {
-            tempList.Add(grav);
-            ParticlePrefabs = tempList;
+            //Loads prefab for the gravity particle
+            ParticlePrefabs.Add(Resources.Load("GravityEarth") as GameObject);
         }
-        ParticleSprites = Resources.LoadAll("Planet_Sprites", typeof(Sprite));
+        if (hasParticleSprites)
+        {
+            //loads sprites which are used for the gravity (diffrent planet texture) from the folder
+            //"Planet_Sprites" and only type of Sprite
+            ParticleSprites = Resources.LoadAll("Planet_Sprites", typeof(Sprite));
+        }
     }
-
+    //Creates then returns a particle with properties for the gravity simulator
     public static newParticle CreateGravityParticle()
     {
         newParticle particle = new newParticle();
@@ -624,30 +635,32 @@ public class newParticle : MonoBehaviour {
         particle.AddParticlePropery(newParticle.Properties.graphingValuesAcceleration);
         particle.AddParticlePropery(newParticle.Properties.graphingValuesSpeed);
 
+        //Creates the gameobject for the gravity particle
         particle.CreateGravityObject();
         particle.graphingValuesAcceleration = new List<Vector2>();
         particle.graphingValuesSpeed = new List<Vector2>();
 
-        //This is used when performing collision calculations
-        //particle.MyGameObject.GetComponent<newCollisionsController>().particleIndex = newParticle.ParticleInstances.Count;
-
-
+        //Sets initial values for the gravity particle (defaults)
         particle.initialVelocity = Vector3.zero;
         particle.diameter = 0.25f;
         particle.restitution = 1;
         particle.mass = 1.0f;
         particle.gravity = true;
         particle.collisions = true;
+        //returns particle which has been created
         return particle;
     }
 
     #endregion
 
     #region Collisions Particles
-
-
+    //Method which creates a Collisions particle 
+    //Adds required properties
+    //Sets default values
+    //Create GameObject scene
     public static newParticle CreateCollisionsParticle()
     {
+        //Properties added to the particle
         newParticle particle = new newParticle();
         particle.AddParticlePropery(newParticle.Properties.MyGameObject);
         particle.AddParticlePropery(newParticle.Properties.ParticlePrefabs);
@@ -660,22 +673,20 @@ public class newParticle : MonoBehaviour {
         particle.AddParticlePropery(newParticle.Properties.graphingValuesMomentumX);
         particle.AddParticlePropery(newParticle.Properties.graphingValuesMomentumY);
 
+        //Creates gameobject for the scene
         particle.CreateCollisionsObject();
         particle.graphingValuesMomentumX = new List<Vector2>();
         particle.graphingValuesMomentumY = new List<Vector2>();
 
-        //This is used when performing collision calculations
-        //particle.MyGameObject.GetComponent<newCollisionsController>().particleIndex = newParticle.ParticleInstances.Count;
-
-
+        //Default values
         particle.initialVelocity = Vector3.zero;
         particle.diameter = 0.25f;
         particle.restitution = 1;
         particle.mass = 1.0f;
         particle.collisions = true;
+        //returns particle
         return particle;
     }
-
     //Controls the instatiation process of creating the particle
     private void CreateCollisionsObject()
     {
@@ -695,9 +706,11 @@ public class newParticle : MonoBehaviour {
     //Creates sprite and prefab references 
     private void CreateCollisionsParticleReference()
     {
+        //Instatiates list
         ParticlePrefabs = new List<GameObject>();
         if (hasParticlePrefabs)
         {
+            //Creates collisions prefab reference
             ParticlePrefabs.Add(Resources.Load("CollisionsSphere") as GameObject);
         }
     }
@@ -705,9 +718,13 @@ public class newParticle : MonoBehaviour {
     #endregion
 
     #region Suvat Particles
-
+    //Method which creates a Suvat particle 
+    //Adds required properties
+    //Sets default values
+    //Create GameObject scene
     public static newParticle CreateSuvatParticle()
     {
+        //Adding suvat properties
         newParticle particle = new newParticle();
         particle.AddParticlePropery(newParticle.Properties.MyGameObject);
         particle.AddParticlePropery(newParticle.Properties.ParticlePrefabs);
@@ -726,25 +743,30 @@ public class newParticle : MonoBehaviour {
         particle.AddParticlePropery(newParticle.Properties.graphingValuesSpeed);
         particle.AddParticlePropery(newParticle.Properties.graphingValuesDistance);
 
+        //Creates the gameObject
         particle.CreateSuvatObject();
 
+        //Assigns default values
         particle.displacement = new Vector3();
         particle.initialVelocity = new Vector3();
         particle.currentVelocity = new Vector3();
         particle.acceleration = new Vector3();
         particle.initialPosition = new Vector3();
 
+        //Initialises variables
         particle.key = new string[] {"00000","00000","00000"};
         particle.invalidInputs = new bool[] { false, false, false };
         particle.graphingValuesSpeed = new List<Vector2>();
         particle.graphingValuesDistance = new List<Vector2>();
+        //returns the particle which has been created
         return particle;
     }
-
+    //Creates the gameobject for the scene which is repesenting the particle
     private void CreateSuvatObject()
     {
+        //Creates prefab and sprite references
         CreateSuvatObjectReference();
-
+        //Creates object
         GameObject particleObject = Instantiate(ParticlePrefabs[0]) as GameObject;
 
         //Assigns object to this instance
@@ -753,12 +775,14 @@ public class newParticle : MonoBehaviour {
         //This is used when performing collision calculations
         particleObject.GetComponent<newCollisionsController>().particleIndex = ParticleInstances.Count;
     }
-
+    //Creates references with the prefab and sprites
     private void CreateSuvatObjectReference()
     {
+        //Initializes the list
         ParticlePrefabs = new List<GameObject>();
         if (hasParticlePrefabs)
         {
+            //Adds the prefab for Suvat
             ParticlePrefabs.Add(Resources.Load("Sphere") as GameObject);
         }
     }
