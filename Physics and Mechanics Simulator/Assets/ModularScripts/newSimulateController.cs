@@ -51,13 +51,14 @@ public class newSimulateController : MonoBehaviour {
     #endregion
 
     #region Simulation type selected
-
+    //Types of simulation the controller supports
     public enum SimulationTypes
     {
         Suvat,
         Collisions,
         Gravity
     }
+    //current simulation type
     public SimulationTypes simulationType;
 
     #endregion
@@ -78,58 +79,56 @@ public class newSimulateController : MonoBehaviour {
 
             UpdateUI();
             simulationTime += deltaT;
-
+            //Collisions module needs to clamp particles inside of border
             if (simulationType == SimulationTypes.Collisions)
             {
                 ClampParticles();
             }
         }
     }
-
+    //Clamps particles from the collisions module inside the borders
     private void ClampParticles()
     {
-
         //GameObject.Find looks in the scene view for a gameobject with name ("NAME")
         GameObject BorderLeft = GameObject.Find("BorderLeft");
         GameObject BorderRight = GameObject.Find("BorderRight");
         GameObject BorderTop = GameObject.Find("BorderTop");
         GameObject BorderBottom = GameObject.Find("BorderBottom");
 
-         
+        //buffer which changes the border size of the confines
+        float buffer = 0.01f;    
         foreach (newParticle particle in newParticle.ParticleInstances)
         {
             Vector3 newPosition = particle.MyGameObject.transform.position + particle.currentVelocity * deltaT;
             //Clamps the particles position to inside of the borders
             float diameter = particle.diameter;
 
-            float minX = BorderLeft.transform.position.x + diameter / 2 + (BorderLeft.GetComponent<Renderer>().bounds.size.x / 2) - 0.01f;
-            float maxX = BorderRight.transform.position.x - diameter / 2 - (BorderRight.GetComponent<Renderer>().bounds.size.x / 2) + 0.01f;
+            float minX = BorderLeft.transform.position.x + diameter / 2 + (BorderLeft.GetComponent<Renderer>().bounds.size.x / 2) - buffer;
+            float maxX = BorderRight.transform.position.x - diameter / 2 - (BorderRight.GetComponent<Renderer>().bounds.size.x / 2) + buffer;
 
-            float minY = BorderBottom.transform.position.y + diameter / 2 + (BorderBottom.GetComponent<Renderer>().bounds.size.y / 2) - 0.01f;
-            float maxY = BorderTop.transform.position.y - diameter / 2 - (BorderTop.GetComponent<Renderer>().bounds.size.y / 2) + 0.01f;
+            float minY = BorderBottom.transform.position.y + diameter / 2 + (BorderBottom.GetComponent<Renderer>().bounds.size.y / 2) - buffer;
+            float maxY = BorderTop.transform.position.y - diameter / 2 - (BorderTop.GetComponent<Renderer>().bounds.size.y / 2) + buffer;
 
-
+            //Clamps position to be inside of the border objects
             newPosition.x = MyMaths.Clamp(newPosition.x, minX, maxX);
             newPosition.y = MyMaths.Clamp(newPosition.y, minY, maxY);
             particle.MyGameObject.transform.position = newPosition;
-
         }
     }
-
+    //Updates particle selected's values in the UI
     private void UpdateUI()
     {
         switch(simulationType)
         {
             case SimulationTypes.Suvat:
-                //Suvat_UiController.instance.UpdateUI(newParticle.ParticleInstances[Gravity_InputController.Instance.ParticleIndexSelected]);
+                Suvat_UiController.instance.UpdateUI(newParticle.ParticleInstances[Suvat_UiController.instance.DropBox_Particle.value]);
                 break;
             case SimulationTypes.Collisions:
-                //Gravity_InputController.Instance.UpdateUI(newParticle.ParticleInstances[Gravity_InputController.Instance.ParticleIndexSelected]);
+                Collisions_InputController.Instance.UpdateUI(newParticle.ParticleInstances[Collisions_InputController.Instance.ParticleIndexSelected]);
                 break;
             case SimulationTypes.Gravity:
                 Gravity_InputController.Instance.UpdateUI(newParticle.ParticleInstances[Gravity_InputController.Instance.ParticleIndexSelected]);
                 break;
-
         }
     }
 

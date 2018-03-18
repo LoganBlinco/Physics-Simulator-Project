@@ -3,27 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class newCollisionsController : MonoBehaviour {
-
-    //Stores index of the particle in the GravityPlanets.PlanetInstances list
+    //Stores particle index value which this script is attached to
     public int particleIndex;
-
-    //List containing gameobjects which have collided with the current object (calculations to perform)
+    //List of other particles which have collided with this object (collisions are currently occuring)
     public List<GameObject> collidedObjects = new List<GameObject>();
 
     #region OnTriggers
-    //Called when a trigger collider interacts with a rigid body with a collider
+    //Called when trigger colliders enter each other
     private void OnTriggerEnter(Collider other)
     {
+        //Only perform calculations if program is simulating
         if (newSimulateController.isSimulating == true)
         {
+            //particle collisions
             if (other.gameObject.tag == "Particle")
             {
-                //Performs calculations for particle to particle collision
                 ParticleCollisionCalculation(other);
             }
+            //border collision
             else if (other.gameObject.tag == "Border")
             {
-                //Performs calculations for particle to border collision
                 BorderCollisionCalculation(other);
             }
             //Allowing me to find any objects which have not been tagged
@@ -34,7 +33,7 @@ public class newCollisionsController : MonoBehaviour {
             }
         }
     }
-    //Called when the colliders exit each other
+    //Called when trigger colliders leave each other
     private void OnTriggerExit(Collider other)
     {
         //If a particle to particle collision has occured then the collision process has ended therefore hasCollided = false (no longer colliding)
@@ -61,11 +60,13 @@ public class newCollisionsController : MonoBehaviour {
     private void BorderCollisionCalculation(Collider other)
     {
         newParticle particle = newParticle.ParticleInstances[particleIndex];
+        //particles in the collision must have collisions enabled
         if (particle.hasCollisions == false || particle.hasRestitution == false)
         {
             return;
         }
         //Gets restitution calculaues from the slider and from particle
+        //Border collisions only occurs in the collisions module therefore can call the Collisions_InputController script
         float BorderRestitution = Collisions_InputController.Instance.Slider_BorderRestitution.value;
         float Restitution = particle.restitution;
 
@@ -109,6 +110,7 @@ public class newCollisionsController : MonoBehaviour {
     //Performs and controls the maths of the calculations
     private void CalculateCollision(newParticle first, newParticle second)
     {
+        //Checking that particles in collisions are valid to collide
         if (first.hasCollisions == false || first.hasRestitution == false || second.hasCollisions == false || second.hasRestitution == false)
         {
             return;

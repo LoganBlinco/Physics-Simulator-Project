@@ -126,6 +126,7 @@ public class Suvat_UiController : MonoBehaviour {
     {
         //Calculates values required for simulation
         Suvat.OnCalculateClicked();
+        
         //Begins the simulation process in the SimulateController class
         newSimulateController.isSimulating = true;
     }

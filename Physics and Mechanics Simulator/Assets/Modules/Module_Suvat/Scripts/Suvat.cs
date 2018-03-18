@@ -308,13 +308,18 @@ public class Suvat : MonoBehaviour {
             //If the radius has not been stated or =0 then a default value of 1 is assigned.
             values.diameter = 1;
         }
-        //If the gravity toggle has been enabled
-        if (controller.Gravity.isOn == true)
+        try
         {
-            //gravity must be added.Gravity is negative therefore a vector subtraction occurs of the magnitude of gravity.
-            //Y component only
-            values.acceleration -= new Vector3(0, Gravity, 0);
+            //If the gravity toggle has been enabled
+            if (controller.Gravity.isOn == true)
+            {
+                //gravity must be added.Gravity is negative therefore a vector subtraction occurs of the magnitude of gravity.
+                //Y component only
+                values.acceleration -= new Vector3(0, Gravity, 0);
+            }
         }
+        catch (NullReferenceException) { }
+
     }
 
     #endregion

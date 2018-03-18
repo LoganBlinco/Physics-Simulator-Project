@@ -17,12 +17,15 @@ public class mouseDrag : MonoBehaviour {
     //Ran when gameobject is first instatiated
     public void Start()
     {
-        //GameObject.Find looks in the scene view for a gameobject with name ("NAME")
-        BorderLeft = GameObject.Find("BorderLeft");
-        BorderRight = GameObject.Find("BorderRight");
-        BorderTop = GameObject.Find("BorderTop");
-        BorderBottom = GameObject.Find("BorderBottom");
-
+        try
+        {
+            //GameObject.Find looks in the scene view for a gameobject with name ("NAME")
+            BorderLeft = GameObject.Find("BorderLeft");
+            BorderRight = GameObject.Find("BorderRight");
+            BorderTop = GameObject.Find("BorderTop");
+            BorderBottom = GameObject.Find("BorderBottom");
+        }
+        catch (NullReferenceException) { }
     }
 
     //Ran when user hovers and clicks over a collider
