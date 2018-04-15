@@ -24,21 +24,27 @@ public class GenerateBackground : MonoBehaviour {
     //Creates the background
     public static void CreateBackground()
     {
+        Debug.Log("Ran");
         //Clears variable values to be reused.
         ClearVariables();
+        Debug.Log("Variables cleared");
         //Destroy active Background_prefab objects.
         DestroyObjects();
+        Debug.Log("Objects destroyed");
         for (int dimentions = 0;dimentions<3;dimentions++)
         {
             //Gets max and min values
             GetVetex(dimentions);
         }
+        Debug.Log("Vertex got");
         //Adds the offset 
         min = min - Vector3.one * offset * sizeOfSprite;
         max = max + Vector3.one * offset * sizeOfSprite;
         CalculateNumberOfInstances();
+        Debug.Log("Instances calc");
         //Creates the objects to the scene
         InstatiatePrefabs();
+        Debug.Log("Prefabs created");
     }
 
     //Sets variable data to 0

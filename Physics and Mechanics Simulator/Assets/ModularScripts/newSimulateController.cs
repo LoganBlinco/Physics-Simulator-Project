@@ -65,7 +65,7 @@ public class newSimulateController : MonoBehaviour {
 
     void Update()
     {
-        if (isSimulating == true)
+        if (isSimulating == true && newParticle.ParticleInstances.Count >= 1)
         {
             //Controls updating the graph
             UpdateParticleGraphValues();

@@ -51,8 +51,6 @@ public class Suvat_UiController : MonoBehaviour {
     public Dropdown GraphDropBoxParticles;
     public Dropdown GraphDropBoxDimention;
 
-    //Database entry field for the address
-    public InputField DatabaseInputField;
 
 
     #endregion
@@ -138,7 +136,6 @@ public class Suvat_UiController : MonoBehaviour {
         ParticleInfomationCanvas.SetActive(true);
         ParticleGraphCanvas.SetActive(false);
     }
-
 
     //Ran when Particle graphs is clicked
     //Sets the Particle grapghs panel active
